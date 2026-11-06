@@ -1,0 +1,1694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Second Brain · Internship Notebook</title>
+<meta name="description" content="A minimalist second-brain notebook for an internship: calendar, Work / Study / Ideas notes, pending tasks, search and #tags." />
+<meta name="theme-color" content="#F6F3EA" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235E7043'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23F6F3EA' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%23F6F3EA'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Design tokens — cream background, sage / olive accents
+   ============================================================ */
+:root {
+  --bg: #F6F3EA;
+  --surface: #FFFDF7;
+  --surface-2: #F0ECE0;
+  --surface-3: #E9E4D6;
+  --border: #E3DDCC;
+  --border-strong: #CFC8B3;
+  --text: #2E3229;
+  --muted: #6B6F60;
+  --faint: #A3A596;
+
+  --accent: #5E7043;          /* olive — buttons, active tab (AA on white) */
+  --accent-hover: #4E5E37;
+  --sage: #8FA06F;            /* decorative — dots, highlights */
+  --accent-soft: #E3E9D3;
+  --accent-softer: #EFF2E5;
+
+  --danger: #A34A35;
+  --danger-soft: #F5E2DB;
+  --warn: #8F6516;
+  --warn-soft: #F4E9CF;
+
+  --study: #7A6420;  --study-soft: #F1EBD3;
+  --ideas: #3E6656;  --ideas-soft: #DDE9E2;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 1px 2px rgba(46,50,41,.05), 0 6px 20px rgba(46,50,41,.06);
+  --shadow-lg: 0 10px 40px rgba(46,50,41,.16);
+  --font: "Inter", "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+body.lock { overflow: hidden; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon { flex: none; display: block; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.boot { min-height: 100vh; display: grid; place-items: center; color: var(--muted); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 38px; padding: 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-weight: 500; font-size: 14px;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.btn:hover:not(:disabled) { background: var(--surface-2); }
+.btn:disabled { opacity: .4; cursor: not-allowed; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.ghost:hover:not(:disabled) { background: var(--surface-2); }
+.btn.ghost.active { background: var(--accent-soft); color: var(--accent-hover); }
+.btn.icon-only { width: 38px; padding: 0; }
+.btn.sm { height: 32px; padding: 0 10px; font-size: 13px; }
+.btn.sm.icon-only { width: 32px; }
+.btn.danger:hover:not(:disabled) { color: var(--danger); background: var(--danger-soft); }
+@media (pointer: coarse) {
+  .btn { height: 42px; }
+  .btn.icon-only { width: 42px; }
+  .btn.sm { height: 38px; }
+  .btn.sm.icon-only { width: 38px; }
+}
+
+.count-pill {
+  min-width: 20px; height: 20px; padding: 0 6px;
+  border-radius: 999px; background: var(--accent); color: #fff;
+  font-size: 11.5px; font-weight: 600; display: inline-grid; place-items: center;
+}
+.btn.ghost.active .count-pill { background: var(--accent-hover); }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(246,243,234,.92);
+  backdrop-filter: saturate(1.2) blur(10px);
+  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 1440px; margin: 0 auto;
+  padding: 12px 24px;
+  display: flex; align-items: center; gap: 20px;
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 10px; background: var(--accent);
+  display: grid; place-items: center; color: var(--bg); flex: none;
+}
+.brand-name { font-weight: 600; font-size: 16px; line-height: 1.2; }
+.brand-sub { font-size: 12px; color: var(--muted); line-height: 1.2; white-space: nowrap; }
+.nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+
+/* ---------- Search ---------- */
+.search { position: relative; flex: 1; max-width: 560px; }
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 12px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 11px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.search-box:focus-within { border-color: var(--sage); box-shadow: 0 0 0 3px var(--accent-softer); }
+.search-box input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 14.5px; }
+.search-box .icon { color: var(--muted); }
+.search-box input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.meta .tag { font-size: 12.5px; }
+.kbd { font-size: 11px; color: var(--faint); border: 1px solid var(--border); border-radius: 5px; padding: 0 5px; }
+.search-pop {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 40;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); max-height: min(70vh, 540px); overflow: auto;
+}
+.search-section { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+.search-section:last-child { border-bottom: 0; }
+.search-label { font-size: 11.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.results { list-style: none; margin: 0; padding: 4px 0; }
+.result { padding: 10px 14px; cursor: pointer; border-left: 3px solid transparent; }
+.result:hover, .result.active { background: var(--surface-2); border-left-color: var(--sage); }
+.result-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); margin-bottom: 2px; }
+.result-date { display: inline-flex; align-items: center; gap: 5px; font-weight: 500; color: var(--text); }
+.result-title { font-weight: 500; }
+.result-snippet { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.search-empty { padding: 18px 14px; color: var(--muted); font-size: 14px; }
+mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; }
+
+/* ---------- Badges, tags ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11.5px; font-weight: 500; line-height: 1;
+  padding: 4px 8px; border-radius: 999px;
+  background: var(--surface-2); color: var(--muted);
+}
+.badge.p-high { background: var(--danger-soft); color: var(--danger); }
+.badge.p-medium { background: var(--warn-soft); color: var(--warn); }
+.badge.p-low { background: var(--accent-softer); color: var(--accent); }
+.badge.overdue { background: var(--danger-soft); color: var(--danger); }
+.badge.due-today { background: var(--warn-soft); color: var(--warn); }
+.tab-badge { font-size: 11.5px; font-weight: 500; padding: 3px 8px; border-radius: 6px; }
+.tab-badge.t-work { background: var(--accent-soft); color: var(--accent-hover); }
+.tab-badge.t-study { background: var(--study-soft); color: var(--study); }
+.tab-badge.t-ideas { background: var(--ideas-soft); color: var(--ideas); }
+.tag {
+  display: inline; border: 0; padding: 0 4px; margin: 0;
+  border-radius: 5px; background: var(--accent-softer); color: var(--accent);
+  font-weight: 500; font-size: inherit; line-height: inherit;
+}
+.tag:hover { background: var(--accent-soft); }
+.tag-chip {
+  border: 1px solid var(--border); background: var(--surface); color: var(--accent);
+  border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 500;
+}
+.tag-chip:hover { background: var(--accent-softer); border-color: var(--sage); }
+.tag-chip span { color: var(--faint); font-weight: 400; margin-left: 4px; }
+
+/* ---------- Layout ---------- */
+.layout {
+  max-width: 1440px; margin: 0 auto;
+  padding: 24px;
+  display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 24px;
+  align-items: start;
+}
+@media (max-width: 1180px) { .layout { grid-template-columns: minmax(0, 1fr) 370px; gap: 20px; padding: 20px; } }
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 18px; box-shadow: var(--shadow);
+}
+
+/* ---------- Calendar ---------- */
+.cal { padding: 22px; }
+.cal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.cal-title { font-size: 22px; }
+.cal-sub { font-size: 13px; color: var(--muted); }
+.cal-nav { margin-left: auto; display: flex; gap: 6px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.dow { text-align: center; font-size: 11.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 4px 0 8px; }
+.day {
+  position: relative; aspect-ratio: 1 / .78; min-height: 52px; max-height: 104px;
+  border: 1px solid transparent; border-radius: 12px; background: transparent;
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 8px 9px; text-align: left; font-size: 14px; font-weight: 500;
+  transition: background .12s, border-color .12s;
+}
+.day:hover:not(:disabled) { background: var(--surface-2); }
+.day:disabled { color: var(--faint); cursor: not-allowed; font-weight: 400;
+  background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(227,221,204,.35) 6px 7px); }
+.day .num { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 4px; border-radius: 999px; }
+.day.today .num { background: var(--accent-soft); color: var(--accent-hover); font-weight: 600; }
+.day.selected { border-color: var(--accent); background: var(--accent-softer); }
+.day.selected .num { background: var(--accent); color: #fff; }
+.day.weekend:not(:disabled) .num { color: var(--muted); }
+.day.selected.weekend .num { color: #fff; }
+.day .dot { position: absolute; left: 50%; bottom: 9px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--sage); }
+.cal-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--muted); }
+.legend-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--sage); margin-right: 6px; vertical-align: middle; }
+.month-steps { display: flex; gap: 4px; margin-left: auto; }
+.month-step { border: 0; background: transparent; padding: 3px 8px; border-radius: 6px; font-size: 12.5px; color: var(--muted); }
+.month-step:hover { background: var(--surface-2); }
+.month-step.on { background: var(--accent-soft); color: var(--accent-hover); font-weight: 600; }
+
+/* ---------- Daily panel ---------- */
+.panel {
+  position: sticky; top: 88px;
+  max-height: calc(100vh - 112px);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.panel-head { padding: 18px 18px 12px; display: flex; align-items: flex-start; gap: 10px; }
+.panel-date { font-size: 18px; line-height: 1.25; }
+.panel-meta { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.panel-head-actions { margin-left: auto; display: flex; gap: 2px; }
+.panel-close { display: none; }
+.tabs { display: flex; gap: 4px; margin: 0 18px; padding: 4px; background: var(--surface-2); border-radius: 12px; }
+.tab {
+  flex: 1; min-width: 0; height: 40px; border: 0; border-radius: 9px; background: transparent;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-weight: 500; font-size: 14px; color: var(--muted);
+  transition: background .15s, color .15s;
+}
+.tab:hover { color: var(--text); }
+.tab.active { background: var(--accent); color: #fff; box-shadow: 0 1px 3px rgba(46,50,41,.15); }
+.tab .th { font-size: 12px; opacity: .85; }
+.tab .n { font-size: 11px; min-width: 18px; height: 18px; border-radius: 999px; display: inline-grid; place-items: center; background: var(--surface-3); color: var(--muted); padding: 0 5px; }
+.tab.active .n { background: rgba(255,255,255,.22); color: #fff; }
+.panel-body { flex: 1; overflow: auto; padding: 14px 18px 22px; display: flex; flex-direction: column; gap: 10px; }
+.compose-btn {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 12px 14px; border: 1.5px dashed var(--border-strong); border-radius: 12px;
+  background: transparent; color: var(--muted); font-weight: 500; text-align: left;
+}
+.compose-btn:hover { border-color: var(--sage); color: var(--accent); background: var(--accent-softer); }
+.empty { text-align: center; color: var(--muted); font-size: 14px; padding: 28px 12px; }
+.empty .icon { margin: 0 auto 8px; color: var(--faint); }
+.backdrop { display: none; }
+
+/* ---------- Entries ---------- */
+.entry {
+  border: 1px solid var(--border); border-radius: 13px; background: var(--surface);
+  padding: 12px 12px 12px 14px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.entry:hover { border-color: var(--border-strong); }
+.entry.flash { animation: flash 1.8s ease; }
+@keyframes flash { 0%, 40% { border-color: var(--sage); box-shadow: 0 0 0 4px var(--accent-soft); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.entry-row { display: flex; align-items: flex-start; gap: 10px; }
+.entry-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.entry-title { font-size: 15px; font-weight: 600; line-height: 1.4; word-break: break-word; }
+.entry.done .entry-title { text-decoration: line-through; color: var(--faint); }
+.entry.done .rich { color: var(--faint); }
+.entry-actions { display: flex; gap: 0; margin: -4px -4px 0 0; opacity: .55; transition: opacity .15s; }
+.entry:hover .entry-actions, .entry:focus-within .entry-actions { opacity: 1; }
+@media (hover: none) { .entry-actions { opacity: 1; } }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.check {
+  flex: none; width: 22px; height: 22px; margin-top: 1px;
+  border-radius: 7px; border: 1.6px solid var(--border-strong); background: var(--surface);
+  display: grid; place-items: center; color: transparent; padding: 0;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.check:hover { border-color: var(--accent); color: var(--accent-soft); }
+.check.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (pointer: coarse) { .check { width: 26px; height: 26px; } }
+.rich { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; font-size: 14.5px; }
+.rich a { text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--sage); }
+.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 8px; }
+.thumb { position: relative; aspect-ratio: 1; border-radius: 9px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-2); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; }
+.thumb .x, .file-chip .x {
+  position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%;
+  border: 0; background: rgba(46,50,41,.7); color: #fff; display: grid; place-items: center; padding: 0;
+}
+.files { display: flex; flex-direction: column; gap: 6px; }
+.file-chip {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface-2); font-size: 13px; text-decoration: none; color: var(--text);
+}
+.file-chip:hover { border-color: var(--border-strong); }
+.file-chip .fname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.file-chip .fsize { color: var(--muted); font-size: 12px; }
+.file-chip .x { position: static; flex: none; }
+.uploading { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.spinner { display: inline-block; flex: none; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Editor ---------- */
+.editor { border: 1.5px solid var(--sage); border-radius: 13px; background: var(--surface); padding: 12px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 0 4px var(--accent-softer); }
+.editor.drag { background: var(--accent-softer); }
+.editor-title { width: 100%; border: 0; outline: 0; background: transparent; font-size: 15.5px; font-weight: 600; padding: 2px 0; }
+.editor-title::placeholder, .editor textarea::placeholder { color: var(--faint); font-weight: 400; }
+.editor textarea {
+  width: 100%; min-height: 120px; resize: vertical;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--bg);
+  padding: 10px 12px; line-height: 1.55; font-size: 14.5px; outline: 0;
+}
+.editor textarea:focus { border-color: var(--sage); background: var(--surface); }
+.field-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.field { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.field input[type=date] { height: 34px; border: 1px solid var(--border); border-radius: 8px; padding: 0 8px; background: var(--surface); }
+.segment { display: inline-flex; padding: 3px; background: var(--surface-2); border-radius: 9px; gap: 2px; }
+.segment button { border: 0; background: transparent; height: 28px; padding: 0 10px; border-radius: 7px; font-size: 12.5px; font-weight: 500; color: var(--muted); }
+.segment button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(46,50,41,.12); }
+.segment button.on.p-high { color: var(--danger); }
+.segment button.on.p-medium { color: var(--warn); }
+.segment button.on.p-low { color: var(--accent); }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.toolbar .spacer { flex: 1; }
+.hint { font-size: 12px; color: var(--faint); }
+.link-form { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; background: var(--surface-2); border-radius: 10px; }
+.link-form input { flex: 1 1 140px; min-width: 0; height: 34px; border: 1px solid var(--border); border-radius: 8px; padding: 0 10px; background: var(--surface); outline: 0; }
+.link-form input:focus { border-color: var(--sage); }
+
+/* ---------- Pending tasks ---------- */
+.pending { padding: 22px; }
+.pending-head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 6px; }
+.pending-head h2 { font-size: 22px; }
+.pending-sub { color: var(--muted); font-size: 13.5px; margin-bottom: 18px; }
+.group { margin-top: 18px; }
+.group-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.group-title.overdue { color: var(--danger); }
+.group-title .n { font-weight: 500; color: var(--faint); }
+.task-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); margin-bottom: 8px; }
+.task-row:hover { border-color: var(--border-strong); }
+.task-main { flex: 1; min-width: 0; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+.task-title { font-weight: 500; word-break: break-word; }
+.task-src { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.task-open { color: var(--faint); }
+.task-row:hover .task-open { color: var(--accent); }
+
+/* ---------- Menu ---------- */
+.menu-wrap { position: relative; }
+.menu {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 45; width: 280px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg);
+  padding: 6px;
+}
+.menu-status { padding: 10px 10px 12px; border-bottom: 1px solid var(--border); margin-bottom: 6px; font-size: 12.5px; color: var(--muted); }
+.menu-status strong { display: flex; align-items: center; gap: 6px; color: var(--text); font-size: 13.5px; margin-bottom: 2px; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); }
+.status-dot.local { background: var(--warn); }
+.menu-item { width: 100%; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 10px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; text-align: left; }
+.menu-item:hover { background: var(--surface-2); }
+.menu-sep { height: 1px; background: var(--border); margin: 6px 4px; }
+
+/* ---------- Toasts, lightbox, auth ---------- */
+.toasts { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; align-items: center; width: min(92vw, 440px); pointer-events: none; }
+.toast { pointer-events: auto; display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; border-radius: 12px; background: var(--text); color: var(--bg); font-size: 14px; box-shadow: var(--shadow-lg); animation: rise .2s ease; }
+.toast.error { background: var(--danger); color: #fff; }
+.toast button { border: 0; background: rgba(255,255,255,.14); color: inherit; border-radius: 7px; padding: 5px 10px; font-weight: 600; font-size: 13px; }
+@keyframes rise { from { transform: translateY(8px); opacity: 0; } }
+.lightbox { position: fixed; inset: 0; z-index: 90; background: rgba(32,35,28,.82); display: grid; place-items: center; padding: 24px; cursor: zoom-out; }
+.lightbox img { max-width: 100%; max-height: 88vh; border-radius: 10px; box-shadow: var(--shadow-lg); }
+.lightbox .btn { position: absolute; top: 16px; right: 16px; }
+
+.auth { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+.auth-card { width: min(100%, 400px); padding: 30px 28px; }
+.auth-card .brand { margin-bottom: 22px; }
+.auth-card h1 { font-size: 22px; margin-bottom: 4px; }
+.auth-card p.lead { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
+.auth-form { display: flex; flex-direction: column; gap: 10px; }
+.auth-form label { font-size: 13px; font-weight: 500; color: var(--muted); display: flex; flex-direction: column; gap: 5px; }
+.auth-form input { height: 42px; border: 1px solid var(--border); border-radius: 10px; padding: 0 12px; background: var(--bg); outline: 0; font-size: 15px; color: var(--text); }
+.auth-form input:focus { border-color: var(--sage); background: var(--surface); }
+.auth-form .btn { height: 44px; width: 100%; }
+.divider { display: flex; align-items: center; gap: 12px; color: var(--faint); font-size: 12.5px; margin: 16px 0; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.auth-msg { font-size: 13px; padding: 9px 12px; border-radius: 9px; }
+.auth-msg.error { background: var(--danger-soft); color: var(--danger); }
+.auth-msg.info { background: var(--accent-softer); color: var(--accent-hover); }
+.auth-switch { margin-top: 16px; text-align: center; font-size: 13.5px; color: var(--muted); }
+.linklike { border: 0; background: none; padding: 0; color: var(--accent); font-weight: 500; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ============================================================
+   Responsive: iPad portrait & phones — daily panel becomes a drawer
+   ============================================================ */
+@media (max-width: 899px) {
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 60;
+    width: min(100%, 540px); max-height: none; height: 100%;
+    border-radius: 0; border-width: 0 0 0 1px;
+    transform: translateX(105%); transition: transform .26s cubic-bezier(.2,.8,.2,1);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .panel.open { transform: none; box-shadow: var(--shadow-lg); }
+  .panel-close { display: inline-flex; }
+  .backdrop { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(32,35,28,.35); animation: fade .2s; }
+  @keyframes fade { from { opacity: 0; } }
+}
+@media (max-width: 720px) {
+  .topbar-inner { flex-wrap: wrap; padding: 10px 16px; gap: 10px; }
+  .search { order: 3; flex-basis: 100%; max-width: none; }
+  .brand-sub, .nav .label, .kbd { display: none; }
+  .cal, .pending { padding: 16px; }
+  .cal-title { font-size: 19px; }
+  .cal-grid { gap: 3px; }
+  .day { aspect-ratio: 1 / 1.05; min-height: 44px; padding: 5px; border-radius: 10px; font-size: 13.5px; }
+  .day .num { min-width: 24px; height: 24px; }
+  .day .dot { bottom: 6px; }
+  .month-steps { margin-left: 0; }
+  .tab { flex-direction: column; gap: 0; height: 48px; font-size: 13.5px; }
+  .tab .n { display: none; }
+  .panel-head, .panel-body { padding-left: 16px; padding-right: 16px; }
+  .tabs { margin: 0 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<div id="root"><div class="boot">Loading your notebook…</div></div>
+
+<!-- React 18 + in-browser JSX (no build step needed) -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+<!-- Firebase (compat SDK) — only used when FIREBASE_CONFIG below is filled in -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef, useCallback, useContext, createContext } = React;
+
+/* ============================================================
+   1. CONFIG — paste your Firebase web config here.
+   Leave apiKey empty to run in DEMO MODE (saved in this browser only, no login).
+   ============================================================ */
+const FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
+};
+// false = images/files are stored inside Firestore (works on the free Spark plan, ~650 KB per file).
+// true  = use Firebase Storage (bigger files; needs the Blaze plan with billing enabled).
+const USE_FIREBASE_STORAGE = false;
+
+const FIREBASE_ENABLED = Boolean(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && window.firebase);
+if (FIREBASE_ENABLED) {
+  firebase.initializeApp(FIREBASE_CONFIG);
+  firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {}); // offline cache
+  firebase.auth().getRedirectResult().catch(() => {});
+}
+
+/* ============================================================
+   2. CONSTANTS
+   ============================================================ */
+const RANGE_START = "2026-11-06";
+const RANGE_END = "2027-03-05";
+const FIRST_MONTH = { y: 2026, m: 10 }; // November 2026 (months are 0-based)
+const LAST_MONTH = { y: 2027, m: 2 };   // March 2027
+const TABS = [
+  { id: "work", en: "Work", th: "งาน", icon: "briefcase", noun: "task" },
+  { id: "study", en: "Study", th: "เรียน", icon: "book", noun: "note" },
+  { id: "ideas", en: "Ideas", th: "ไอเดีย", icon: "zap", noun: "idea" },
+];
+const TAB_BY_ID = Object.fromEntries(TABS.map((t) => [t.id, t]));
+const PRIORITIES = [
+  { id: "high", label: "High" },
+  { id: "medium", label: "Medium" },
+  { id: "low", label: "Low" },
+];
+const PRIORITY_RANK = { high: 0, medium: 1, low: 2 };
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MAX_INLINE_CHARS = 900 * 1024; // Firestore document limit is 1 MiB
+
+/* ============================================================
+   3. UTILITIES — dates, ids, text parsing, files
+   ============================================================ */
+const pad = (n) => String(n).padStart(2, "0");
+const toKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const fromKey = (k) => { const [y, m, d] = k.split("-").map(Number); return new Date(y, m - 1, d); };
+const inRange = (k) => k >= RANGE_START && k <= RANGE_END;
+const todayKey = () => toKey(new Date());
+const addDays = (k, n) => { const d = fromKey(k); d.setDate(d.getDate() + n); return toKey(d); };
+const fmtLong = (k) => fromKey(k).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const fmtShort = (k) => fromKey(k).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+const fmtDue = (k) => fromKey(k).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+const monthLabel = (y, m) => new Date(y, m, 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+const monthIdx = ({ y, m }) => y * 12 + m;
+const uid = () => (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+const fmtSize = (b) => (b < 1024 ? `${b} B` : b < 1048576 ? `${Math.round(b / 1024)} KB` : `${(b / 1048576).toFixed(1)} MB`);
+const firstLine = (s) => (s || "").split("\n").find((l) => l.trim()) || "";
+const entryLabel = (e) => e.title || firstLine(e.body).slice(0, 90) || "(untitled)";
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// Markdown link [label](url) · bare URL · #tag (letters incl. Thai, numbers, _ and -)
+const RICH_RE = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<]*[^\s<.,;:!?)\]'"])|(^|[\s(\[{,;:!?"'])#([\p{L}\p{M}\p{N}_-]+)/gu;
+
+function tokenize(text) {
+  const out = [];
+  let last = 0, m;
+  RICH_RE.lastIndex = 0;
+  const pushText = (a, b) => { if (b > a) out.push({ t: "text", v: text.slice(a, b) }); };
+  while ((m = RICH_RE.exec(text))) {
+    if (m[1] !== undefined) { pushText(last, m.index); out.push({ t: "link", label: m[1], href: m[2] }); }
+    else if (m[3] !== undefined) { pushText(last, m.index); out.push({ t: "link", label: m[3], href: m[3] }); }
+    else { pushText(last, m.index + m[4].length); out.push({ t: "tag", v: m[5] }); }
+    last = RICH_RE.lastIndex;
+  }
+  pushText(last, text.length);
+  return out;
+}
+
+function extractTags(text) {
+  const seen = new Map();
+  tokenize(text || "").forEach((tk) => { if (tk.t === "tag" && !seen.has(tk.v.toLowerCase())) seen.set(tk.v.toLowerCase(), tk.v); });
+  return [...seen.values()];
+}
+
+// Make every entry Firestore-safe (no undefined values) and consistent.
+function normalizeEntry(e) {
+  const isWork = e.tab === "work";
+  return {
+    id: String(e.id || uid()),
+    date: String(e.date),
+    tab: e.tab,
+    title: String(e.title || ""),
+    body: String(e.body || ""),
+    done: isWork ? Boolean(e.done) : false,
+    doneAt: isWork && e.done ? Number(e.doneAt) || Date.now() : null,
+    due: isWork && e.due ? String(e.due) : null,
+    priority: isWork ? (PRIORITY_RANK[e.priority] !== undefined ? e.priority : "medium") : null,
+    attachments: Array.isArray(e.attachments) ? JSON.parse(JSON.stringify(e.attachments)) : [],
+    tags: extractTags(`${e.title || ""}\n${e.body || ""}`),
+    createdAt: Number(e.createdAt) || Date.now(),
+    updatedAt: Number(e.updatedAt) || Date.now(),
+  };
+}
+
+function blobToDataURL(blob) {
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
+}
+function dataURLToBlob(dataURL) {
+  const [head, b64] = dataURL.split(",");
+  const type = (head.match(/data:([^;]+)/) || [])[1] || "application/octet-stream";
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type });
+}
+
+// Shrink photos so they fit in Firestore (and load fast on iPad).
+async function compressImage(file, targetBytes = 600 * 1024) {
+  if (!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type) || file.size <= targetBytes) return file;
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    let maxDim = 1600, quality = 0.82, blob = null;
+    for (let attempt = 0; attempt < 6; attempt++) {
+      const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * scale); c.height = Math.round(img.naturalHeight * scale);
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      blob = await new Promise((res) => c.toBlob(res, "image/jpeg", quality));
+      if (blob && blob.size <= targetBytes) break;
+      quality = Math.max(0.5, quality - 0.1); maxDim = Math.round(maxDim * 0.82);
+    }
+    return blob ? new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" }) : file;
+  } catch { return file; } finally { URL.revokeObjectURL(url); }
+}
+
+function downloadBlob(blob, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ============================================================
+   4. DATA LAYER — same interface for both backends
+      subscribe · save · saveMany · remove · putFile · putFileWithId
+      getFileBlob · getFileURL · removeFile
+   ============================================================ */
+
+// ---- 4a. Local (IndexedDB) — demo mode, no login ----
+let idbPromise = null;
+function openIDB() {
+  if (!idbPromise) idbPromise = new Promise((res, rej) => {
+    const req = indexedDB.open("second-brain-notebook", 1);
+    req.onupgradeneeded = () => {
+      req.result.createObjectStore("entries", { keyPath: "id" });
+      req.result.createObjectStore("files", { keyPath: "id" });
+    };
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+  return idbPromise;
+}
+async function idbRun(storeName, mode, fn) {
+  const db = await openIDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(storeName, mode);
+    const req = fn(tx.objectStore(storeName));
+    tx.oncomplete = () => res(req ? req.result : undefined);
+    tx.onerror = () => rej(tx.error);
+    tx.onabort = () => rej(tx.error || new Error("Storage is full or blocked."));
+  });
+}
+
+function createLocalStore() {
+  let entries = [];
+  const subs = new Set();
+  const urls = new Map();
+  const emit = () => subs.forEach((cb) => cb(entries));
+  const ready = idbRun("entries", "readonly", (s) => s.getAll()).then((r) => { entries = r || []; });
+
+  const getFileBlob = async (meta) => { const r = await idbRun("files", "readonly", (s) => s.get(meta.id)); return r ? r.blob : null; };
+  const putFileWithId = async (meta, blob) => {
+    await idbRun("files", "readwrite", (s) => s.put({ id: meta.id, blob }));
+    return { id: meta.id, name: meta.name, type: meta.type, size: meta.size, kind: meta.kind, storage: "local" };
+  };
+  return {
+    mode: "local",
+    subscribe(cb, onError) {
+      subs.add(cb);
+      ready.then(() => cb(entries)).catch((e) => onError && onError(e));
+      return () => subs.delete(cb);
+    },
+    async save(e) { await idbRun("entries", "readwrite", (s) => s.put(e)); entries = [...entries.filter((x) => x.id !== e.id), e]; emit(); },
+    async saveMany(list) {
+      await idbRun("entries", "readwrite", (s) => { list.forEach((e) => s.put(e)); });
+      const ids = new Set(list.map((e) => e.id));
+      entries = [...entries.filter((x) => !ids.has(x.id)), ...list]; emit();
+    },
+    async remove(id) { await idbRun("entries", "readwrite", (s) => s.delete(id)); entries = entries.filter((x) => x.id !== id); emit(); },
+    async putFile(file, kind) {
+      return putFileWithId({ id: uid(), name: file.name || "file", type: file.type || "application/octet-stream", size: file.size, kind }, file);
+    },
+    putFileWithId,
+    getFileBlob,
+    async getFileURL(meta) {
+      if (urls.has(meta.id)) return urls.get(meta.id);
+      const b = await getFileBlob(meta); if (!b) return null;
+      const u = URL.createObjectURL(b); urls.set(meta.id, u); return u;
+    },
+    async removeFile(meta) { await idbRun("files", "readwrite", (s) => s.delete(meta.id)); urls.delete(meta.id); },
+  };
+}
+
+// ---- 4b. Firebase (Auth + Firestore [+ Storage]) — synced across devices ----
+function createFirebaseStore(user) {
+  const base = firebase.firestore().collection("users").doc(user.uid);
+  const col = base.collection("entries");
+  const filesCol = base.collection("files");
+  const urls = new Map();
+
+  async function putBlob(meta, blob) {
+    const clean = { id: meta.id, name: meta.name, type: blob.type || meta.type, size: blob.size, kind: meta.kind };
+    if (USE_FIREBASE_STORAGE) {
+      const path = `users/${user.uid}/files/${meta.id}`;
+      const ref = firebase.storage().ref(path);
+      await ref.put(blob, { contentType: clean.type, customMetadata: { name: clean.name } });
+      return { ...clean, storage: "cloud", path, url: await ref.getDownloadURL() };
+    }
+    const data = await blobToDataURL(blob);
+    if (data.length > MAX_INLINE_CHARS) {
+      throw new Error(`"${clean.name}" is ${fmtSize(blob.size)} — too big for the free plan (≈650 KB per file). Enable Firebase Storage for larger files.`);
+    }
+    await filesCol.doc(meta.id).set({ data, name: clean.name, type: clean.type });
+    return { ...clean, storage: "inline" };
+  }
+  const getFileBlob = async (meta) => {
+    if (meta.storage === "cloud") return null; // already a URL; not embedded in backups
+    const d = await filesCol.doc(meta.id).get();
+    return d.exists ? dataURLToBlob(d.data().data) : null;
+  };
+  return {
+    mode: "cloud",
+    subscribe(cb, onError) { return col.onSnapshot((snap) => cb(snap.docs.map((d) => d.data())), onError); },
+    save: (e) => col.doc(e.id).set(e),
+    async saveMany(list) {
+      for (let i = 0; i < list.length; i += 400) {
+        const batch = firebase.firestore().batch();
+        list.slice(i, i + 400).forEach((e) => batch.set(col.doc(e.id), e));
+        await batch.commit();
+      }
+    },
+    remove: (id) => col.doc(id).delete(),
+    async putFile(file, kind) {
+      const blob = kind === "image" && !USE_FIREBASE_STORAGE ? await compressImage(file) : file;
+      return putBlob({ id: uid(), name: blob.name || file.name || "file", type: file.type, kind }, blob);
+    },
+    putFileWithId: (meta, blob) => putBlob(meta, blob),
+    getFileBlob,
+    async getFileURL(meta) {
+      if (meta.url) return meta.url;
+      if (urls.has(meta.id)) return urls.get(meta.id);
+      const b = await getFileBlob(meta); if (!b) return null;
+      const u = URL.createObjectURL(b); urls.set(meta.id, u); return u;
+    },
+    async removeFile(meta) {
+      if (meta.storage === "cloud") await firebase.storage().ref(meta.path).delete().catch(() => {});
+      else await filesCol.doc(meta.id).delete();
+    },
+  };
+}
+
+/* ============================================================
+   5. SHARED UI CONTEXT + ICONS
+   ============================================================ */
+const AppCtx = createContext(null);
+const useApp = () => useContext(AppCtx);
+
+const ICONS = {
+  chevronLeft: <polyline points="15 18 9 12 15 6" />,
+  chevronRight: <polyline points="9 18 15 12 9 6" />,
+  search: <><circle cx="11" cy="11" r="7.5" /><line x1="20.5" y1="20.5" x2="16.4" y2="16.4" /></>,
+  check: <polyline points="20 6 9 17 4 12" />,
+  plus: <><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></>,
+  x: <><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></>,
+  link: <><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></>,
+  image: <><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></>,
+  paperclip: <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />,
+  trash: <><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></>,
+  edit: <path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />,
+  calendar: <><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></>,
+  list: <><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
+  more: <><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></>,
+  download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></>,
+  upload: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></>,
+  flag: <><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" /></>,
+  clock: <><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></>,
+  logout: <><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></>,
+  file: <><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></>,
+  briefcase: <><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></>,
+  book: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></>,
+  zap: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />,
+  sparkle: <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" />,
+  brain: <><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" /></>,
+  arrowRight: <><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></>,
+};
+function Icon({ name, size = 18, strokeWidth = 1.8 }) {
+  return (
+    <svg className="icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICONS[name]}</svg>
+  );
+}
+
+/* ============================================================
+   6. SMALL BUILDING BLOCKS
+   ============================================================ */
+function RichText({ text }) {
+  const { onTag } = useApp();
+  return tokenize(text).map((tk, i) => {
+    if (tk.t === "link") return <a key={i} href={tk.href} target="_blank" rel="noopener noreferrer">{tk.label}</a>;
+    if (tk.t === "tag") return <button key={i} type="button" className="tag" onClick={(e) => { e.stopPropagation(); onTag("#" + tk.v); }}>#{tk.v}</button>;
+    return <React.Fragment key={i}>{tk.v}</React.Fragment>;
+  });
+}
+
+function Highlight({ text, terms }) {
+  const t = terms.filter(Boolean);
+  if (!t.length) return text;
+  const re = new RegExp(`(${t.map(escapeRe).join("|")})`, "gi");
+  return text.split(re).map((p, i) => (i % 2 ? <mark key={i}>{p}</mark> : <React.Fragment key={i}>{p}</React.Fragment>));
+}
+
+function PriorityBadge({ p }) {
+  if (!p) return null;
+  return <span className={`badge p-${p}`}><Icon name="flag" size={11} strokeWidth={2.2} />{PRIORITIES.find((x) => x.id === p).label}</span>;
+}
+function DueBadge({ due, done }) {
+  if (!due) return null;
+  const today = todayKey();
+  const cls = done ? "" : due < today ? "overdue" : due === today ? "due-today" : "";
+  const label = !done && due < today ? `Overdue · ${fmtDue(due)}` : due === today ? "Due today" : `Due ${fmtDue(due)}`;
+  return <span className={`badge ${cls}`}><Icon name="clock" size={11} strokeWidth={2.2} />{label}</span>;
+}
+
+function useFileURL(meta) {
+  const { store } = useApp();
+  const [url, setUrl] = useState(meta.url || null);
+  useEffect(() => {
+    let alive = true;
+    if (!meta.url) store.getFileURL(meta).then((u) => alive && setUrl(u)).catch(() => {});
+    return () => { alive = false; };
+  }, [meta.id, store]);
+  return url;
+}
+
+function Thumb({ meta, onRemove }) {
+  const url = useFileURL(meta);
+  const { openImage } = useApp();
+  return (
+    <div className="thumb">
+      {url ? <img src={url} alt={meta.name} loading="lazy" onClick={() => openImage(url)} /> : <div className="uploading" style={{ height: "100%", justifyContent: "center" }}><span className="spinner" /></div>}
+      {onRemove && <button type="button" className="x" onClick={() => onRemove(meta)} aria-label={`Remove ${meta.name}`}><Icon name="x" size={13} strokeWidth={2.4} /></button>}
+    </div>
+  );
+}
+function FileChip({ meta, onRemove }) {
+  const url = useFileURL(meta);
+  const inner = (
+    <>
+      <Icon name="file" size={18} />
+      <span className="fname">{meta.name}</span>
+      <span className="fsize">{fmtSize(meta.size || 0)}</span>
+      {onRemove
+        ? <button type="button" className="x" onClick={(e) => { e.preventDefault(); onRemove(meta); }} aria-label={`Remove ${meta.name}`}><Icon name="x" size={13} strokeWidth={2.4} /></button>
+        : <Icon name="download" size={16} />}
+    </>
+  );
+  if (onRemove || !url) return <div className="file-chip">{inner}</div>;
+  return <a className="file-chip" href={url} download={meta.name} target="_blank" rel="noopener noreferrer">{inner}</a>;
+}
+function Attachments({ list, onRemove }) {
+  if (!list || !list.length) return null;
+  const images = list.filter((a) => a.kind === "image");
+  const files = list.filter((a) => a.kind !== "image");
+  return (
+    <>
+      {images.length > 0 && <div className="thumbs">{images.map((a) => <Thumb key={a.id} meta={a} onRemove={onRemove} />)}</div>}
+      {files.length > 0 && <div className="files">{files.map((a) => <FileChip key={a.id} meta={a} onRemove={onRemove} />)}</div>}
+    </>
+  );
+}
+
+/* ============================================================
+   7. ENTRY EDITOR — title, rich body, links, images, files, due date, priority
+   ============================================================ */
+function EntryEditor({ initial, date, tab, onClose }) {
+  const { store, toast, actions } = useApp();
+  const isWork = tab === "work";
+  const [title, setTitle] = useState(initial.title || "");
+  const [body, setBody] = useState(initial.body || "");
+  const [due, setDue] = useState(initial.due || "");
+  const [priority, setPriority] = useState(initial.priority || "medium");
+  const [atts, setAtts] = useState(initial.attachments || []);
+  const [uploading, setUploading] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkLabel, setLinkLabel] = useState("");
+  const [drag, setDrag] = useState(false);
+  const added = useRef([]);    // uploaded during this edit session
+  const removed = useRef([]);  // existing attachments the user removed
+  const taRef = useRef(null);
+  const titleRef = useRef(null);
+  const imgInput = useRef(null);
+  const fileInput = useRef(null);
+
+  useEffect(() => { (initial.id ? taRef : titleRef).current?.focus(); }, []);
+
+  async function addFiles(fileList, forceKind) {
+    const files = [...fileList];
+    for (const file of files) {
+      const kind = forceKind || (file.type.startsWith("image/") ? "image" : "file");
+      setUploading((n) => n + 1);
+      try {
+        const meta = await store.putFile(file, kind);
+        added.current.push(meta);
+        setAtts((a) => [...a, meta]);
+      } catch (err) { toast(err.message || "Upload failed", "error"); }
+      finally { setUploading((n) => n - 1); }
+    }
+  }
+  function removeAtt(meta) {
+    setAtts((a) => a.filter((x) => x.id !== meta.id));
+    if (added.current.some((x) => x.id === meta.id)) {
+      added.current = added.current.filter((x) => x.id !== meta.id);
+      store.removeFile(meta).catch(() => {});
+    } else removed.current.push(meta);
+  }
+  function insertAtCursor(snippet) {
+    const ta = taRef.current;
+    const s = ta ? ta.selectionStart : body.length;
+    const e = ta ? ta.selectionEnd : body.length;
+    const before = body.slice(0, s);
+    const sep = before && !/\s$/.test(before) ? " " : "";
+    const next = before + sep + snippet + " " + body.slice(e);
+    setBody(next);
+    requestAnimationFrame(() => { if (ta) { ta.focus(); const pos = (before + sep + snippet + " ").length; ta.setSelectionRange(pos, pos); } });
+  }
+  function addLink(ev) {
+    ev.preventDefault();
+    let u = linkUrl.trim(); if (!u) return;
+    if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+    const label = linkLabel.trim().replace(/[\[\]]/g, "");
+    insertAtCursor(label ? `[${label}](${u})` : u);
+    setLinkUrl(""); setLinkLabel(""); setLinkOpen(false);
+  }
+  async function save() {
+    if (uploading) return toast("Wait for uploads to finish…");
+    if (!title.trim() && !body.trim() && !atts.length) return toast("Write something first.");
+    setSaving(true);
+    try {
+      await actions.save({
+        ...initial, date, tab,
+        title: title.trim(), body: body.replace(/\s+$/, ""),
+        attachments: atts, due: isWork ? due || null : null, priority: isWork ? priority : null,
+        updatedAt: Date.now(),
+      });
+      removed.current.forEach((m) => store.removeFile(m).catch(() => {}));
+      added.current = [];
+      onClose();
+    } catch (err) { toast(err.message || "Could not save", "error"); setSaving(false); }
+  }
+  function cancel() {
+    added.current.forEach((m) => store.removeFile(m).catch(() => {}));
+    onClose();
+  }
+  function onKeyDown(e) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); save(); }
+    if (e.key === "Escape") { e.stopPropagation(); cancel(); }
+  }
+  function onPaste(e) {
+    const files = [...(e.clipboardData?.files || [])];
+    if (files.length) { e.preventDefault(); addFiles(files); }
+  }
+
+  return (
+    <div className={`editor${drag ? " drag" : ""}`} onKeyDown={onKeyDown}
+      onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
+      onDrop={(e) => { e.preventDefault(); setDrag(false); if (e.dataTransfer.files.length) addFiles(e.dataTransfer.files); }}>
+      <input ref={titleRef} className="editor-title" value={title} onChange={(e) => setTitle(e.target.value)}
+        placeholder={isWork ? "Task title" : tab === "study" ? "What did you learn?" : "Idea title"} aria-label="Title" />
+      <textarea ref={taRef} value={body} onChange={(e) => setBody(e.target.value)} onPaste={onPaste}
+        placeholder={"Notes… paste links or screenshots here. Add #tags like #Internship #Urgent"} aria-label="Notes" />
+
+      {isWork && (
+        <div className="field-row">
+          <label className="field"><Icon name="clock" size={15} />Due
+            <input type="date" value={due} onChange={(e) => setDue(e.target.value)} />
+          </label>
+          <div className="field"><Icon name="flag" size={15} />
+            <div className="segment" role="radiogroup" aria-label="Priority">
+              {PRIORITIES.map((p) => (
+                <button key={p.id} type="button" role="radio" aria-checked={priority === p.id}
+                  className={`${priority === p.id ? "on" : ""} p-${p.id}`} onClick={() => setPriority(p.id)}>{p.label}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Attachments list={atts} onRemove={removeAtt} />
+      {uploading > 0 && <div className="uploading"><span className="spinner" />Uploading {uploading} file{uploading > 1 ? "s" : ""}…</div>}
+
+      {linkOpen && (
+        <form className="link-form" onSubmit={addLink}>
+          <input autoFocus value={linkUrl} onChange={(e) => setLinkUrl(e.target.value)} placeholder="https://…" aria-label="Link URL" inputMode="url" />
+          <input value={linkLabel} onChange={(e) => setLinkLabel(e.target.value)} placeholder="Text to show (optional)" aria-label="Link text" />
+          <button className="btn sm primary" type="submit">Insert</button>
+          <button className="btn sm ghost" type="button" onClick={() => setLinkOpen(false)}>Cancel</button>
+        </form>
+      )}
+
+      <div className="toolbar">
+        <button type="button" className="btn sm ghost icon-only" title="Insert link" aria-label="Insert link" onClick={() => setLinkOpen((v) => !v)}><Icon name="link" size={17} /></button>
+        <button type="button" className="btn sm ghost icon-only" title="Insert image" aria-label="Insert image" onClick={() => imgInput.current.click()}><Icon name="image" size={17} /></button>
+        <button type="button" className="btn sm ghost icon-only" title="Attach file" aria-label="Attach file" onClick={() => fileInput.current.click()}><Icon name="paperclip" size={17} /></button>
+        <input ref={imgInput} type="file" accept="image/*" multiple hidden onChange={(e) => { addFiles(e.target.files, "image"); e.target.value = ""; }} />
+        <input ref={fileInput} type="file" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} />
+        <span className="spacer" />
+        <span className="hint">Ctrl/⌘ + Enter</span>
+        <button type="button" className="btn sm ghost" onClick={cancel}>Cancel</button>
+        <button type="button" className="btn sm primary" onClick={save} disabled={saving || uploading > 0}>{saving ? "Saving…" : "Save"}</button>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   8. ENTRY CARD (view mode)
+   ============================================================ */
+function EntryCard({ entry, focused }) {
+  const { actions } = useApp();
+  const [editing, setEditing] = useState(false);
+  const [flash, setFlash] = useState(false);
+  const ref = useRef(null);
+  const isWork = entry.tab === "work";
+
+  useEffect(() => {
+    if (!focused) return;
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setFlash(true);
+    const t = setTimeout(() => setFlash(false), 1900);
+    return () => clearTimeout(t);
+  }, [focused]);
+
+  if (editing) return <EntryEditor initial={entry} date={entry.date} tab={entry.tab} onClose={() => setEditing(false)} />;
+
+  return (
+    <article ref={ref} className={`entry${entry.done ? " done" : ""}${flash ? " flash" : ""}`}>
+      <div className="entry-row">
+        {isWork && (
+          <button type="button" className={`check${entry.done ? " on" : ""}`} onClick={() => actions.toggleDone(entry)}
+            aria-label={entry.done ? "Mark as not done" : "Mark as done"} aria-pressed={entry.done}>
+            <Icon name="check" size={14} strokeWidth={3} />
+          </button>
+        )}
+        <div className="entry-main">
+          {entry.title && <h4 className="entry-title"><RichText text={entry.title} /></h4>}
+          {isWork && (entry.priority || entry.due) && <div className="meta"><PriorityBadge p={entry.priority} /><DueBadge due={entry.due} done={entry.done} /></div>}
+          {entry.body && <div className="rich"><RichText text={entry.body} /></div>}
+          <Attachments list={entry.attachments} />
+        </div>
+        <div className="entry-actions">
+          <button type="button" className="btn sm ghost icon-only" onClick={() => setEditing(true)} aria-label="Edit" title="Edit"><Icon name="edit" size={15} /></button>
+          <button type="button" className="btn sm ghost icon-only danger" onClick={() => actions.remove(entry)} aria-label="Delete" title="Delete"><Icon name="trash" size={15} /></button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ============================================================
+   9. DAILY PANEL — Work / Study / Ideas tabs for one date
+   ============================================================ */
+function DailyPanel({ date, tab, setTab, entries, open, onClose, onDateChange, focusId }) {
+  const [composing, setComposing] = useState(false);
+  useEffect(() => setComposing(false), [date, tab]);
+
+  const day = useMemo(() => entries.filter((e) => e.date === date), [entries, date]);
+  const counts = useMemo(() => Object.fromEntries(TABS.map((t) => [t.id, day.filter((e) => e.tab === t.id).length])), [day]);
+  const list = useMemo(() => {
+    const l = day.filter((e) => e.tab === tab);
+    return tab === "work"
+      ? l.sort((a, b) => (a.done - b.done) || (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]) || (a.createdAt - b.createdAt))
+      : l.sort((a, b) => a.createdAt - b.createdAt);
+  }, [day, tab]);
+  const openTasks = day.filter((e) => e.tab === "work" && !e.done).length;
+  const t = TAB_BY_ID[tab];
+
+  return (
+    <aside className={`card panel${open ? " open" : ""}`} aria-label="Daily notes">
+      <div className="panel-head">
+        <div>
+          <h2 className="panel-date">{fmtLong(date)}</h2>
+          <div className="panel-meta">{day.length ? `${day.length} item${day.length > 1 ? "s" : ""}${openTasks ? ` · ${openTasks} open task${openTasks > 1 ? "s" : ""}` : ""}` : "Nothing yet"}{date === todayKey() ? " · Today" : ""}</div>
+        </div>
+        <div className="panel-head-actions">
+          <button className="btn sm ghost icon-only" disabled={!inRange(addDays(date, -1))} onClick={() => onDateChange(addDays(date, -1))} aria-label="Previous day"><Icon name="chevronLeft" /></button>
+          <button className="btn sm ghost icon-only" disabled={!inRange(addDays(date, 1))} onClick={() => onDateChange(addDays(date, 1))} aria-label="Next day"><Icon name="chevronRight" /></button>
+          <button className="btn sm ghost icon-only panel-close" onClick={onClose} aria-label="Close"><Icon name="x" /></button>
+        </div>
+      </div>
+
+      <div className="tabs" role="tablist">
+        {TABS.map((x) => (
+          <button key={x.id} role="tab" aria-selected={tab === x.id} className={`tab${tab === x.id ? " active" : ""}`} onClick={() => setTab(x.id)}>
+            <span>{x.en}</span><span className="th">{x.th}</span>{counts[x.id] > 0 && <span className="n">{counts[x.id]}</span>}
+          </button>
+        ))}
+      </div>
+
+      <div className="panel-body" role="tabpanel">
+        {composing
+          ? <EntryEditor key={`new-${date}-${tab}`} initial={{}} date={date} tab={tab} onClose={() => setComposing(false)} />
+          : <button className="compose-btn" onClick={() => setComposing(true)}><Icon name="plus" />Add {t.noun} to {t.en} ({t.th})</button>}
+        {list.map((e) => <EntryCard key={e.id} entry={e} focused={focusId === e.id} />)}
+        {!list.length && !composing && (
+          <div className="empty"><Icon name={t.icon} size={28} />No {t.noun}s on this day yet.</div>
+        )}
+      </div>
+    </aside>
+  );
+}
+
+/* ============================================================
+   10. CALENDAR — restricted to 6 Nov 2026 → 5 Mar 2027
+   ============================================================ */
+function Calendar({ month, setMonth, selected, onSelect, byDate }) {
+  const { y, m } = month;
+  const idx = monthIdx(month);
+  const canPrev = idx > monthIdx(FIRST_MONTH);
+  const canNext = idx < monthIdx(LAST_MONTH);
+  const step = (d) => { const n = new Date(y, m + d, 1); setMonth({ y: n.getFullYear(), m: n.getMonth() }); };
+  const today = todayKey();
+
+  const cells = [];
+  const lead = new Date(y, m, 1).getDay();
+  const daysIn = new Date(y, m + 1, 0).getDate();
+  for (let i = 0; i < lead; i++) cells.push(null);
+  for (let d = 1; d <= daysIn; d++) cells.push(toKey(new Date(y, m, d)));
+  while (cells.length % 7) cells.push(null);
+
+  const monthPrefix = `${y}-${pad(m + 1)}`;
+  const activeDays = [...byDate.keys()].filter((k) => k.startsWith(monthPrefix)).length;
+  const months = [];
+  for (let i = monthIdx(FIRST_MONTH); i <= monthIdx(LAST_MONTH); i++) months.push({ y: Math.floor(i / 12), m: i % 12 });
+
+  return (
+    <section className="card cal" aria-label="Calendar">
+      <div className="cal-head">
+        <div>
+          <h2 className="cal-title">{monthLabel(y, m)}</h2>
+          <div className="cal-sub">{activeDays ? `${activeDays} day${activeDays > 1 ? "s" : ""} with notes` : "No notes this month yet"}</div>
+        </div>
+        <div className="cal-nav">
+          {inRange(today) && <button className="btn sm" onClick={() => onSelect(today)}>Today</button>}
+          <button className="btn sm icon-only" disabled={!canPrev} onClick={() => step(-1)} aria-label="Previous month"><Icon name="chevronLeft" /></button>
+          <button className="btn sm icon-only" disabled={!canNext} onClick={() => step(1)} aria-label="Next month"><Icon name="chevronRight" /></button>
+        </div>
+      </div>
+
+      <div className="cal-grid">
+        {DOW.map((d) => <div key={d} className="dow" aria-hidden="true">{d}</div>)}
+        {cells.map((k, i) => {
+          if (!k) return <div key={`e${i}`} aria-hidden="true" />;
+          const c = byDate.get(k);
+          const dow = fromKey(k).getDay();
+          const cls = ["day", k === today && "today", k === selected && "selected", (dow === 0 || dow === 6) && "weekend"].filter(Boolean).join(" ");
+          return (
+            <button key={k} className={cls} disabled={!inRange(k)} onClick={() => onSelect(k)}
+              aria-pressed={k === selected} aria-label={`${fmtLong(k)}${c ? `, ${c.total} item${c.total > 1 ? "s" : ""}` : ""}`}
+              title={c ? `Work ${c.work} · Study ${c.study} · Ideas ${c.ideas}` : undefined}>
+              <span className="num">{Number(k.slice(8))}</span>
+              {c && <span className="dot" aria-hidden="true" />}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="cal-foot">
+        <span><span className="legend-dot" />Has notes or tasks</span>
+        <span>Range: 6 Nov 2026 – 5 Mar 2027</span>
+        <div className="month-steps">
+          {months.map((mm) => (
+            <button key={mm.m} className={`month-step${mm.y === y && mm.m === m ? " on" : ""}`} onClick={() => setMonth(mm)}>
+              {new Date(mm.y, mm.m, 1).toLocaleDateString("en-GB", { month: "short" })}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   11. PENDING TASKS — every unfinished Work item, from any date
+   ============================================================ */
+function PendingTasks({ entries, onOpen }) {
+  const { actions } = useApp();
+  const [prio, setPrio] = useState("all");
+  const today = todayKey();
+  const week = addDays(today, 7);
+
+  const pending = entries.filter((e) => e.tab === "work" && !e.done && (prio === "all" || e.priority === prio));
+  const sorter = (a, b) => (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]) || ((a.due || "9") < (b.due || "9") ? -1 : (a.due || "9") > (b.due || "9") ? 1 : 0) || (a.date < b.date ? -1 : 1);
+  const groups = [
+    { id: "overdue", title: "Overdue", items: pending.filter((e) => e.due && e.due < today) },
+    { id: "today", title: "Due today", items: pending.filter((e) => e.due === today) },
+    { id: "week", title: "Next 7 days", items: pending.filter((e) => e.due && e.due > today && e.due <= week) },
+    { id: "later", title: "Later", items: pending.filter((e) => e.due && e.due > week) },
+    { id: "none", title: "No due date", items: pending.filter((e) => !e.due) },
+  ].map((g) => ({ ...g, items: g.items.sort(sorter) })).filter((g) => g.items.length);
+  const total = entries.filter((e) => e.tab === "work" && !e.done).length;
+
+  return (
+    <section className="card pending" aria-label="Pending tasks">
+      <div className="pending-head">
+        <h2>Pending Tasks</h2>
+        <span className="count-pill">{total}</span>
+        <div className="segment" role="radiogroup" aria-label="Filter by priority" style={{ marginLeft: "auto" }}>
+          {[{ id: "all", label: "All" }, ...PRIORITIES].map((p) => (
+            <button key={p.id} role="radio" aria-checked={prio === p.id} className={`${prio === p.id ? "on" : ""} p-${p.id}`} onClick={() => setPrio(p.id)}>{p.label}</button>
+          ))}
+        </div>
+      </div>
+      <div className="pending-sub">Unfinished Work (งาน) items from every date. Tick one to mark it done.</div>
+
+      {!groups.length && (
+        <div className="empty"><Icon name="check" size={28} />{total ? "No tasks with this priority." : "All caught up. New Work items will show up here."}</div>
+      )}
+      {groups.map((g) => (
+        <div key={g.id} className="group">
+          <div className={`group-title ${g.id}`}>{g.title}<span className="n">{g.items.length}</span></div>
+          {g.items.map((e) => (
+            <div key={e.id} className="task-row">
+              <button type="button" className="check" onClick={() => actions.toggleDone(e)} aria-label={`Mark "${entryLabel(e)}" as done`}>
+                <Icon name="check" size={14} strokeWidth={3} />
+              </button>
+              <div className="task-main" role="button" tabIndex={0} onClick={() => onOpen(e.date, "work", e.id)}
+                onKeyDown={(ev) => { if (ev.key === "Enter") onOpen(e.date, "work", e.id); }}>
+                <div className="task-title">{entryLabel(e)}</div>
+                <div className="meta">
+                  <PriorityBadge p={e.priority} />
+                  <DueBadge due={e.due} />
+                  <span className="task-src"><Icon name="calendar" size={12} />{fmtShort(e.date)} · Work (งาน)</span>
+                  {e.tags.map((tg) => <RichText key={tg} text={"#" + tg} />)}
+                </div>
+              </div>
+              <span className="task-open" aria-hidden="true"><Icon name="arrowRight" size={16} /></span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </section>
+  );
+}
+
+/* ============================================================
+   12. GLOBAL SEARCH — keywords + #tags, shows date and tab
+   ============================================================ */
+function parseQuery(q) {
+  const tags = [], words = [];
+  q.trim().split(/\s+/).filter(Boolean).forEach((tok) => {
+    if (tok.startsWith("#") && tok.length > 1) tags.push(tok.slice(1).toLowerCase());
+    else if (tok !== "#") words.push(tok.toLowerCase());
+  });
+  return { tags, words };
+}
+function makeSnippet(body, words) {
+  const flat = (body || "").replace(/\s+/g, " ").trim();
+  if (!flat) return "";
+  const lower = flat.toLowerCase();
+  let idx = -1;
+  words.forEach((w) => { const i = lower.indexOf(w); if (i >= 0 && (idx < 0 || i < idx)) idx = i; });
+  if (idx < 0) return flat.length > 130 ? flat.slice(0, 130) + "…" : flat;
+  const start = Math.max(0, idx - 50);
+  return (start > 0 ? "…" : "") + flat.slice(start, start + 140) + (start + 140 < flat.length ? "…" : "");
+}
+
+function SearchBar({ entries, query, setQuery, open, setOpen, inputRef, onPick }) {
+  const wrapRef = useRef(null);
+  const [active, setActive] = useState(0);
+  const { tags, words } = useMemo(() => parseQuery(query), [query]);
+
+  const allTags = useMemo(() => {
+    const map = new Map();
+    entries.forEach((e) => e.tags.forEach((t) => {
+      const k = t.toLowerCase();
+      map.set(k, { tag: map.get(k)?.tag || t, n: (map.get(k)?.n || 0) + 1 });
+    }));
+    return [...map.values()].sort((a, b) => b.n - a.n || a.tag.localeCompare(b.tag));
+  }, [entries]);
+
+  const results = useMemo(() => {
+    if (!tags.length && !words.length) return [];
+    const order = { work: 0, study: 1, ideas: 2 };
+    return entries.filter((e) => {
+      const et = e.tags.map((t) => t.toLowerCase());
+      if (!tags.every((t) => et.some((x) => x.startsWith(t)))) return false;
+      const hay = `${e.title}\n${e.body}\n${e.attachments.map((a) => a.name).join(" ")}`.toLowerCase();
+      return words.every((w) => hay.includes(w));
+    }).sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : order[a.tab] - order[b.tab]));
+  }, [entries, tags, words]);
+
+  const lastTok = query.split(/\s+/).pop() || "";
+  const tagSuggestions = lastTok.startsWith("#")
+    ? allTags.filter((t) => t.tag.toLowerCase().startsWith(lastTok.slice(1).toLowerCase()) && t.tag.toLowerCase() !== lastTok.slice(1).toLowerCase()).slice(0, 8)
+    : [];
+
+  useEffect(() => setActive(0), [query]);
+  useEffect(() => {
+    const onDown = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, []);
+
+  const completeTag = (t) => { const parts = query.split(/\s+/); parts[parts.length - 1] = "#" + t; setQuery(parts.join(" ") + " "); inputRef.current?.focus(); };
+  const pick = (e) => { onPick(e); setOpen(false); inputRef.current?.blur(); };
+  const terms = [...words, ...tags.map((t) => "#" + t)];
+
+  function onKeyDown(e) {
+    if (e.key === "Escape") { setOpen(false); inputRef.current?.blur(); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); setActive((a) => Math.min(a + 1, results.length - 1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setActive((a) => Math.max(a - 1, 0)); }
+    else if (e.key === "Enter" && results[active]) { e.preventDefault(); pick(results[active]); }
+  }
+
+  const hasQuery = tags.length || words.length;
+  return (
+    <div className="search" ref={wrapRef}>
+      <div className="search-box">
+        <Icon name="search" size={17} />
+        <input ref={inputRef} type="search" value={query} placeholder="Search notes or #tags…" aria-label="Search notes and tags"
+          onChange={(e) => { setQuery(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)} onKeyDown={onKeyDown} />
+        {query ? <button className="btn sm ghost icon-only" onClick={() => { setQuery(""); inputRef.current?.focus(); }} aria-label="Clear search"><Icon name="x" size={15} /></button> : <span className="kbd">/</span>}
+      </div>
+
+      {open && (
+        <div className="search-pop" role="listbox">
+          {(tagSuggestions.length > 0 || (!hasQuery && allTags.length > 0)) && (
+            <div className="search-section">
+              <div className="search-label">{hasQuery ? "Matching tags" : "Your tags"}</div>
+              <div className="chips">
+                {(tagSuggestions.length ? tagSuggestions : allTags.slice(0, 24)).map((t) => (
+                  <button key={t.tag} className="tag-chip" onMouseDown={(e) => e.preventDefault()} onClick={() => (hasQuery ? completeTag(t.tag) : (setQuery("#" + t.tag + " "), inputRef.current?.focus()))}>
+                    #{t.tag}<span>{t.n}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {!hasQuery && !allTags.length && <div className="search-empty">Type a keyword, or a #tag such as #Internship.</div>}
+          {hasQuery && (
+            <div className="search-section" style={{ padding: 0 }}>
+              <div className="search-label" style={{ padding: "12px 14px 0" }}>{results.length} result{results.length === 1 ? "" : "s"}</div>
+              {results.length === 0
+                ? <div className="search-empty">Nothing matches “{query.trim()}”.</div>
+                : <ul className="results">
+                    {results.slice(0, 60).map((e, i) => {
+                      const tab = TAB_BY_ID[e.tab];
+                      const snip = makeSnippet(e.body, words);
+                      return (
+                        <li key={e.id} role="option" aria-selected={i === active} className={`result${i === active ? " active" : ""}`}
+                          onMouseEnter={() => setActive(i)} onMouseDown={(ev) => ev.preventDefault()} onClick={() => pick(e)}>
+                          <div className="result-top">
+                            <span className="result-date"><Icon name="calendar" size={13} />{fmtShort(e.date)}</span>
+                            <span className={`tab-badge t-${e.tab}`}>{tab.en} ({tab.th})</span>
+                            {e.tab === "work" && e.done && <span className="badge">Done</span>}
+                          </div>
+                          <div className="result-title"><Highlight text={entryLabel(e)} terms={terms} /></div>
+                          {snip && e.title && <div className="result-snippet"><Highlight text={snip} terms={terms} /></div>}
+                        </li>
+                      );
+                    })}
+                  </ul>}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   13. MENU — sync status, export / import backup, sample data, sign out
+   ============================================================ */
+function Menu({ user, onExport, onImport, onSample }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const fileRef = useRef(null);
+  useEffect(() => {
+    const onDown = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, []);
+  const run = (fn) => () => { setOpen(false); fn(); };
+  return (
+    <div className="menu-wrap" ref={ref}>
+      <button className="btn ghost icon-only" onClick={() => setOpen((v) => !v)} aria-label="Menu" aria-expanded={open}><Icon name="more" /></button>
+      <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => { const f = e.target.files[0]; e.target.value = ""; if (f) onImport(f); }} />
+      {open && (
+        <div className="menu" role="menu">
+          <div className="menu-status">
+            {user
+              ? <><strong><span className="status-dot" />Synced with Firebase</strong>{user.email || user.displayName}</>
+              : <><strong><span className="status-dot local" />Demo mode</strong>Saved in this browser only. Add your Firebase config in index.html to turn on login &amp; sync.</>}
+          </div>
+          <button className="menu-item" role="menuitem" onClick={run(onExport)}><Icon name="download" />Export backup (.json)</button>
+          <button className="menu-item" role="menuitem" onClick={run(() => fileRef.current.click())}><Icon name="upload" />Import backup</button>
+          <button className="menu-item" role="menuitem" onClick={run(onSample)}><Icon name="sparkle" />Add sample notes</button>
+          {user && <><div className="menu-sep" /><button className="menu-item" role="menuitem" onClick={run(() => firebase.auth().signOut())}><Icon name="logout" />Sign out</button></>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   14. SAMPLE DATA (for testing the UI quickly)
+   ============================================================ */
+function sampleEntries() {
+  const now = Date.now();
+  const mk = (date, tab, title, body, extra = {}) => normalizeEntry({ id: uid(), date, tab, title, body, createdAt: now, updatedAt: now, ...extra });
+  return [
+    mk("2026-11-06", "work", "Set up laptop & accounts", "Ask IT for VPN + Jira access. #Internship #Onboarding", { priority: "high", due: "2026-11-09" }),
+    mk("2026-11-06", "study", "SQL window functions", "ROW_NUMBER vs RANK vs DENSE_RANK.\n[PostgreSQL tutorial](https://www.postgresql.org/docs/current/tutorial-window.html) #SQL #Study"),
+    mk("2026-11-06", "ideas", "Friday learning log", "Write a 5-line recap every Friday, good material for the final internship report. #Internship"),
+    mk("2026-11-10", "work", "Draft AS-IS process map", "Interview the ops team, then map the current approval flow. #Internship #Urgent", { priority: "high", due: "2026-11-12" }),
+    mk("2026-11-12", "work", "Prepare stand-up notes", "Yesterday / today / blockers. #Routine", { priority: "low" }),
+    mk("2026-11-13", "study", "BABOK chapter 4: Elicitation", "Interviews, workshops, observation. #BA #Study"),
+    mk("2026-11-18", "work", "Send weekly report to mentor", "Include charts from the dashboard. #Internship", { priority: "medium", due: "2026-11-20" }),
+    mk("2026-11-20", "ideas", "Dashboard filter idea", "Add a filter by department. Ask mentor first. #Idea #Internship"),
+    mk("2026-12-01", "work", "Mid-internship review prep", "Collect evidence for each learning goal. #Internship #Urgent", { priority: "high", due: "2026-12-05" }),
+    mk("2026-12-15", "study", "Power BI: DAX basics", "CALCULATE, FILTER, ALL. #PowerBI #Study"),
+  ];
+}
+
+/* ============================================================
+   15. NOTEBOOK — main screen, owns app state
+   ============================================================ */
+function Notebook({ store, user }) {
+  const [entries, setEntries] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const initialDate = inRange(todayKey()) ? todayKey() : RANGE_START;
+  const [view, setView] = useState("calendar");
+  const [selected, setSelected] = useState(initialDate);
+  const [tab, setTab] = useState("work");
+  const [panelOpen, setPanelOpen] = useState(false);
+  const [focusId, setFocusId] = useState(null);
+  const [month, setMonth] = useState(() => { const d = fromKey(initialDate); return { y: d.getFullYear(), m: d.getMonth() }; });
+  const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [toasts, setToasts] = useState([]);
+  const [lightbox, setLightbox] = useState(null);
+  const searchRef = useRef(null);
+
+  const toast = useCallback((msg, kind = "info", action = null) => {
+    const id = uid();
+    setToasts((t) => [...t.slice(-2), { id, msg, kind, action }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), action ? 6000 : 4000);
+  }, []);
+
+  useEffect(() => {
+    setLoaded(false);
+    const unsub = store.subscribe(
+      (list) => { setEntries(list.map(normalizeEntry)); setLoaded(true); },
+      (err) => { setLoaded(true); toast(err.code === "permission-denied" ? "Firestore blocked access — check your security rules." : err.message, "error"); }
+    );
+    return unsub;
+  }, [store]);
+
+  // Lock page scroll while the mobile drawer is open
+  useEffect(() => { document.body.classList.toggle("lock", panelOpen && window.matchMedia("(max-width: 899px)").matches); }, [panelOpen]);
+
+  // Keyboard: "/" focuses search, Esc closes overlays
+  useEffect(() => {
+    const onKey = (e) => {
+      const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
+      if (e.key === "/" && !typing) { e.preventDefault(); searchRef.current?.focus(); }
+      if (e.key === "Escape" && !typing) { setLightbox(null); setPanelOpen(false); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const byDate = useMemo(() => {
+    const map = new Map();
+    entries.forEach((e) => {
+      if (!map.has(e.date)) map.set(e.date, { work: 0, study: 0, ideas: 0, total: 0, open: 0 });
+      const c = map.get(e.date); c[e.tab]++; c.total++; if (e.tab === "work" && !e.done) c.open++;
+    });
+    return map;
+  }, [entries]);
+  const pendingCount = useMemo(() => entries.filter((e) => e.tab === "work" && !e.done).length, [entries]);
+
+  function selectDate(k) {
+    if (!inRange(k)) return;
+    setSelected(k); setFocusId(null); setPanelOpen(true);
+    const d = fromKey(k); setMonth({ y: d.getFullYear(), m: d.getMonth() });
+  }
+  function openEntry(date, tabId, entryId) {
+    selectDate(date); setTab(tabId); setFocusId(entryId);
+    setTimeout(() => setFocusId(null), 2200);
+  }
+
+  const actions = useMemo(() => ({
+    save: async (e) => { await store.save(normalizeEntry(e)); },
+    async toggleDone(e) {
+      const next = normalizeEntry({ ...e, done: !e.done, doneAt: e.done ? null : Date.now(), updatedAt: Date.now() });
+      try {
+        await store.save(next);
+        if (next.done) toast(`Done: ${entryLabel(next)}`, "info", { label: "Undo", fn: () => store.save(normalizeEntry({ ...next, done: false, updatedAt: Date.now() })) });
+      } catch (err) { toast(err.message, "error"); }
+    },
+    async remove(e) {
+      if (!window.confirm(`Delete this ${TAB_BY_ID[e.tab].noun}? This can't be undone.`)) return;
+      try {
+        await Promise.all(e.attachments.map((a) => store.removeFile(a).catch(() => {})));
+        await store.remove(e.id);
+        toast("Deleted");
+      } catch (err) { toast(err.message, "error"); }
+    },
+  }), [store, toast]);
+
+  async function exportBackup() {
+    try {
+      toast("Preparing backup…");
+      const files = {};
+      for (const e of entries) for (const a of e.attachments) {
+        try { const b = await store.getFileBlob(a); if (b) files[a.id] = await blobToDataURL(b); } catch {}
+      }
+      const data = { app: "second-brain-notebook", version: 1, exportedAt: new Date().toISOString(), range: [RANGE_START, RANGE_END], entries, files };
+      downloadBlob(new Blob([JSON.stringify(data)], { type: "application/json" }), `second-brain-backup-${todayKey()}.json`);
+    } catch (err) { toast("Export failed: " + err.message, "error"); }
+  }
+  async function importBackup(file) {
+    try {
+      const data = JSON.parse(await file.text());
+      if (!data || !Array.isArray(data.entries)) throw new Error("This is not a Second Brain backup file.");
+      const valid = data.entries.filter((e) => e && e.id && /^\d{4}-\d{2}-\d{2}$/.test(e.date) && TAB_BY_ID[e.tab]);
+      if (!window.confirm(`Import ${valid.length} item(s)? Items with the same ID will be replaced; everything else stays.`)) return;
+      toast("Importing…");
+      const files = data.files || {};
+      let missing = 0;
+      const out = [];
+      for (const e of valid) {
+        const atts = [];
+        for (const a of e.attachments || []) {
+          if (files[a.id]) {
+            try { atts.push(await store.putFileWithId(a, dataURLToBlob(files[a.id]))); } catch { missing++; }
+          } else if (a.url) atts.push(a);
+          else missing++;
+        }
+        out.push(normalizeEntry({ ...e, attachments: atts }));
+      }
+      await store.saveMany(out);
+      toast(`Imported ${out.length} item${out.length === 1 ? "" : "s"}${missing ? ` (${missing} attachment${missing > 1 ? "s" : ""} skipped)` : ""}.`);
+    } catch (err) { toast("Import failed: " + err.message, "error"); }
+  }
+  async function addSample() {
+    try { await store.saveMany(sampleEntries()); toast("Added 10 sample notes. Try searching #Internship."); }
+    catch (err) { toast(err.message, "error"); }
+  }
+
+  const ctx = useMemo(() => ({
+    store, toast, actions,
+    openImage: setLightbox,
+    onTag: (t) => { setQuery(t + " "); setSearchOpen(true); setTimeout(() => searchRef.current?.focus(), 0); },
+  }), [store, toast, actions]);
+
+  return (
+    <AppCtx.Provider value={ctx}>
+      <header className="topbar">
+        <div className="topbar-inner">
+          <div className="brand">
+            <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
+            <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook · 6 Nov 2026 – 5 Mar 2027</div></div>
+          </div>
+          <SearchBar entries={entries} query={query} setQuery={setQuery} open={searchOpen} setOpen={setSearchOpen}
+            inputRef={searchRef} onPick={(e) => openEntry(e.date, e.tab, e.id)} />
+          <nav className="nav">
+            <button className={`btn ghost${view === "calendar" ? " active" : ""}`} onClick={() => setView("calendar")} aria-label="Calendar">
+              <Icon name="calendar" /><span className="label">Calendar</span>
+            </button>
+            <button className={`btn ghost${view === "pending" ? " active" : ""}`} onClick={() => setView("pending")} aria-label={`Pending tasks, ${pendingCount}`}>
+              <Icon name="list" /><span className="label">Pending</span>{pendingCount > 0 && <span className="count-pill">{pendingCount}</span>}
+            </button>
+            <Menu user={user} onExport={exportBackup} onImport={importBackup} onSample={addSample} />
+          </nav>
+        </div>
+      </header>
+
+      <main className="layout">
+        <div>
+          {!loaded
+            ? <div className="card empty"><span className="spinner" style={{ margin: "0 auto" }} /></div>
+            : view === "calendar"
+              ? <Calendar month={month} setMonth={setMonth} selected={selected} onSelect={selectDate} byDate={byDate} />
+              : <PendingTasks entries={entries} onOpen={openEntry} />}
+        </div>
+        {panelOpen && <div className="backdrop" onClick={() => setPanelOpen(false)} />}
+        <DailyPanel date={selected} tab={tab} setTab={setTab} entries={entries} open={panelOpen}
+          onClose={() => setPanelOpen(false)} onDateChange={selectDate} focusId={focusId} />
+      </main>
+
+      <div className="toasts" aria-live="polite">
+        {toasts.map((t) => (
+          <div key={t.id} className={`toast ${t.kind}`}>
+            <span style={{ flex: 1 }}>{t.msg}</span>
+            {t.action && <button onClick={() => { t.action.fn(); setToasts((x) => x.filter((y) => y.id !== t.id)); }}>{t.action.label}</button>}
+          </div>
+        ))}
+      </div>
+      {lightbox && (
+        <div className="lightbox" onClick={() => setLightbox(null)}>
+          <img src={lightbox} alt="" />
+          <button className="btn icon-only" onClick={() => setLightbox(null)} aria-label="Close image"><Icon name="x" /></button>
+        </div>
+      )}
+    </AppCtx.Provider>
+  );
+}
+
+/* ============================================================
+   16. AUTH SCREEN — Google or email / password (Firebase mode only)
+   ============================================================ */
+const AUTH_MESSAGES = {
+  "auth/invalid-credential": "Email or password is incorrect.",
+  "auth/wrong-password": "Email or password is incorrect.",
+  "auth/user-not-found": "No account with that email. Create one below.",
+  "auth/email-already-in-use": "An account with this email already exists. Sign in instead.",
+  "auth/weak-password": "Password needs at least 6 characters.",
+  "auth/invalid-email": "That email address doesn't look right.",
+  "auth/too-many-requests": "Too many attempts. Wait a minute and try again.",
+  "auth/unauthorized-domain": "This website isn't allowed yet. Add its domain in Firebase → Authentication → Settings → Authorized domains.",
+  "auth/operation-not-allowed": "This sign-in method isn't enabled in Firebase yet.",
+  "auth/network-request-failed": "Network error. Check your connection.",
+};
+function AuthScreen() {
+  const [mode, setMode] = useState("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState(null);
+  const auth = firebase.auth();
+  const fail = (e) => { if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") setMsg({ kind: "error", text: AUTH_MESSAGES[e.code] || e.message }); };
+
+  async function google() {
+    setMsg(null); setBusy(true);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    try { await auth.signInWithPopup(provider); }
+    catch (e) {
+      if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment") await auth.signInWithRedirect(provider).catch(fail);
+      else fail(e);
+    } finally { setBusy(false); }
+  }
+  async function submit(e) {
+    e.preventDefault(); setMsg(null); setBusy(true);
+    try {
+      if (mode === "signin") await auth.signInWithEmailAndPassword(email.trim(), password);
+      else await auth.createUserWithEmailAndPassword(email.trim(), password);
+    } catch (err) { fail(err); } finally { setBusy(false); }
+  }
+  async function reset() {
+    if (!email.trim()) return setMsg({ kind: "error", text: "Type your email first, then tap “Forgot password”." });
+    try { await auth.sendPasswordResetEmail(email.trim()); setMsg({ kind: "info", text: "Password reset email sent." }); } catch (e) { fail(e); }
+  }
+
+  return (
+    <div className="auth">
+      <div className="card auth-card">
+        <div className="brand">
+          <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
+          <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook</div></div>
+        </div>
+        <h1>{mode === "signin" ? "Welcome back" : "Create your account"}</h1>
+        <p className="lead">Your notes sync across desktop, iPad and phone.</p>
+        <button className="btn" style={{ width: "100%", height: 44 }} onClick={google} disabled={busy}>
+          <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.2l7.8 6.1C12.3 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17.1z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.4-.8-2.9-.8-4.7s.3-3.2.8-4.7l-7.8-6.1C1 16.5 0 20.1 0 24s1 7.5 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.7-4.1-13.6-9.8l-7.8 6.1C6.6 42.6 14.6 48 24 48z"/></svg>
+          Continue with Google
+        </button>
+        <div className="divider">or with email</div>
+        <form className="auth-form" onSubmit={submit}>
+          <label>Email<input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+          <label>Password<input type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+          {msg && <div className={`auth-msg ${msg.kind}`}>{msg.text}</div>}
+          <button className="btn primary" type="submit" disabled={busy}>{busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}</button>
+        </form>
+        <div className="auth-switch">
+          {mode === "signin"
+            ? <>New here? <button className="linklike" onClick={() => { setMode("signup"); setMsg(null); }}>Create an account</button> · <button className="linklike" onClick={reset}>Forgot password</button></>
+            : <>Already have an account? <button className="linklike" onClick={() => { setMode("signin"); setMsg(null); }}>Sign in</button></>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   17. APP ROOT — picks demo (local) or Firebase mode
+   ============================================================ */
+function App() {
+  const [user, setUser] = useState(FIREBASE_ENABLED ? undefined : null); // undefined = still checking
+  useEffect(() => { if (FIREBASE_ENABLED) return firebase.auth().onAuthStateChanged((u) => setUser(u)); }, []);
+  const store = useMemo(() => (FIREBASE_ENABLED ? (user ? createFirebaseStore(user) : null) : createLocalStore()), [user && user.uid]);
+
+  if (FIREBASE_ENABLED && user === undefined) return <div className="boot">Loading your notebook…</div>;
+  if (FIREBASE_ENABLED && !user) return <AuthScreen />;
+  return <Notebook key={user ? user.uid : "local"} store={store} user={user} />;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+<noscript>This notebook needs JavaScript turned on.</noscript>
+</body>
+</html>
