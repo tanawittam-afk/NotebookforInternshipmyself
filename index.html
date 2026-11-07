@@ -455,14 +455,30 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<!-- Supabase — only used when SUPABASE_CONFIG below is filled in (takes priority over Firebase) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.89.0/dist/umd/supabase.js"></script>
 
 <script type="text/babel" data-presets="react">
 const { useState, useEffect, useMemo, useRef, useCallback, useContext, createContext } = React;
 
 /* ============================================================
-   1. CONFIG — paste your Firebase web config here.
-   Leave apiKey empty to run in DEMO MODE (saved in this browser only, no login).
+   1. CONFIG — paste your Supabase (preferred) or Firebase web config here.
+   Priority: Supabase if filled in → else Firebase → else DEMO MODE
+   (saved in this browser only, no login).
    ============================================================ */
+const SUPABASE_CONFIG = {
+  url: "https://ivbajugeynbhjnlemjgg.supabase.co",
+  anonKey: "sb_publishable_maBoLmED4-xVBSK_MdiVJg_RmQ_IwFO", // public publishable key (safe in client code; RLS protects data)
+};
+const SUPABASE_ENABLED = Boolean(SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey && window.supabase);
+// Read email-link info (password recovery / expired link) before the client consumes the URL hash.
+const SB_URL_HASH = new URLSearchParams(location.hash.slice(1));
+const SB_RECOVERY_LINK = SB_URL_HASH.get("type") === "recovery";
+const SB_LINK_ERROR = SB_URL_HASH.get("error_description");
+const sb = SUPABASE_ENABLED
+  ? window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })
+  : null;
+
 const FIREBASE_CONFIG = {
   apiKey: "",
   authDomain: "",
@@ -475,12 +491,15 @@ const FIREBASE_CONFIG = {
 // true  = use Firebase Storage (bigger files; needs the Blaze plan with billing enabled).
 const USE_FIREBASE_STORAGE = false;
 
-const FIREBASE_ENABLED = Boolean(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && window.firebase);
+const FIREBASE_ENABLED = !SUPABASE_ENABLED && Boolean(FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId && window.firebase);
 if (FIREBASE_ENABLED) {
   firebase.initializeApp(FIREBASE_CONFIG);
   firebase.firestore().enablePersistence({ synchronizeTabs: true }).catch(() => {}); // offline cache
   firebase.auth().getRedirectResult().catch(() => {});
 }
+const CLOUD_ENABLED = SUPABASE_ENABLED || FIREBASE_ENABLED;
+const CLOUD_NAME = SUPABASE_ENABLED ? "Supabase" : "Firebase";
+const signOutCloud = () => (SUPABASE_ENABLED ? sb.auth.signOut() : firebase.auth().signOut());
 
 /* ============================================================
    2. CONSTANTS
@@ -734,6 +753,121 @@ function createFirebaseStore(user) {
     async removeFile(meta) {
       if (meta.storage === "cloud") await firebase.storage().ref(meta.path).delete().catch(() => {});
       else await filesCol.doc(meta.id).delete();
+    },
+  };
+}
+
+// ---- 4c. Supabase (Auth + Postgres + Realtime + Storage) — synced across devices ----
+const SB_BUCKET = "notebook-files";
+const SB_MAX_FILE = 50 * 1024 * 1024;
+const SB_TABLE = "entries";
+function createSupabaseStore(client, user) {
+  const rows = new Map(); // id -> entry (camelCase)
+  const subs = new Set();
+  const urls = new Map(); // file id -> { url, exp }
+  let loaded = false;
+  const emit = () => { if (loaded) { const list = [...rows.values()]; subs.forEach((cb) => cb(list)); } };
+  const toRow = (e) => ({
+    id: e.id, user_id: user.id, date: e.date, tab: e.tab, title: e.title, body: e.body,
+    done: e.done, done_at: e.doneAt, due: e.due, priority: e.priority,
+    attachments: e.attachments, tags: e.tags, created_at: e.createdAt, updated_at: e.updatedAt,
+  });
+  const fromRow = (r) => ({
+    id: r.id, date: r.date, tab: r.tab, title: r.title || "", body: r.body || "",
+    done: Boolean(r.done), doneAt: r.done_at == null ? null : Number(r.done_at), due: r.due || null, priority: r.priority || null,
+    attachments: Array.isArray(r.attachments) ? r.attachments : [], tags: r.tags || [],
+    createdAt: Number(r.created_at) || 0, updatedAt: Number(r.updated_at) || 0,
+  });
+  const check = ({ error }) => { if (error) throw error; };
+  const fileName = (meta) => meta.path || `${user.id}/${meta.id}`;
+
+  async function putBlob(meta, blob) {
+    if (blob.size > SB_MAX_FILE) throw new Error(`"${meta.name}" is ${fmtSize(blob.size)} — too big (max 50 MB per file).`);
+    const type = blob.type || meta.type || "application/octet-stream";
+    const path = `${user.id}/${meta.id}`;
+    const { error } = await client.storage.from(SB_BUCKET).upload(path, blob, { contentType: type, upsert: false });
+    // Re-importing the same backup: the object already exists — keep it.
+    if (error && !(String(error.statusCode) === "409" || /exists|duplicate/i.test(error.message || ""))) throw error;
+    return { id: meta.id, name: meta.name, type, size: blob.size, kind: meta.kind, storage: "supabase", path };
+  }
+  const getFileBlob = async (meta) => {
+    if (meta.storage !== "supabase") return null;
+    const { data, error } = await client.storage.from(SB_BUCKET).download(fileName(meta));
+    if (error) throw error;
+    return data;
+  };
+
+  return {
+    mode: "cloud",
+    subscribe(cb, onError) {
+      subs.add(cb);
+      const fail = (e) => onError && onError(e);
+      const upsertLocal = (r) => { if (r && r.id) { rows.set(r.id, fromRow(r)); emit(); } };
+      const channel = client
+        .channel(`entries-${user.id}-${uid()}`)
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: SB_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
+        .on("postgres_changes", { event: "UPDATE", schema: "public", table: SB_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
+        // DELETE events can't be filtered and only carry the primary key — ignore ids we don't have.
+        .on("postgres_changes", { event: "DELETE", schema: "public", table: SB_TABLE }, (p) => {
+          const id = p.old && p.old.id;
+          if (id && rows.has(id)) { rows.delete(id); emit(); }
+        })
+        .subscribe((status, err) => { if (status === "CHANNEL_ERROR") fail(err || new Error("Live sync disconnected — changes from other devices may be delayed.")); });
+      (async () => {
+        const PAGE = 1000;
+        for (let from = 0; ; from += PAGE) {
+          const { data, error } = await client.from(SB_TABLE).select("*").order("id").range(from, from + PAGE - 1);
+          if (error) throw error;
+          data.forEach((r) => { const cur = rows.get(r.id); if (!cur || Number(r.updated_at) >= cur.updatedAt) rows.set(r.id, fromRow(r)); });
+          if (data.length < PAGE) break;
+        }
+        loaded = true;
+        emit();
+      })().catch(fail);
+      return () => { subs.delete(cb); client.removeChannel(channel); };
+    },
+    async save(e) {
+      const prev = rows.get(e.id);
+      rows.set(e.id, e); emit();
+      try { check(await client.from(SB_TABLE).upsert(toRow(e))); }
+      catch (err) { if (prev) rows.set(e.id, prev); else rows.delete(e.id); emit(); throw err; }
+    },
+    async saveMany(list) {
+      const prev = new Map(list.map((e) => [e.id, rows.get(e.id)]));
+      list.forEach((e) => rows.set(e.id, e)); emit();
+      try {
+        for (let i = 0; i < list.length; i += 500) check(await client.from(SB_TABLE).upsert(list.slice(i, i + 500).map(toRow)));
+      } catch (err) {
+        prev.forEach((p, id) => { if (p) rows.set(id, p); else rows.delete(id); }); emit();
+        throw err;
+      }
+    },
+    async remove(id) {
+      const prev = rows.get(id);
+      rows.delete(id); emit();
+      try { check(await client.from(SB_TABLE).delete().eq("id", id)); }
+      catch (err) { if (prev) { rows.set(id, prev); emit(); } throw err; }
+    },
+    async putFile(file, kind) {
+      const blob = kind === "image" ? await compressImage(file, 1.5 * 1024 * 1024) : file;
+      return putBlob({ id: uid(), name: blob.name || file.name || "file", type: file.type, kind }, blob);
+    },
+    putFileWithId: (meta, blob) => putBlob(meta, blob),
+    getFileBlob,
+    async getFileURL(meta) {
+      if (meta.url) return meta.url;
+      if (meta.storage !== "supabase") return null;
+      const hit = urls.get(meta.id);
+      if (hit && hit.exp > Date.now() + 60000) return hit.url;
+      const { data, error } = await client.storage.from(SB_BUCKET).createSignedUrl(fileName(meta), 3600);
+      if (error) throw error;
+      urls.set(meta.id, { url: data.signedUrl, exp: Date.now() + 3600 * 1000 });
+      return data.signedUrl;
+    },
+    async removeFile(meta) {
+      urls.delete(meta.id);
+      if (meta.storage !== "supabase") return;
+      check(await client.storage.from(SB_BUCKET).remove([fileName(meta)]));
     },
   };
 }
@@ -1380,13 +1514,13 @@ function Menu({ user, onExport, onImport, onSample }) {
         <div className="menu" role="menu">
           <div className="menu-status">
             {user
-              ? <><strong><span className="status-dot" />Synced with Firebase</strong>{user.email || user.displayName}</>
-              : <><strong><span className="status-dot local" />Demo mode</strong>Saved in this browser only. Add your Firebase config in index.html to turn on login &amp; sync.</>}
+              ? <><strong><span className="status-dot" />Synced with {CLOUD_NAME}</strong>{user.email || user.displayName}</>
+              : <><strong><span className="status-dot local" />Demo mode</strong>Saved in this browser only. Add your Supabase (or Firebase) config in index.html to turn on login &amp; sync.</>}
           </div>
           <button className="menu-item" role="menuitem" onClick={run(onExport)}><Icon name="download" />Export backup (.json)</button>
           <button className="menu-item" role="menuitem" onClick={run(() => fileRef.current.click())}><Icon name="upload" />Import backup</button>
           <button className="menu-item" role="menuitem" onClick={run(onSample)}><Icon name="sparkle" />Add sample notes</button>
-          {user && <><div className="menu-sep" /><button className="menu-item" role="menuitem" onClick={run(() => firebase.auth().signOut())}><Icon name="logout" />Sign out</button></>}
+          {user && <><div className="menu-sep" /><button className="menu-item" role="menuitem" onClick={run(() => signOutCloud())}><Icon name="logout" />Sign out</button></>}
         </div>
       )}
     </div>
@@ -1442,7 +1576,7 @@ function Notebook({ store, user }) {
     setLoaded(false);
     const unsub = store.subscribe(
       (list) => { setEntries(list.map(normalizeEntry)); setLoaded(true); },
-      (err) => { setLoaded(true); toast(err.code === "permission-denied" ? "Firestore blocked access — check your security rules." : err.message, "error"); }
+      (err) => { setLoaded(true); toast(err.code === "permission-denied" ? "Firestore blocked access — check your security rules." : err.code === "42501" ? "Supabase blocked access — check the row-level security policies." : err.message, "error"); }
     );
     return unsub;
   }, [store]);
@@ -1614,6 +1748,79 @@ const AUTH_MESSAGES = {
   "auth/operation-not-allowed": "This sign-in method isn't enabled in Firebase yet.",
   "auth/network-request-failed": "Network error. Check your connection.",
 };
+// Supabase: email + password with email confirmation. `recovery` = arrived from a password-reset link.
+const SB_REDIRECT = location.origin + location.pathname;
+function sbAuthText(e) {
+  const m = (e && e.message) || "Something went wrong.";
+  if (/invalid login credentials/i.test(m)) return "Wrong email or password.";
+  if (/already registered/i.test(m)) return "An account with this email already exists. Sign in instead.";
+  if (/rate limit|too many/i.test(m)) return "Too many attempts. Wait a minute and try again.";
+  return m;
+}
+function SupabaseAuth({ recovery, onRecovered }) {
+  const [mode, setMode] = useState("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState(SB_LINK_ERROR ? { kind: "error", text: SB_LINK_ERROR } : null);
+  const fail = (e) => setMsg({ kind: "error", text: sbAuthText(e) });
+
+  async function resend() {
+    const { error } = await sb.auth.resend({ type: "signup", email: email.trim(), options: { emailRedirectTo: SB_REDIRECT } });
+    setMsg(error ? { kind: "error", text: sbAuthText(error) } : { kind: "info", text: "Confirmation email sent. Click the link in it, then sign in." });
+  }
+  async function submit(e) {
+    e.preventDefault(); setMsg(null);
+    if (password.length < 6) return setMsg({ kind: "error", text: "Password needs at least 6 characters." });
+    setBusy(true);
+    try {
+      if (recovery) {
+        const { error } = await sb.auth.updateUser({ password });
+        if (error) return fail(error);
+        onRecovered();
+      } else if (mode === "signin") {
+        const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password });
+        if (error && /email not confirmed/i.test(error.message || "")) {
+          setMsg({ kind: "error", text: "Please confirm your email first — click the link we sent you.", action: { label: "Resend confirmation email", fn: resend } });
+        } else if (error) fail(error);
+      } else {
+        const { data, error } = await sb.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: SB_REDIRECT } });
+        if (error) return fail(error);
+        if (!data.session) { setMode("signin"); setPassword(""); setMsg({ kind: "info", text: "Check your email to confirm your account, then sign in." }); }
+      }
+    } catch (err) { fail(err); } finally { setBusy(false); }
+  }
+  async function reset() {
+    if (!email.trim()) return setMsg({ kind: "error", text: "Type your email first, then tap “Forgot password?”." });
+    const { error } = await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo: SB_REDIRECT });
+    setMsg(error ? { kind: "error", text: sbAuthText(error) } : { kind: "info", text: "Password reset email sent. Open the link in it to set a new password." });
+  }
+
+  return (
+    <div className="auth">
+      <div className="card auth-card">
+        <div className="brand">
+          <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
+          <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook</div></div>
+        </div>
+        <h1>{recovery ? "Set a new password" : mode === "signin" ? "Welcome back" : "Create your account"}</h1>
+        <p className="lead">Your notes sync across desktop, iPad and phone.</p>
+        <form className="auth-form" onSubmit={submit}>
+          {!recovery && <label>Email<input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>}
+          <label>{recovery ? "New password" : "Password"}<input type="password" autoComplete={mode === "signin" && !recovery ? "current-password" : "new-password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+          {msg && <div className={`auth-msg ${msg.kind}`}>{msg.text}{msg.action && <> <button type="button" className="linklike" onClick={msg.action.fn}>{msg.action.label}</button></>}</div>}
+          <button className="btn primary" type="submit" disabled={busy}>{busy ? "Please wait…" : recovery ? "Save new password" : mode === "signin" ? "Sign in" : "Create account"}</button>
+        </form>
+        {!recovery && <div className="auth-switch">
+          {mode === "signin"
+            ? <>New here? <button className="linklike" onClick={() => { setMode("signup"); setMsg(null); }}>Create an account</button> · <button className="linklike" onClick={reset}>Forgot password?</button></>
+            : <>Already have an account? <button className="linklike" onClick={() => { setMode("signin"); setMsg(null); }}>Sign in</button></>}
+        </div>}
+      </div>
+    </div>
+  );
+}
+
 function AuthScreen() {
   const [mode, setMode] = useState("signin");
   const [email, setEmail] = useState("");
@@ -1675,16 +1882,31 @@ function AuthScreen() {
 }
 
 /* ============================================================
-   17. APP ROOT — picks demo (local) or Firebase mode
+   17. APP ROOT — picks Supabase, Firebase, or demo (local) mode
    ============================================================ */
 function App() {
-  const [user, setUser] = useState(FIREBASE_ENABLED ? undefined : null); // undefined = still checking
-  useEffect(() => { if (FIREBASE_ENABLED) return firebase.auth().onAuthStateChanged((u) => setUser(u)); }, []);
-  const store = useMemo(() => (FIREBASE_ENABLED ? (user ? createFirebaseStore(user) : null) : createLocalStore()), [user && user.uid]);
+  const [user, setUser] = useState(CLOUD_ENABLED ? undefined : null); // undefined = still checking
+  const [recovery, setRecovery] = useState(SUPABASE_ENABLED && SB_RECOVERY_LINK); // Supabase password-reset link
+  useEffect(() => {
+    if (SUPABASE_ENABLED) {
+      sb.auth.getSession().then(({ data }) => setUser((data.session && data.session.user) || null)).catch(() => setUser(null));
+      const { data } = sb.auth.onAuthStateChange((event, session) => {
+        if (event === "PASSWORD_RECOVERY") setRecovery(true);
+        if (event === "SIGNED_OUT") setRecovery(false);
+        setUser((session && session.user) || null);
+      });
+      return () => data.subscription.unsubscribe();
+    }
+    if (FIREBASE_ENABLED) return firebase.auth().onAuthStateChanged((u) => setUser(u));
+  }, []);
+  const userKey = user ? user.uid || user.id : null;
+  const store = useMemo(() => (SUPABASE_ENABLED ? (user ? createSupabaseStore(sb, user) : null)
+    : FIREBASE_ENABLED ? (user ? createFirebaseStore(user) : null) : createLocalStore()), [userKey]);
 
-  if (FIREBASE_ENABLED && user === undefined) return <div className="boot">Loading your notebook…</div>;
-  if (FIREBASE_ENABLED && !user) return <AuthScreen />;
-  return <Notebook key={user ? user.uid : "local"} store={store} user={user} />;
+  if (CLOUD_ENABLED && user === undefined) return <div className="boot">Loading your notebook…</div>;
+  if (SUPABASE_ENABLED && (!user || recovery)) return <SupabaseAuth recovery={Boolean(user && recovery)} onRecovered={() => setRecovery(false)} />;
+  if (CLOUD_ENABLED && !user) return <AuthScreen />;
+  return <Notebook key={userKey || "local"} store={store} user={user} />;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
