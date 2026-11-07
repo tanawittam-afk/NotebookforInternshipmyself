@@ -802,7 +802,13 @@ function createSupabaseStore(client, user) {
     subscribe(cb, onError) {
       subs.add(cb);
       const fail = (e) => onError && onError(e);
-      const upsertLocal = (r) => { if (r && r.id) { rows.set(r.id, fromRow(r)); emit(); } };
+      // Ignore stale echoes: only apply if we have no copy or the incoming row is at least as new.
+      const upsertLocal = (r) => {
+        if (!r || !r.id) return;
+        const next = fromRow(r), cur = rows.get(r.id);
+        if (cur && next.updatedAt < cur.updatedAt) return;
+        rows.set(r.id, next); emit();
+      };
       const channel = client
         .channel(`entries-${user.id}-${uid()}`)
         .on("postgres_changes", { event: "INSERT", schema: "public", table: SB_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
@@ -1886,13 +1892,22 @@ function AuthScreen() {
    ============================================================ */
 function App() {
   const [user, setUser] = useState(CLOUD_ENABLED ? undefined : null); // undefined = still checking
-  const [recovery, setRecovery] = useState(SUPABASE_ENABLED && SB_RECOVERY_LINK); // Supabase password-reset link
+  // Supabase password-reset link — but never when the link carried an auth error (expired/invalid).
+  const [recovery, setRecovery] = useState(SUPABASE_ENABLED && SB_RECOVERY_LINK && !SB_LINK_ERROR);
   useEffect(() => {
     if (SUPABASE_ENABLED) {
-      sb.auth.getSession().then(({ data }) => setUser((data.session && data.session.user) || null)).catch(() => setUser(null));
+      let recoveryEvent = false; // PASSWORD_RECOVERY seen in this flow
+      let hadSession = false;    // a session existed before any later SIGNED_IN (e.g. from a valid reset link)
+      sb.auth.getSession().then(({ data }) => {
+        if (data.session) hadSession = true;
+        setUser((data.session && data.session.user) || null);
+      }).catch(() => setUser(null));
       const { data } = sb.auth.onAuthStateChange((event, session) => {
-        if (event === "PASSWORD_RECOVERY") setRecovery(true);
-        if (event === "SIGNED_OUT") setRecovery(false);
+        if (event === "PASSWORD_RECOVERY") { recoveryEvent = true; setRecovery(true); }
+        if (event === "SIGNED_OUT") { recoveryEvent = false; hadSession = false; setRecovery(false); }
+        // A fresh normal sign-in (no prior session, no recovery event) is not a password reset.
+        if (event === "SIGNED_IN" && !recoveryEvent && !hadSession) setRecovery(false);
+        if (session && event !== "SIGNED_OUT") hadSession = true;
         setUser((session && session.user) || null);
       });
       return () => data.subscription.unsubscribe();
