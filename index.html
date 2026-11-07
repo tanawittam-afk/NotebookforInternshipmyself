@@ -193,7 +193,7 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 .layout {
   max-width: 1440px; margin: 0 auto;
   padding: 24px;
-  display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 24px;
+  display: grid; grid-template-columns: 248px minmax(0, 1fr) 420px; gap: 24px;
   align-items: start;
 }
 @media (max-width: 1180px) { .layout { grid-template-columns: minmax(0, 1fr) 370px; gap: 20px; padding: 20px; } }
@@ -405,6 +405,84 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 .auth-switch { margin-top: 16px; text-align: center; font-size: 13.5px; color: var(--muted); }
 .linklike { border: 0; background: none; padding: 0; color: var(--accent); font-weight: 500; text-decoration: underline; text-underline-offset: 2px; }
 
+/* ---------- Workspaces sidebar (company › department › position) ---------- */
+.ws-burger { display: none; }
+.ws-side { position: sticky; top: 88px; max-height: calc(100vh - 112px); overflow: auto; padding: 10px 8px 14px; display: flex; flex-direction: column; gap: 1px; }
+.ws-side:focus { outline: none; }
+.ws-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%; min-height: 36px; margin-top: 10px; padding: 0 2px 0 10px; border: 0; background: transparent; text-align: left; font-size: 11.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+button.ws-head:hover { color: var(--text); }
+.ws-row { position: relative; display: flex; align-items: center; gap: 2px; min-height: 40px; padding-right: 2px; border-radius: 9px; }
+.ws-row:hover { background: var(--surface-2); }
+.ws-row.on { background: var(--accent-soft); }
+.ws-row.on::before { content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 3px; border-radius: 3px; background: var(--accent); }
+.ws-row.faint .ws-name { color: var(--faint); }
+.ws-chev { flex: none; width: 28px; height: 28px; border: 0; padding: 0; border-radius: 7px; background: transparent; color: var(--muted); display: grid; place-items: center; }
+button.ws-chev:hover { background: var(--surface-3); }
+.ws-chev .icon { transition: transform .15s; }
+.ws-chev[aria-expanded="true"] .icon { transform: rotate(90deg); }
+.ws-name { flex: 1; min-width: 0; align-self: stretch; border: 0; background: transparent; padding: 0 4px; text-align: left; font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-radius: 7px; }
+.ws-row.on .ws-name { color: var(--accent-hover); font-weight: 600; }
+.ws-row .count-pill { flex: none; background: var(--surface-3); color: var(--muted); }
+.ws-row.on .count-pill { background: var(--accent); color: #fff; }
+.ws-badge { flex: none; padding: 3px 6px; font-size: 11px; }
+.ws-more { opacity: .55; }
+.ws-row:hover .ws-more, .ws-more:focus-visible, .ws-more[aria-expanded="true"] { opacity: 1; }
+@media (hover: none) { .ws-more { opacity: 1; } }
+.ws-menu { position: static; width: auto; margin: 2px 4px 6px 28px; box-shadow: var(--shadow); }
+.ws-input { flex: 1; min-width: 0; width: 100%; height: 34px; border: 1px solid var(--sage); border-radius: 8px; padding: 0 10px; background: var(--surface); outline: 0; font-size: 14px; }
+.ws-add { justify-content: flex-start; width: 100%; margin-top: 4px; color: var(--muted); }
+.ws-empty { margin: 4px; padding: 14px; border: 1.5px dashed var(--border-strong); border-radius: 12px; text-align: center; color: var(--muted); font-size: 13.5px; }
+.ws-empty p { margin: 0 0 10px; }
+@media (pointer: coarse) { .ws-row { min-height: 48px; } .ws-chev { width: 36px; height: 36px; } }
+.ws-chip { display: inline-flex; align-items: center; gap: 2px; min-width: 0; max-width: 280px; height: 32px; padding: 0 3px 0 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-hover); font-size: 13px; font-weight: 500; }
+.ws-chip button { border: 0; background: transparent; color: inherit; padding: 0; }
+.ws-chip .ws-chip-main { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-chip .x { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; }
+.ws-chip .x:hover { background: var(--accent-softer); }
+.ws-sel { gap: 2px; padding-right: 3px; max-width: 220px; }
+.ws-sel > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ws-sel button { flex: none; border: 0; background: transparent; color: inherit; padding: 0; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; }
+.ws-sel button:hover { background: var(--surface-3); }
+.ws-select { height: 30px; max-width: 220px; border: 1px solid var(--border); border-radius: 8px; padding: 0 6px; background: var(--surface); font-size: 13px; }
+/* checklist (Work) */
+.cl { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.cl li { display: flex; align-items: center; gap: 8px; min-height: 28px; font-size: 14px; }
+.cl li > span { overflow-wrap: anywhere; }
+.cl li.done > span { text-decoration: line-through; color: var(--faint); }
+.cl .check { width: 18px; height: 18px; border-radius: 5px; margin: 0; }
+.cl li input { flex: 1; min-width: 0; height: 30px; border: 1px solid var(--border); border-radius: 7px; padding: 0 8px; background: var(--bg); outline: 0; }
+.cl li input:focus { border-color: var(--sage); background: var(--surface); }
+@media (pointer: coarse) { .cl .check { width: 24px; height: 24px; } .cl li { min-height: 40px; } }
+/* "## " headings inside notes (learning template) */
+.rich-h { display: block; margin: 10px 0 2px; font-size: 13px; font-weight: 600; color: var(--accent-hover); }
+.rich-h:first-child { margin-top: 0; }
+/* position card */
+.pos-card, .pos-form { display: flex; flex-direction: column; gap: 10px; padding: 14px; margin-bottom: 4px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface-2); }
+.pos-form input[type=number], .pos-form textarea { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); outline: 0; }
+.pos-form input[type=number] { height: 34px; width: 84px; padding: 0 8px; }
+.pos-form textarea { width: 100%; min-height: 70px; padding: 8px 10px; resize: vertical; font-size: 14px; }
+.pos-form .link-form { padding: 0; background: transparent; }
+.tag-chip:disabled { opacity: .45; cursor: default; }
+.bld-img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: 12px; border: 1px solid var(--border); cursor: zoom-in; }
+.bld-floor { flex: none; min-width: 64px; justify-content: center; }
+.timeline-date { display: flex; align-items: center; gap: 6px; margin: 12px 0 6px; font-size: 12.5px; font-weight: 600; }
+
+/* Under 1180px the workspace sidebar becomes a left drawer (mirrors the daily panel drawer) */
+@keyframes fade { from { opacity: 0; } }
+@media (max-width: 1180px) {
+  .ws-burger { display: inline-flex; margin-right: -8px; }
+  .ws-side {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 60;
+    width: min(86%, 320px); max-height: none; height: 100%;
+    border-radius: 0; border-width: 0 1px 0 0;
+    padding-top: 16px; padding-bottom: calc(14px + env(safe-area-inset-bottom));
+    transform: translateX(-105%); visibility: hidden;
+    transition: transform .26s cubic-bezier(.2,.8,.2,1), visibility 0s linear .26s;
+  }
+  .ws-side.open { transform: none; visibility: visible; box-shadow: var(--shadow-lg); transition: transform .26s cubic-bezier(.2,.8,.2,1); }
+  .backdrop.ws { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(32,35,28,.35); animation: fade .2s; }
+}
+
 /* ============================================================
    Responsive: iPad portrait & phones — daily panel becomes a drawer
    ============================================================ */
@@ -422,9 +500,11 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
   .backdrop { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(32,35,28,.35); animation: fade .2s; }
   @keyframes fade { from { opacity: 0; } }
 }
+@media (max-width: 960px) { .nav .label, .brand-sub { display: none; } }
 @media (max-width: 720px) {
   .topbar-inner { flex-wrap: wrap; padding: 10px 16px; gap: 10px; }
   .search { order: 3; flex-basis: 100%; max-width: none; }
+  .ws-chip { order: 4; max-width: 100%; }
   .brand-sub, .nav .label, .kbd { display: none; }
   .cal, .pending { padding: 16px; }
   .cal-title { font-size: 19px; }
@@ -582,10 +662,78 @@ function normalizeEntry(e) {
     priority: isWork ? (PRIORITY_RANK[e.priority] !== undefined ? e.priority : "medium") : null,
     attachments: Array.isArray(e.attachments) ? JSON.parse(JSON.stringify(e.attachments)) : [],
     tags: extractTags(`${e.title || ""}\n${e.body || ""}`),
+    workspaceIds: Array.isArray(e.workspaceIds) ? [...new Set(e.workspaceIds.filter((x) => typeof x === "string" && x))] : [],
+    assignedBy: isWork && e.assignedBy && String(e.assignedBy).trim() ? String(e.assignedBy).trim() : null,
+    checklist: Array.isArray(e.checklist)
+      ? e.checklist.filter((c) => c && String(c.text || "").trim()).map((c) => ({ id: String(c.id || uid()), text: String(c.text).trim(), done: Boolean(c.done) }))
+      : [],
     createdAt: Number(e.createdAt) || Date.now(),
     updatedAt: Number(e.updatedAt) || Date.now(),
   };
 }
+
+/* ---- Workspaces: company › department › position (an entry can link to several) ---- */
+const WS_KINDS = { company: "Company", department: "Department", position: "Position" };
+const WS_CHILD_KINDS = { company: ["department", "position"], department: ["position"], position: [] };
+const WS_STATUSES = [
+  { id: "open", label: "Open", cls: "p-low" },
+  { id: "hold", label: "On hold", cls: "p-medium" },
+  { id: "closed", label: "Closed", cls: "" },
+];
+const WS_CHANNEL_PRESETS = ["JobThai", "LinkedIn", "Facebook", "Ads"];
+const WS_FILTER_KEY = "second-brain-ws-filter";
+const SCHEMA_MSG = "Run supabase/002_workspaces.sql in Supabase";
+const ASSIGNED = [{ id: "mentor", label: "พี่เลี้ยง" }, { id: "self", label: "ตัวเอง" }, { id: "other", label: "Other" }];
+const LEARNING_TEMPLATE = "## เรื่องอะไร\n\n## ทำไมสำคัญ\n\n## ทำอย่างไร / ขั้นตอน\n\n## ตัวอย่างจริง\n\n## อธิบายด้วยคำของฉัน\n\n## คำถามถามพี่เลี้ยง\n";
+
+function normalizeWorkspace(w) {
+  const kind = WS_KINDS[w.kind] ? w.kind : "company";
+  const isPos = kind === "position";
+  const hc = parseInt(w.headcount, 10);
+  return {
+    id: String(w.id || uid()),
+    parentId: kind === "company" || !w.parentId ? null : String(w.parentId),
+    kind,
+    name: String(w.name || "").trim() || "(untitled)",
+    color: w.color ? String(w.color) : null,
+    sort: Number(w.sort) || 0,
+    archivedAt: w.archivedAt ? Number(w.archivedAt) || Date.now() : null,
+    headcount: isPos && Number.isFinite(hc) && hc >= 0 ? hc : null,
+    status: isPos && WS_STATUSES.some((s) => s.id === w.status) ? w.status : null,
+    channels: isPos && Array.isArray(w.channels)
+      ? w.channels.filter((c) => c && String(c.name || "").trim()).map((c) => ({ name: String(c.name).trim(), url: String(c.url || "").trim() }))
+      : [],
+    openedOn: isPos && /^\d{4}-\d{2}-\d{2}$/.test(w.openedOn || "") ? w.openedOn : null,
+    note: String(w.note || ""),
+    createdAt: Number(w.createdAt) || Date.now(),
+    updatedAt: Number(w.updatedAt) || Date.now(),
+  };
+}
+// company has no parent · department → company · position → company or department
+const wsParentOk = (kind, parent) => (kind === "company" ? !parent : Boolean(parent) && WS_CHILD_KINDS[parent.kind].includes(kind));
+function buildWsIndex(list) {
+  const byId = new Map(list.map((w) => [w.id, w]));
+  const kids = new Map(); // parent id ("" = top level, incl. orphans) -> sorted children
+  list.forEach((w) => {
+    const p = w.parentId && byId.has(w.parentId) ? w.parentId : "";
+    if (!kids.has(p)) kids.set(p, []);
+    kids.get(p).push(w);
+  });
+  kids.forEach((l) => l.sort((a, b) => a.sort - b.sort || a.createdAt - b.createdAt));
+  const path = (id) => { // root … id; [] for unknown ids
+    const out = [], seen = new Set();
+    for (let cur = byId.get(id); cur && !seen.has(cur.id); cur = cur.parentId ? byId.get(cur.parentId) : null) { seen.add(cur.id); out.unshift(cur); }
+    return out;
+  };
+  const descendants = (id) => {
+    const s = new Set([id]), stack = [id];
+    while (stack.length) (kids.get(stack.pop()) || []).forEach((c) => { if (!s.has(c.id)) { s.add(c.id); stack.push(c.id); } });
+    return s;
+  };
+  const isArchived = (id) => path(id).some((w) => w.archivedAt);
+  return { byId, kids, path, descendants, isArchived };
+}
+const isSchemaMissing = (err) => Boolean(err) && (["PGRST204", "PGRST205", "42P01", "42703"].includes(err.code) || /schema cache/i.test(err.message || ""));
 
 function blobToDataURL(blob) {
   return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
@@ -638,12 +786,12 @@ function downloadBlob(blob, name) {
 let idbPromise = null;
 function openIDB() {
   if (!idbPromise) idbPromise = new Promise((res, rej) => {
-    const req = indexedDB.open("second-brain-notebook", 1);
+    const req = indexedDB.open("second-brain-notebook", 2); // v2 adds "workspaces"
     req.onupgradeneeded = () => {
-      req.result.createObjectStore("entries", { keyPath: "id" });
-      req.result.createObjectStore("files", { keyPath: "id" });
+      const db = req.result;
+      ["entries", "files", "workspaces"].forEach((n) => { if (!db.objectStoreNames.contains(n)) db.createObjectStore(n, { keyPath: "id" }); });
     };
-    req.onsuccess = () => res(req.result);
+    req.onsuccess = () => { req.result.onversionchange = () => req.result.close(); res(req.result); };
     req.onerror = () => rej(req.error);
   });
   return idbPromise;
@@ -665,6 +813,15 @@ function createLocalStore() {
   const urls = new Map();
   const emit = () => subs.forEach((cb) => cb(entries));
   const ready = idbRun("entries", "readonly", (s) => s.getAll()).then((r) => { entries = r || []; });
+  let workspaces = [];
+  const wsSubs = new Set();
+  const wsEmit = () => wsSubs.forEach((cb) => cb(workspaces));
+  const wsReady = idbRun("workspaces", "readonly", (s) => s.getAll()).then((r) => { workspaces = r || []; });
+  const saveWorkspaces = async (list) => {
+    await idbRun("workspaces", "readwrite", (s) => { list.forEach((w) => s.put(w)); });
+    const ids = new Set(list.map((w) => w.id));
+    workspaces = [...workspaces.filter((x) => !ids.has(x.id)), ...list]; wsEmit();
+  };
 
   const getFileBlob = async (meta) => { const r = await idbRun("files", "readonly", (s) => s.get(meta.id)); return r ? r.blob : null; };
   const putFileWithId = async (meta, blob) => {
@@ -685,6 +842,14 @@ function createLocalStore() {
       entries = [...entries.filter((x) => !ids.has(x.id)), ...list]; emit();
     },
     async remove(id) { await idbRun("entries", "readwrite", (s) => s.delete(id)); entries = entries.filter((x) => x.id !== id); emit(); },
+    subscribeWorkspaces(cb, onError) {
+      wsSubs.add(cb);
+      wsReady.then(() => cb(workspaces)).catch((e) => onError && onError(e));
+      return () => wsSubs.delete(cb);
+    },
+    saveWorkspace: (w) => saveWorkspaces([w]),
+    saveWorkspaces,
+    async removeWorkspace(id) { await idbRun("workspaces", "readwrite", (s) => s.delete(id)); workspaces = workspaces.filter((x) => x.id !== id); wsEmit(); },
     async putFile(file, kind) {
       return putFileWithId({ id: uid(), name: file.name || "file", type: file.type || "application/octet-stream", size: file.size, kind }, file);
     },
@@ -704,6 +869,7 @@ function createFirebaseStore(user) {
   const base = firebase.firestore().collection("users").doc(user.uid);
   const col = base.collection("entries");
   const filesCol = base.collection("files");
+  const wsCol = base.collection("workspaces");
   const urls = new Map();
 
   async function putBlob(meta, blob) {
@@ -738,6 +904,16 @@ function createFirebaseStore(user) {
       }
     },
     remove: (id) => col.doc(id).delete(),
+    subscribeWorkspaces(cb, onError) { return wsCol.onSnapshot((snap) => cb(snap.docs.map((d) => d.data())), onError); },
+    saveWorkspace: (w) => wsCol.doc(w.id).set(w),
+    async saveWorkspaces(list) {
+      for (let i = 0; i < list.length; i += 400) {
+        const batch = firebase.firestore().batch();
+        list.slice(i, i + 400).forEach((w) => batch.set(wsCol.doc(w.id), w));
+        await batch.commit();
+      }
+    },
+    removeWorkspace: (id) => wsCol.doc(id).delete(),
     async putFile(file, kind) {
       const blob = kind === "image" && !USE_FIREBASE_STORAGE ? await compressImage(file) : file;
       return putBlob({ id: uid(), name: blob.name || file.name || "file", type: file.type, kind }, blob);
@@ -761,6 +937,7 @@ function createFirebaseStore(user) {
 const SB_BUCKET = "notebook-files";
 const SB_MAX_FILE = 50 * 1024 * 1024;
 const SB_TABLE = "entries";
+const WS_TABLE = "workspaces";
 function createSupabaseStore(client, user) {
   const rows = new Map(); // id -> entry (camelCase)
   const subs = new Set();
@@ -771,14 +948,57 @@ function createSupabaseStore(client, user) {
     id: e.id, user_id: user.id, date: e.date, tab: e.tab, title: e.title, body: e.body,
     done: e.done, done_at: e.doneAt, due: e.due, priority: e.priority,
     attachments: e.attachments, tags: e.tags, created_at: e.createdAt, updated_at: e.updatedAt,
+    workspace_ids: e.workspaceIds || [], assigned_by: e.assignedBy || null, checklist: e.checklist || [],
   });
   const fromRow = (r) => ({
     id: r.id, date: r.date, tab: r.tab, title: r.title || "", body: r.body || "",
     done: Boolean(r.done), doneAt: r.done_at == null ? null : Number(r.done_at), due: r.due || null, priority: r.priority || null,
     attachments: Array.isArray(r.attachments) ? r.attachments : [], tags: r.tags || [],
+    workspaceIds: Array.isArray(r.workspace_ids) ? r.workspace_ids : [], assignedBy: r.assigned_by || null,
+    checklist: Array.isArray(r.checklist) ? r.checklist : [],
     createdAt: Number(r.created_at) || 0, updatedAt: Number(r.updated_at) || 0,
   });
   const check = ({ error }) => { if (error) throw error; };
+
+  // ---- Workspaces table + graceful fallback while supabase/002_workspaces.sql hasn't been run ----
+  const wsRows = new Map();
+  const wsSubs = new Set();
+  let wsLoaded = false, wsFail = null, schemaWarned = false, legacyEntries = false;
+  const wsEmit = () => { if (wsLoaded) { const list = [...wsRows.values()]; wsSubs.forEach((cb) => cb(list)); } };
+  const schemaError = () => Object.assign(new Error(SCHEMA_MSG), { code: "SCHEMA_MISSING" });
+  const warnSchema = () => { if (!schemaWarned) { schemaWarned = true; if (wsFail) wsFail(schemaError()); } };
+  const wsToRow = (w) => ({
+    id: w.id, user_id: user.id, parent_id: w.parentId, kind: w.kind, name: w.name, color: w.color, sort: w.sort,
+    archived_at: w.archivedAt, headcount: w.headcount, status: w.status, channels: w.channels, opened_on: w.openedOn,
+    note: w.note, created_at: w.createdAt, updated_at: w.updatedAt,
+  });
+  const wsFromRow = (r) => normalizeWorkspace({
+    id: r.id, parentId: r.parent_id, kind: r.kind, name: r.name, color: r.color, sort: r.sort, archivedAt: r.archived_at,
+    headcount: r.headcount, status: r.status, channels: r.channels, openedOn: r.opened_on, note: r.note,
+    createdAt: r.created_at, updatedAt: r.updated_at,
+  });
+  const wsError = (err) => {
+    if (isSchemaMissing(err)) { schemaWarned = true; return schemaError(); }
+    if (err && err.code === "23503") return new Error("This still has departments/positions inside — archive it instead.");
+    return err;
+  };
+  // Entries: if the new columns are missing, retry without them (workspace links / assigned-by / checklist are not stored until the migration runs).
+  const NEW_ENTRY_COLS = ["workspace_ids", "assigned_by", "checklist"];
+  async function upsertEntryRows(list) {
+    if (!legacyEntries) {
+      const { error } = await client.from(SB_TABLE).upsert(list);
+      if (!error) return;
+      if (!isSchemaMissing(error)) throw error;
+      legacyEntries = true; warnSchema();
+    }
+    check(await client.from(SB_TABLE).upsert(list.map((r) => { const o = { ...r }; NEW_ENTRY_COLS.forEach((k) => delete o[k]); return o; })));
+  }
+  async function saveWsList(list) {
+    const prev = new Map(list.map((w) => [w.id, wsRows.get(w.id)]));
+    list.forEach((w) => wsRows.set(w.id, w)); wsEmit();
+    try { check(await client.from(WS_TABLE).upsert(list.map(wsToRow))); }
+    catch (err) { prev.forEach((p, id) => { if (p) wsRows.set(id, p); else wsRows.delete(id); }); wsEmit(); throw wsError(err); }
+  }
   const fileName = (meta) => meta.path || `${user.id}/${meta.id}`;
 
   async function putBlob(meta, blob) {
@@ -835,14 +1055,14 @@ function createSupabaseStore(client, user) {
     async save(e) {
       const prev = rows.get(e.id);
       rows.set(e.id, e); emit();
-      try { check(await client.from(SB_TABLE).upsert(toRow(e))); }
+      try { await upsertEntryRows([toRow(e)]); }
       catch (err) { if (prev) rows.set(e.id, prev); else rows.delete(e.id); emit(); throw err; }
     },
     async saveMany(list) {
       const prev = new Map(list.map((e) => [e.id, rows.get(e.id)]));
       list.forEach((e) => rows.set(e.id, e)); emit();
       try {
-        for (let i = 0; i < list.length; i += 500) check(await client.from(SB_TABLE).upsert(list.slice(i, i + 500).map(toRow)));
+        for (let i = 0; i < list.length; i += 500) await upsertEntryRows(list.slice(i, i + 500).map(toRow));
       } catch (err) {
         prev.forEach((p, id) => { if (p) rows.set(id, p); else rows.delete(id); }); emit();
         throw err;
@@ -853,6 +1073,45 @@ function createSupabaseStore(client, user) {
       rows.delete(id); emit();
       try { check(await client.from(SB_TABLE).delete().eq("id", id)); }
       catch (err) { if (prev) { rows.set(id, prev); emit(); } throw err; }
+    },
+    subscribeWorkspaces(cb, onError) {
+      wsSubs.add(cb); wsFail = onError;
+      const fail = (e) => onError && onError(e);
+      let channel = null, alive = true;
+      const upsertLocal = (r) => { // same stale-echo guard as entries
+        if (!r || !r.id) return;
+        const next = wsFromRow(r), cur = wsRows.get(r.id);
+        if (cur && next.updatedAt < cur.updatedAt) return;
+        wsRows.set(r.id, next); wsEmit();
+      };
+      (async () => {
+        const { data, error } = await client.from(WS_TABLE).select("*").order("id").range(0, 4999);
+        if (error) {
+          if (!isSchemaMissing(error)) throw error;
+          wsLoaded = true; wsEmit(); warnSchema(); return; // table not created yet — app keeps working without workspaces
+        }
+        data.forEach((r) => { const cur = wsRows.get(r.id); if (!cur || Number(r.updated_at) >= cur.updatedAt) wsRows.set(r.id, wsFromRow(r)); });
+        wsLoaded = true; wsEmit();
+        if (!alive) return;
+        channel = client
+          .channel(`workspaces-${user.id}-${uid()}`)
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: WS_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
+          .on("postgres_changes", { event: "UPDATE", schema: "public", table: WS_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
+          .on("postgres_changes", { event: "DELETE", schema: "public", table: WS_TABLE }, (p) => {
+            const id = p.old && p.old.id;
+            if (id && wsRows.has(id)) { wsRows.delete(id); wsEmit(); }
+          })
+          .subscribe((status, err) => { if (status === "CHANNEL_ERROR") fail(err || new Error("Live sync disconnected — changes from other devices may be delayed.")); });
+      })().catch(fail);
+      return () => { alive = false; wsSubs.delete(cb); if (channel) client.removeChannel(channel); };
+    },
+    saveWorkspace: (w) => saveWsList([w]),
+    saveWorkspaces: saveWsList,
+    async removeWorkspace(id) {
+      const prev = wsRows.get(id);
+      wsRows.delete(id); wsEmit();
+      try { check(await client.from(WS_TABLE).delete().eq("id", id)); }
+      catch (err) { if (prev) { wsRows.set(id, prev); wsEmit(); } throw wsError(err); }
     },
     async putFile(file, kind) {
       const blob = kind === "image" ? await compressImage(file, 1.5 * 1024 * 1024) : file;
@@ -911,6 +1170,8 @@ const ICONS = {
   sparkle: <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" />,
   brain: <><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" /></>,
   arrowRight: <><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></>,
+  building: <><rect x="4" y="2" width="16" height="20" rx="2" /><line x1="9" y1="6" x2="9.01" y2="6" /><line x1="15" y1="6" x2="15.01" y2="6" /><line x1="9" y1="10" x2="9.01" y2="10" /><line x1="15" y1="10" x2="15.01" y2="10" /><line x1="9" y1="14" x2="9.01" y2="14" /><line x1="15" y1="14" x2="15.01" y2="14" /><path d="M10 22v-4h4v4" /></>,
+  menu: <><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /></>,
 };
 function Icon({ name, size = 18, strokeWidth = 1.8 }) {
   return (
@@ -929,6 +1190,30 @@ function RichText({ text }) {
     if (tk.t === "tag") return <button key={i} type="button" className="tag" onClick={(e) => { e.stopPropagation(); onTag("#" + tk.v); }}>#{tk.v}</button>;
     return <React.Fragment key={i}>{tk.v}</React.Fragment>;
   });
+}
+
+// Note body: lines starting with "## " render as small headings; everything else stays RichText (links, #tags).
+function RichBody({ text }) {
+  if (!/^## /m.test(text)) return <RichText text={text} />;
+  const out = [];
+  let buf = [];
+  const flush = () => {
+    const t = buf.join("\n").replace(/^\n+|\n+$/g, "");
+    if (t) out.push(<RichText key={out.length} text={t} />);
+    buf = [];
+  };
+  text.split("\n").forEach((l) => {
+    if (l.startsWith("## ")) { flush(); out.push(<span key={out.length} className="rich-h"><RichText text={l.slice(3)} /></span>); }
+    else buf.push(l);
+  });
+  flush();
+  return out;
+}
+const assignedLabel = (a) => (a === "mentor" ? "จากพี่เลี้ยง" : a === "self" ? "ตัวเอง" : `By ${a}`);
+function AssignedBadge({ a }) { return a ? <span className="badge" title="Assigned by">{assignedLabel(a)}</span> : null; }
+function ChecklistProgress({ list }) {
+  if (!list || !list.length) return null;
+  return <span className="badge" title="Checklist"><Icon name="list" size={11} strokeWidth={2.2} />{list.filter((c) => c.done).length}/{list.length}</span>;
 }
 
 function Highlight({ text, terms }) {
@@ -1002,8 +1287,14 @@ function Attachments({ list, onRemove }) {
    7. ENTRY EDITOR — title, rich body, links, images, files, due date, priority
    ============================================================ */
 function EntryEditor({ initial, date, tab, onClose }) {
-  const { store, toast, actions } = useApp();
+  const { store, toast, actions, wsFilter } = useApp();
   const isWork = tab === "work";
+  const initAssigned = initial.assignedBy || "";
+  const [wsIds, setWsIds] = useState(initial.workspaceIds || (!initial.id && wsFilter ? [wsFilter] : []));
+  const [assigned, setAssigned] = useState(initAssigned === "mentor" || initAssigned === "self" ? initAssigned : initAssigned ? "other" : "");
+  const [assignedOther, setAssignedOther] = useState(initAssigned === "mentor" || initAssigned === "self" ? "" : initAssigned);
+  const [checklist, setChecklist] = useState(initial.checklist || []);
+  const [clText, setClText] = useState("");
   const [title, setTitle] = useState(initial.title || "");
   const [body, setBody] = useState(initial.body || "");
   const [due, setDue] = useState(initial.due || "");
@@ -1071,6 +1362,9 @@ function EntryEditor({ initial, date, tab, onClose }) {
         ...initial, date, tab,
         title: title.trim(), body: body.replace(/\s+$/, ""),
         attachments: atts, due: isWork ? due || null : null, priority: isWork ? priority : null,
+        workspaceIds: wsIds,
+        assignedBy: isWork ? (assigned === "other" ? assignedOther.trim() || null : assigned || null) : null,
+        checklist: isWork ? (clText.trim() ? [...checklist, { id: uid(), text: clText.trim(), done: false }] : checklist) : (initial.checklist || []),
         updatedAt: Date.now(),
       });
       removed.current.forEach((m) => store.removeFile(m).catch(() => {}));
@@ -1089,6 +1383,16 @@ function EntryEditor({ initial, date, tab, onClose }) {
   function onPaste(e) {
     const files = [...(e.clipboardData?.files || [])];
     if (files.length) { e.preventDefault(); addFiles(files); }
+  }
+  function insertTemplate() {
+    setBody((b) => (b.trim() ? b.replace(/\s+$/, "") + "\n\n" + LEARNING_TEMPLATE : LEARNING_TEMPLATE));
+    taRef.current?.focus();
+  }
+  function addCheckItem(e) {
+    if (e.key !== "Enter" || e.ctrlKey || e.metaKey) return;
+    e.preventDefault();
+    const text = clText.trim(); if (!text) return;
+    setChecklist((l) => [...l, { id: uid(), text, done: false }]); setClText("");
   }
 
   return (
@@ -1115,6 +1419,34 @@ function EntryEditor({ initial, date, tab, onClose }) {
           </div>
         </div>
       )}
+      {isWork && (
+        <div className="field-row">
+          <div className="field">Assigned by
+            <div className="segment" role="radiogroup" aria-label="Assigned by">
+              {ASSIGNED.map((a) => (
+                <button key={a.id} type="button" role="radio" aria-checked={assigned === a.id}
+                  className={assigned === a.id ? "on" : ""} onClick={() => setAssigned((v) => (v === a.id ? "" : a.id))}>{a.label}</button>
+              ))}
+            </div>
+          </div>
+          {assigned === "other" && <input className="ws-input" style={{ flex: "0 1 200px" }} value={assignedOther} onChange={(e) => setAssignedOther(e.target.value)} placeholder="Who assigned it?" aria-label="Assigned by (name)" />}
+        </div>
+      )}
+      <WorkspacePicker value={wsIds} onChange={setWsIds} />
+      {isWork && (
+        <ul className="cl" aria-label="Checklist">
+          {checklist.map((c) => (
+            <li key={c.id}>
+              <button type="button" className={`check${c.done ? " on" : ""}`} aria-pressed={c.done} aria-label={c.done ? "Untick" : "Tick"}
+                onClick={() => setChecklist((l) => l.map((x) => (x.id === c.id ? { ...x, done: !x.done } : x)))}><Icon name="check" size={12} strokeWidth={3} /></button>
+              <input value={c.text} aria-label="Checklist item" onChange={(e) => setChecklist((l) => l.map((x) => (x.id === c.id ? { ...x, text: e.target.value } : x)))} />
+              <button type="button" className="btn sm ghost icon-only" aria-label="Remove checklist item" onClick={() => setChecklist((l) => l.filter((x) => x.id !== c.id))}><Icon name="x" size={14} /></button>
+            </li>
+          ))}
+          <li><span className="check" aria-hidden="true" style={{ borderStyle: "dashed" }} />
+            <input value={clText} onChange={(e) => setClText(e.target.value)} onKeyDown={addCheckItem} placeholder="Add checklist item… (Enter)" aria-label="New checklist item" /></li>
+        </ul>
+      )}
 
       <Attachments list={atts} onRemove={removeAtt} />
       {uploading > 0 && <div className="uploading"><span className="spinner" />Uploading {uploading} file{uploading > 1 ? "s" : ""}…</div>}
@@ -1134,6 +1466,7 @@ function EntryEditor({ initial, date, tab, onClose }) {
         <button type="button" className="btn sm ghost icon-only" title="Attach file" aria-label="Attach file" onClick={() => fileInput.current.click()}><Icon name="paperclip" size={17} /></button>
         <input ref={imgInput} type="file" accept="image/*" multiple hidden onChange={(e) => { addFiles(e.target.files, "image"); e.target.value = ""; }} />
         <input ref={fileInput} type="file" multiple hidden onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }} />
+        <button type="button" className="btn sm ghost" title="Insert learning template" onClick={insertTemplate}><Icon name="book" size={16} />Learning template</button>
         <span className="spacer" />
         <span className="hint">Ctrl/⌘ + Enter</span>
         <button type="button" className="btn sm ghost" onClick={cancel}>Cancel</button>
@@ -1174,8 +1507,21 @@ function EntryCard({ entry, focused }) {
         )}
         <div className="entry-main">
           {entry.title && <h4 className="entry-title"><RichText text={entry.title} /></h4>}
-          {isWork && (entry.priority || entry.due) && <div className="meta"><PriorityBadge p={entry.priority} /><DueBadge due={entry.due} done={entry.done} /></div>}
-          {entry.body && <div className="rich"><RichText text={entry.body} /></div>}
+          {isWork && (entry.priority || entry.due || entry.assignedBy || entry.checklist.length > 0) && (
+            <div className="meta"><PriorityBadge p={entry.priority} /><DueBadge due={entry.due} done={entry.done} /><AssignedBadge a={entry.assignedBy} /><ChecklistProgress list={entry.checklist} /></div>
+          )}
+          {entry.body && <div className="rich"><RichBody text={entry.body} /></div>}
+          {isWork && entry.checklist.length > 0 && (
+            <ul className="cl" aria-label="Checklist">
+              {entry.checklist.map((c) => (
+                <li key={c.id} className={c.done ? "done" : ""}>
+                  <button type="button" className={`check${c.done ? " on" : ""}`} onClick={() => actions.toggleCheck(entry, c.id)}
+                    aria-pressed={c.done} aria-label={`${c.done ? "Untick" : "Tick"} “${c.text}”`}><Icon name="check" size={12} strokeWidth={3} /></button>
+                  <span>{c.text}</span>
+                </li>
+              ))}
+            </ul>
+          )}
           <Attachments list={entry.attachments} />
         </div>
         <div className="entry-actions">
@@ -1316,10 +1662,11 @@ function Calendar({ month, setMonth, selected, onSelect, byDate }) {
 function PendingTasks({ entries, onOpen }) {
   const { actions } = useApp();
   const [prio, setPrio] = useState("all");
+  const [src, setSrc] = useState("all");
   const today = todayKey();
   const week = addDays(today, 7);
 
-  const pending = entries.filter((e) => e.tab === "work" && !e.done && (prio === "all" || e.priority === prio));
+  const pending = entries.filter((e) => e.tab === "work" && !e.done && (prio === "all" || e.priority === prio) && (src === "all" || e.assignedBy === src));
   const sorter = (a, b) => (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]) || ((a.due || "9") < (b.due || "9") ? -1 : (a.due || "9") > (b.due || "9") ? 1 : 0) || (a.date < b.date ? -1 : 1);
   const groups = [
     { id: "overdue", title: "Overdue", items: pending.filter((e) => e.due && e.due < today) },
@@ -1342,9 +1689,14 @@ function PendingTasks({ entries, onOpen }) {
         </div>
       </div>
       <div className="pending-sub">Unfinished Work (งาน) items from every date. Tick one to mark it done.</div>
+      <div className="chips" role="group" aria-label="Filter by who assigned it" style={{ marginTop: -8, marginBottom: 8 }}>
+        {[{ id: "all", label: "All" }, { id: "mentor", label: "From mentor" }, { id: "self", label: "Self" }].map((s) => (
+          <button key={s.id} type="button" className={`btn sm ghost${src === s.id ? " active" : ""}`} aria-pressed={src === s.id} onClick={() => setSrc(s.id)}>{s.label}</button>
+        ))}
+      </div>
 
       {!groups.length && (
-        <div className="empty"><Icon name="check" size={28} />{total ? "No tasks with this priority." : "All caught up. New Work items will show up here."}</div>
+        <div className="empty"><Icon name="check" size={28} />{total ? "No tasks match these filters." : "All caught up. New Work items will show up here."}</div>
       )}
       {groups.map((g) => (
         <div key={g.id} className="group">
@@ -1360,6 +1712,8 @@ function PendingTasks({ entries, onOpen }) {
                 <div className="meta">
                   <PriorityBadge p={e.priority} />
                   <DueBadge due={e.due} />
+                  <AssignedBadge a={e.assignedBy} />
+                  <ChecklistProgress list={e.checklist} />
                   <span className="task-src"><Icon name="calendar" size={12} />{fmtShort(e.date)} · Work (งาน)</span>
                   {e.tags.map((tg) => <RichText key={tg} text={"#" + tg} />)}
                 </div>
@@ -1500,6 +1854,374 @@ function SearchBar({ entries, query, setQuery, open, setOpen, inputRef, onPick }
 }
 
 /* ============================================================
+   12b. WORKSPACES — company › department › position: sidebar, picker, position card, summary
+   ============================================================ */
+const statusOf = (id) => WS_STATUSES.find((s) => s.id === id);
+const safeHref = (u) => (/^https?:\/\//i.test(u || "") ? u : null);
+
+function PositionBadge({ ws }) {
+  const st = statusOf(ws.status);
+  if (!st && ws.headcount == null) return null;
+  const text = [st && st.label, ws.headcount != null && String(ws.headcount)].filter(Boolean).join(" · ");
+  return <span className={`badge ws-badge ${st ? st.cls : ""}`} title={`${st ? st.label : "No status"}${ws.headcount != null ? ` · headcount ${ws.headcount}` : ""}`}>{text}</span>;
+}
+
+function WsInlineInput({ initial = "", placeholder, depth = 0, keepOpen, onSubmit, onCancel }) {
+  const [v, setV] = useState(initial);
+  const ref = useRef(null);
+  useEffect(() => { ref.current?.focus(); ref.current?.select(); }, []);
+  return (
+    <div className="ws-row" style={{ paddingLeft: depth * 16 + 30 }}>
+      <input ref={ref} className="ws-input" value={v} placeholder={placeholder} aria-label={placeholder}
+        onChange={(e) => setV(e.target.value)} onBlur={onCancel}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") { e.preventDefault(); const name = v.trim(); if (!name) return onCancel(); onSubmit(name); if (keepOpen) setV(""); }
+          if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); onCancel(); }
+        }} />
+    </div>
+  );
+}
+
+function WorkspaceSidebar({ navRef, open, filter, view, counts, allCount, pendingCount, onSelect, onAll, onPending, onDetails }) {
+  const { workspaces, wsIdx: idx, wsActions } = useApp();
+  const [collapsed, setCollapsed] = useState(() => new Set());
+  const [menuFor, setMenuFor] = useState(null);
+  const [edit, setEdit] = useState(null); // { mode: "add", parentId, kind } | { mode: "rename", id }
+  const [showArchived, setShowArchived] = useState(false);
+
+  const kidsOf = (id) => (idx.kids.get(id) || []).filter((w) => !w.archivedAt);
+  const roots = kidsOf("");
+  const archived = workspaces.filter((w) => w.archivedAt && !(w.parentId && idx.isArchived(w.parentId)))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const canDelete = (w) => !(idx.kids.get(w.id) || []).length && !counts.get(w.id);
+  const toggle = (id) => setCollapsed((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const startAdd = (parentId, kind) => {
+    setMenuFor(null);
+    if (parentId) setCollapsed((s) => { const n = new Set(s); n.delete(parentId); return n; });
+    setEdit({ mode: "add", parentId, kind });
+  };
+  const allOn = !filter && view !== "pending";
+  const pendOn = !filter && view === "pending";
+
+  const item = (label, fn) => <button key={label} type="button" className="menu-item" role="menuitem" onClick={() => { setMenuFor(null); fn(); }}>{label}</button>;
+  function renderMenu(w) {
+    const sibs = (idx.kids.get(w.parentId && idx.byId.has(w.parentId) ? w.parentId : "") || []).filter((x) => !x.archivedAt);
+    const i = sibs.findIndex((x) => x.id === w.id);
+    const live = !w.archivedAt;
+    return (
+      <div className="menu ws-menu" role="menu" aria-label={`${w.name} actions`}>
+        {live && WS_CHILD_KINDS[w.kind].map((k) => item(`Add ${k}`, () => startAdd(w.id, k)))}
+        {live && w.kind === "position" && item("Position details", () => onDetails(w))}
+        {live && item("Rename", () => setEdit({ mode: "rename", id: w.id }))}
+        {live && i > 0 && item("Move up", () => wsActions.move(w, sibs, -1))}
+        {live && i >= 0 && i < sibs.length - 1 && item("Move down", () => wsActions.move(w, sibs, 1))}
+        {item(live ? "Archive" : "Unarchive", () => wsActions.archive(w, live))}
+        {canDelete(w) && item("Delete", () => wsActions.remove(w))}
+      </div>
+    );
+  }
+  function renderRow(w, depth, archivedRow) {
+    if (edit && edit.mode === "rename" && edit.id === w.id) {
+      return <WsInlineInput key={w.id} initial={w.name} depth={depth} placeholder={`Rename ${w.kind}`}
+        onSubmit={(name) => { setEdit(null); if (name !== w.name) wsActions.save({ ...w, name, updatedAt: Date.now() }); }} onCancel={() => setEdit(null)} />;
+    }
+    const kids = archivedRow ? [] : kidsOf(w.id);
+    const expanded = !collapsed.has(w.id);
+    const on = filter === w.id;
+    const n = counts.get(w.id) || 0;
+    const addHere = edit && edit.mode === "add" && edit.parentId === w.id;
+    return (
+      <React.Fragment key={w.id}>
+        <div className={`ws-row${on ? " on" : ""}${archivedRow ? " faint" : ""}`} style={{ paddingLeft: depth * 16 }}>
+          {kids.length
+            ? <button type="button" className="ws-chev" aria-expanded={expanded} aria-label={`${expanded ? "Collapse" : "Expand"} ${w.name}`} onClick={() => toggle(w.id)}><Icon name="chevronRight" size={15} /></button>
+            : <span className="ws-chev" aria-hidden="true" />}
+          <button type="button" className="ws-name" title={`${WS_KINDS[w.kind]}: ${idx.path(w.id).map((x) => x.name).join(" › ")}`}
+            aria-current={on ? "true" : undefined} onClick={() => onSelect(w.id)}>{w.name}</button>
+          {archivedRow ? <span className="badge ws-badge">Closed</span> : w.kind === "position" && <PositionBadge ws={w} />}
+          {n > 0 && <span className="count-pill" aria-label={`${n} items`}>{n}</span>}
+          <button type="button" className="btn sm ghost icon-only ws-more" aria-label={`Actions for ${w.name}`} aria-expanded={menuFor === w.id}
+            onClick={() => setMenuFor((m) => (m === w.id ? null : w.id))}><Icon name="more" size={16} /></button>
+        </div>
+        {menuFor === w.id && renderMenu(w)}
+        {expanded && kids.map((c) => renderRow(c, depth + 1))}
+        {addHere && <WsInlineInput key={`add-${w.id}-${edit.kind}`} depth={depth + 1} keepOpen={edit.kind === "position"} placeholder={`New ${edit.kind} name`}
+          onSubmit={(name) => { if (edit.kind !== "position") setEdit(null); wsActions.add(edit.kind, w.id, name); }} onCancel={() => setEdit(null)} />}
+      </React.Fragment>
+    );
+  }
+
+  return (
+    <nav id="ws-nav" ref={navRef} tabIndex={-1} aria-label="Workspaces" className={`card ws-side${open ? " open" : ""}`}
+      onKeyDown={(e) => { if (e.key === "Escape" && menuFor) { e.stopPropagation(); setMenuFor(null); } }}>
+      <div className={`ws-row${allOn ? " on" : ""}`}>
+        <span className="ws-chev" aria-hidden="true"><Icon name="calendar" size={15} /></span>
+        <button type="button" className="ws-name" aria-current={allOn ? "true" : undefined} onClick={onAll}>All</button>
+        <span className="count-pill">{allCount}</span>
+      </div>
+      <div className={`ws-row${pendOn ? " on" : ""}`}>
+        <span className="ws-chev" aria-hidden="true"><Icon name="list" size={15} /></span>
+        <button type="button" className="ws-name" aria-current={pendOn ? "true" : undefined} onClick={onPending}>Pending</button>
+        {pendingCount > 0 && <span className="count-pill">{pendingCount}</span>}
+      </div>
+      <div className="ws-head">Companies
+        <button type="button" className="btn sm ghost icon-only" aria-label="Add company" title="Add company" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} /></button>
+      </div>
+      {!workspaces.length && !edit ? (
+        <div className="ws-empty">
+          <p>แยกบันทึกตามบริษัท/แผนก/ตำแหน่งที่รับสมัคร</p>
+          <button type="button" className="btn sm primary" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} />Add company</button>
+        </div>
+      ) : (
+        <>
+          {roots.map((w) => renderRow(w, 0))}
+          {edit && edit.mode === "add" && !edit.parentId && (
+            <WsInlineInput key="add-company" placeholder="New company name" onSubmit={(name) => { setEdit(null); wsActions.add("company", null, name); }} onCancel={() => setEdit(null)} />
+          )}
+          <button type="button" className="btn sm ghost ws-add" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} />Add company</button>
+        </>
+      )}
+      {archived.length > 0 && (
+        <>
+          <button type="button" className="ws-head" aria-expanded={showArchived} onClick={() => setShowArchived((v) => !v)}>
+            Archived ({archived.length})<Icon name={showArchived ? "x" : "chevronRight"} size={14} />
+          </button>
+          {showArchived && archived.map((w) => renderRow(w, 0, true))}
+        </>
+      )}
+    </nav>
+  );
+}
+
+// Entry editor: link an entry to one or more company / department / position nodes.
+function WorkspacePicker({ value, onChange }) {
+  const { workspaces, wsIdx: idx } = useApp();
+  if (!workspaces.length && !value.length) return null;
+  const groups = (idx.kids.get("") || []).filter((r) => !r.archivedAt).map((r) => {
+    const opts = [];
+    const walk = (w, depth) => { if (w.archivedAt) return; opts.push({ w, depth }); (idx.kids.get(w.id) || []).forEach((c) => walk(c, depth + 1)); };
+    walk(r, 0);
+    return { r, opts };
+  });
+  return (
+    <div className="field-row">
+      <div className="field" style={{ flexWrap: "wrap" }}><Icon name="briefcase" size={15} />Workspace
+        {value.map((id) => {
+          const path = idx.path(id);
+          if (!path.length) return null; // unknown / deleted id — ignored
+          const label = path.map((n) => n.name).join(" › ");
+          return (
+            <span key={id} className="badge ws-sel" title={label}><span>{path[path.length - 1].name}</span>
+              <button type="button" aria-label={`Remove ${label}`} onClick={() => onChange(value.filter((x) => x !== id))}><Icon name="x" size={11} strokeWidth={2.4} /></button>
+            </span>
+          );
+        })}
+        {groups.length > 0 && (
+          <select className="ws-select" value="" aria-label="Add workspace" onChange={(e) => { if (e.target.value) onChange([...value, e.target.value]); }}>
+            <option value="">＋ Add…</option>
+            {groups.map(({ r, opts }) => (
+              <optgroup key={r.id} label={r.name}>
+                {opts.map(({ w, depth }) => (
+                  <option key={w.id} value={w.id} disabled={value.includes(w.id)}>{"   ".repeat(depth)}{w.name}{depth ? ` (${w.kind})` : ""}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PositionInfo({ ws, onEdit }) {
+  const st = statusOf(ws.status);
+  return (
+    <div className="pos-card">
+      <div className="meta">
+        {st ? <span className={`badge ${st.cls}`}>{st.label}</span> : <span className="badge">No status</span>}
+        {ws.headcount != null && <span className="badge">Headcount {ws.headcount}</span>}
+        {ws.openedOn && <span className="badge"><Icon name="calendar" size={11} strokeWidth={2.2} />Opened {fmtShort(ws.openedOn)}</span>}
+        <button type="button" className="btn sm" style={{ marginLeft: "auto" }} onClick={onEdit}><Icon name="edit" size={14} />Edit details</button>
+      </div>
+      {ws.channels.length > 0 && (
+        <div className="chips" aria-label="Channels">
+          {ws.channels.map((c, i) => safeHref(c.url)
+            ? <a key={i} className="tag-chip" href={safeHref(c.url)} target="_blank" rel="noopener noreferrer">{c.name}</a>
+            : <span key={i} className="tag-chip">{c.name}</span>)}
+        </div>
+      )}
+      {ws.note && <div className="rich">{ws.note}</div>}
+    </div>
+  );
+}
+
+function PositionForm({ ws, onDone }) {
+  const { wsActions } = useApp();
+  const [headcount, setHeadcount] = useState(ws.headcount == null ? "" : String(ws.headcount));
+  const [status, setStatus] = useState(ws.status || "open");
+  const [openedOn, setOpenedOn] = useState(ws.openedOn || "");
+  const [channels, setChannels] = useState(ws.channels);
+  const [note, setNote] = useState(ws.note || "");
+  const [saving, setSaving] = useState(false);
+  const setCh = (i, k, v) => setChannels((cs) => cs.map((c, j) => (j === i ? { ...c, [k]: v } : c)));
+  const addCh = (name) => setChannels((cs) => [...cs, { name, url: "" }]);
+  async function save(e) {
+    e.preventDefault(); setSaving(true);
+    const clean = channels.filter((c) => c.name.trim()).map((c) => {
+      let u = c.url.trim(); if (u && !/^https?:\/\//i.test(u)) u = "https://" + u;
+      return { name: c.name.trim(), url: u };
+    });
+    const ok = await wsActions.save({ ...ws, headcount: headcount === "" ? null : headcount, status, openedOn: openedOn || null, channels: clean, note, updatedAt: Date.now() });
+    setSaving(false);
+    if (ok) onDone();
+  }
+  return (
+    <form className="pos-form" onSubmit={save} aria-label="Position details" onKeyDown={(e) => { if (e.key === "Escape") { e.stopPropagation(); onDone(); } }}>
+      <div className="field-row">
+        <label className="field">Headcount<input type="number" min="0" inputMode="numeric" value={headcount} onChange={(e) => setHeadcount(e.target.value)} /></label>
+        <div className="field">Status
+          <div className="segment" role="radiogroup" aria-label="Status">
+            {WS_STATUSES.map((s) => <button key={s.id} type="button" role="radio" aria-checked={status === s.id} className={`${status === s.id ? "on" : ""} ${s.cls}`} onClick={() => setStatus(s.id)}>{s.label}</button>)}
+          </div>
+        </div>
+        <label className="field">Opened<input type="date" value={openedOn} onChange={(e) => setOpenedOn(e.target.value)} /></label>
+      </div>
+      <div className="field">Channels</div>
+      <div className="chips">
+        {WS_CHANNEL_PRESETS.map((p) => (
+          <button key={p} type="button" className="tag-chip" disabled={channels.some((c) => c.name.trim().toLowerCase() === p.toLowerCase())} onClick={() => addCh(p)}>＋ {p}</button>
+        ))}
+        <button type="button" className="tag-chip" onClick={() => addCh("")}>＋ Other</button>
+      </div>
+      {channels.map((c, i) => (
+        <div key={i} className="link-form">
+          <input value={c.name} onChange={(e) => setCh(i, "name", e.target.value)} placeholder="Channel" aria-label="Channel name" />
+          <input value={c.url} onChange={(e) => setCh(i, "url", e.target.value)} placeholder="Link (optional)" aria-label={`${c.name || "Channel"} link`} inputMode="url" />
+          <button type="button" className="btn sm ghost icon-only" aria-label={`Remove ${c.name || "channel"}`} onClick={() => setChannels((cs) => cs.filter((_, j) => j !== i))}><Icon name="x" size={14} /></button>
+        </div>
+      ))}
+      <label className="field" style={{ flexDirection: "column", alignItems: "stretch", gap: 4 }}>Note
+        <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Requirements, salary range, contact person…" />
+      </label>
+      <div className="toolbar">
+        <span className="spacer" />
+        <button type="button" className="btn sm ghost" onClick={onDone}>Cancel</button>
+        <button type="submit" className="btn sm primary" disabled={saving}>{saving ? "Saving…" : "Save"}</button>
+      </div>
+    </form>
+  );
+}
+
+function WorkspaceSummary({ node, entries, onOpen, editing, setEditing }) {
+  const { wsIdx, actions } = useApp();
+  const path = wsIdx.path(node.id);
+  const open = entries.filter((e) => e.tab === "work" && !e.done)
+    .sort((a, b) => ((a.due || "9") < (b.due || "9") ? -1 : (a.due || "9") > (b.due || "9") ? 1 : PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]));
+  const days = useMemo(() => {
+    const map = new Map();
+    [...entries].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : b.createdAt - a.createdAt)).forEach((e) => {
+      if (!map.has(e.date)) map.set(e.date, []);
+      map.get(e.date).push(e);
+    });
+    return [...map.entries()];
+  }, [entries]);
+  const go = (e) => onOpen(e.date, e.tab, e.id);
+  const row = (e, withCheck) => (
+    <div key={e.id} className="task-row">
+      {withCheck && (
+        <button type="button" className="check" onClick={() => actions.toggleDone(e)} aria-label={`Mark "${entryLabel(e)}" as done`}><Icon name="check" size={14} strokeWidth={3} /></button>
+      )}
+      <div className="task-main" role="button" tabIndex={0} onClick={() => go(e)} onKeyDown={(ev) => { if (ev.key === "Enter") go(e); }}>
+        <div className="task-title">{entryLabel(e)}</div>
+        <div className="meta">
+          {!withCheck && <span className={`tab-badge t-${e.tab}`}>{TAB_BY_ID[e.tab].en} ({TAB_BY_ID[e.tab].th})</span>}
+          {e.tab === "work" && e.done && <span className="badge">Done</span>}
+          {withCheck && <><PriorityBadge p={e.priority} /><DueBadge due={e.due} /><span className="task-src"><Icon name="calendar" size={12} />{fmtShort(e.date)}</span></>}
+          <AssignedBadge a={e.assignedBy} /><ChecklistProgress list={e.checklist} />
+        </div>
+      </div>
+      <span className="task-open" aria-hidden="true"><Icon name="arrowRight" size={16} /></span>
+    </div>
+  );
+  return (
+    <section className="card pending" aria-label={`Summary of ${node.name}`}>
+      <div className="pending-head">
+        <div style={{ minWidth: 0 }}>
+          <div className="pending-sub" style={{ marginBottom: 2 }}>{WS_KINDS[node.kind]}{path.length > 1 ? ` · ${path.slice(0, -1).map((n) => n.name).join(" › ")}` : ""}</div>
+          <h2 style={{ overflowWrap: "anywhere" }}>{node.name}</h2>
+        </div>
+        <span className="count-pill">{entries.length}</span>
+        {wsIdx.isArchived(node.id) && <span className="badge">Closed</span>}
+      </div>
+      {node.kind === "position" && (editing
+        ? <PositionForm key={node.id} ws={node} onDone={() => setEditing(false)} />
+        : <PositionInfo ws={node} onEdit={() => setEditing(true)} />)}
+      <div className="group">
+        <div className="group-title">Open tasks<span className="n">{open.length}</span></div>
+        {open.length ? open.map((e) => row(e, true)) : <div className="pending-sub">No open tasks here.</div>}
+      </div>
+      <div className="group">
+        <div className="group-title">Timeline<span className="n">{entries.length}</span></div>
+        {!entries.length && <div className="empty"><Icon name="briefcase" size={28} />Nothing linked yet. Notes you add while this is selected are linked automatically.</div>}
+        {days.map(([date, items]) => (
+          <div key={date}>
+            <div className="timeline-date"><Icon name="calendar" size={13} />{fmtShort(date)}</div>
+            {items.map((e) => row(e, false))}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   12c. BUILDING — Plan B Tower floor directory (copied as printed on the image)
+   ============================================================ */
+const PLANB_IMG = "assets/plan-b-tower.jpg";
+const PLANB_FLOORS = [
+  { floor: "1–6", name: "สำนักงาน" },
+  { floor: "3–4", name: "ร้านข้าว" },
+  { floor: "11–12", name: "Human Intelligence" },
+  { floor: "13, 14, 23", name: "Operation" },
+  { floor: "14", name: "Plan B Eleven (Football + Account Management)" },
+  { floor: "15", name: "GSV, Innolize, E-Sport, T-Sport, Government Relations, New Business" },
+  { floor: "16", name: "Plan B Eleven (Sport Business)" },
+  { floor: "17", name: "People, Purchasing, IT, Plan B Building" },
+  { floor: "18–29", name: "ชั้นบริหาร — การบริหารงานขององค์กรและทีมต่าง ๆ" },
+  { floor: "21", name: "คาเฟ่, ห้องประชุม (Café, Meeting Room)" },
+  { floor: "22", name: "บัญชี, Client Service" },
+  { floor: "24, 25", name: "Sales VGI, SPORT, OOH และ Sales" },
+  { floor: "25", name: "ผู้บริหาร Executive" },
+  { floor: "26", name: "Marketing" },
+  { floor: "27", name: "CEO Office" },
+  { floor: "28", name: "VGI ล็อบบี้" },
+].map((f, i) => ({ ...f, i, first: parseInt(f.floor, 10) })).sort((a, b) => a.first - b.first || a.i - b.i);
+
+function BuildingView() {
+  const { openImage } = useApp();
+  const [q, setQ] = useState("");
+  const term = q.trim().toLowerCase();
+  const rows = term ? PLANB_FLOORS.filter((f) => `${f.floor} ${f.name}`.toLowerCase().includes(term)) : PLANB_FLOORS;
+  return (
+    <section className="card pending" aria-label="Building details">
+      <div className="pending-head"><h2>Building</h2><span className="pending-sub" style={{ margin: 0 }}>รายละเอียดตึก · Plan B Tower</span></div>
+      <img src={PLANB_IMG} loading="lazy" alt="Plan B Tower floor directory" className="bld-img" onClick={() => openImage(PLANB_IMG)} />
+      <div className="search-box" style={{ margin: "16px 0 10px" }}>
+        <Icon name="search" size={17} />
+        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search floor or team… (e.g. 17, Marketing)" aria-label="Search floors" />
+      </div>
+      {rows.map((f) => (
+        <div key={f.i} className="task-row">
+          <span className="badge p-low bld-floor">Fl. {f.floor}</span>
+          <div className="task-title" style={{ flex: 1, minWidth: 0 }}>{f.name}</div>
+        </div>
+      ))}
+      {!rows.length && <div className="empty">No floor matches “{q.trim()}”.</div>}
+    </section>
+  );
+}
+
+/* ============================================================
    13. MENU — sync status, export / import backup, sample data, sign out
    ============================================================ */
 function Menu({ user, onExport, onImport, onSample }) {
@@ -1571,6 +2293,17 @@ function Notebook({ store, user }) {
   const [toasts, setToasts] = useState([]);
   const [lightbox, setLightbox] = useState(null);
   const searchRef = useRef(null);
+  const [workspaces, setWorkspaces] = useState([]);
+  const [wsLoaded, setWsLoaded] = useState(false);
+  const [wsFilter, setWsFilter] = useState(() => { try { return localStorage.getItem(WS_FILTER_KEY) || null; } catch { return null; } });
+  const [wsOpen, setWsOpen] = useState(false);
+  const [posEditing, setPosEditing] = useState(false);
+  const burgerRef = useRef(null);
+  const wsNavRef = useRef(null);
+  const wsOpenRef = useRef(false);
+  wsOpenRef.current = wsOpen;
+  const entriesRef = useRef(entries);
+  entriesRef.current = entries;
 
   const toast = useCallback((msg, kind = "info", action = null) => {
     const id = uid();
@@ -1587,15 +2320,61 @@ function Notebook({ store, user }) {
     return unsub;
   }, [store]);
 
-  // Lock page scroll while the mobile drawer is open
-  useEffect(() => { document.body.classList.toggle("lock", panelOpen && window.matchMedia("(max-width: 899px)").matches); }, [panelOpen]);
+  useEffect(() => {
+    setWsLoaded(false);
+    return store.subscribeWorkspaces(
+      (list) => { setWorkspaces(list.map(normalizeWorkspace)); setWsLoaded(true); },
+      (err) => { setWsLoaded(true); toast(err.code === "SCHEMA_MISSING" ? SCHEMA_MSG : err.message, "error"); }
+    );
+  }, [store]);
+
+  const wsIdx = useMemo(() => buildWsIndex(workspaces), [workspaces]);
+  const wsIdxRef = useRef(wsIdx);
+  wsIdxRef.current = wsIdx;
+  // Forget a remembered filter whose node no longer exists.
+  useEffect(() => { if (wsLoaded && wsFilter && !wsIdx.byId.has(wsFilter)) setWsFilter(null); }, [wsLoaded, wsIdx, wsFilter]);
+  useEffect(() => { try { wsFilter ? localStorage.setItem(WS_FILTER_KEY, wsFilter) : localStorage.removeItem(WS_FILTER_KEY); } catch {} }, [wsFilter]);
+  useEffect(() => { if (!wsFilter && view === "summary") setView("calendar"); }, [wsFilter, view]);
+
+  const filterNode = wsFilter ? wsIdx.byId.get(wsFilter) || null : null;
+  const visible = useMemo(() => {
+    if (!filterNode) return entries;
+    const set = wsIdx.descendants(filterNode.id);
+    return entries.filter((e) => e.workspaceIds.some((id) => set.has(id)));
+  }, [entries, wsIdx, filterNode]);
+  // Items per node, counting the node itself and everything below it (unknown ids are ignored).
+  const wsCounts = useMemo(() => {
+    const m = new Map();
+    entries.forEach((e) => {
+      const hit = new Set();
+      e.workspaceIds.forEach((id) => wsIdx.path(id).forEach((n) => hit.add(n.id)));
+      hit.forEach((id) => m.set(id, (m.get(id) || 0) + 1));
+    });
+    return m;
+  }, [entries, wsIdx]);
+
+  const isDrawer = () => window.matchMedia("(max-width: 1180px)").matches;
+  const closeWs = () => { setWsOpen(false); burgerRef.current?.focus(); };
+  const openWs = () => { setPanelOpen(false); setWsOpen(true); requestAnimationFrame(() => wsNavRef.current?.focus()); };
+  function selectWs(id) {
+    setWsFilter(id); setPosEditing(false);
+    if (wsOpenRef.current && isDrawer()) closeWs();
+  }
+
+  // Lock page scroll while a mobile drawer is open
+  useEffect(() => {
+    document.body.classList.toggle("lock", (panelOpen && window.matchMedia("(max-width: 899px)").matches) || (wsOpen && isDrawer()));
+  }, [panelOpen, wsOpen]);
 
   // Keyboard: "/" focuses search, Esc closes overlays
   useEffect(() => {
     const onKey = (e) => {
       const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
       if (e.key === "/" && !typing) { e.preventDefault(); searchRef.current?.focus(); }
-      if (e.key === "Escape" && !typing) { setLightbox(null); setPanelOpen(false); }
+      if (e.key === "Escape" && !typing) {
+        setLightbox(null); setPanelOpen(false);
+        if (wsOpenRef.current) { setWsOpen(false); burgerRef.current?.focus(); }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -1603,13 +2382,14 @@ function Notebook({ store, user }) {
 
   const byDate = useMemo(() => {
     const map = new Map();
-    entries.forEach((e) => {
+    visible.forEach((e) => {
       if (!map.has(e.date)) map.set(e.date, { work: 0, study: 0, ideas: 0, total: 0, open: 0 });
       const c = map.get(e.date); c[e.tab]++; c.total++; if (e.tab === "work" && !e.done) c.open++;
     });
     return map;
-  }, [entries]);
+  }, [visible]);
   const pendingCount = useMemo(() => entries.filter((e) => e.tab === "work" && !e.done).length, [entries]);
+  const visiblePending = useMemo(() => visible.filter((e) => e.tab === "work" && !e.done).length, [visible]);
 
   function selectDate(k) {
     if (!inRange(k)) return;
@@ -1638,7 +2418,50 @@ function Notebook({ store, user }) {
         toast("Deleted");
       } catch (err) { toast(err.message, "error"); }
     },
+    async toggleCheck(e, itemId) {
+      const next = normalizeEntry({ ...e, checklist: e.checklist.map((c) => (c.id === itemId ? { ...c, done: !c.done } : c)), updatedAt: Date.now() });
+      try { await store.save(next); } catch (err) { toast(err.message, "error"); }
+    },
   }), [store, toast]);
+
+  // Workspace actions — hierarchy rules are enforced here (client-side).
+  const wsActions = useMemo(() => {
+    const save = async (w) => {
+      try { await store.saveWorkspace(normalizeWorkspace(w)); return true; }
+      catch (err) { toast(err.message || "Could not save", "error"); return false; }
+    };
+    return {
+      save,
+      add(kind, parentId, name) {
+        const idx = wsIdxRef.current;
+        const parent = parentId ? idx.byId.get(parentId) : null;
+        if (!wsParentOk(kind, parent)) return toast(`A ${kind} can't be added there.`, "error");
+        const sibs = idx.kids.get(parent ? parent.id : "") || [];
+        const now = Date.now();
+        return save({ id: uid(), kind, parentId: parent ? parent.id : null, name, sort: sibs.reduce((m, s) => Math.max(m, s.sort), -1) + 1, createdAt: now, updatedAt: now });
+      },
+      async archive(w, on) {
+        const ok = await save({ ...w, archivedAt: on ? Date.now() : null, updatedAt: Date.now() });
+        if (ok && on) toast(`Archived: ${w.name}`, "info", { label: "Undo", fn: () => save({ ...w, archivedAt: null, updatedAt: Date.now() }) });
+      },
+      async remove(w) {
+        if ((wsIdxRef.current.kids.get(w.id) || []).length || entriesRef.current.some((e) => e.workspaceIds.includes(w.id))) {
+          return toast("This still has items inside — archive it instead.", "error");
+        }
+        if (!window.confirm(`Delete “${w.name}”? This can't be undone.`)) return;
+        try { await store.removeWorkspace(w.id); toast("Deleted"); } catch (err) { toast(err.message, "error"); }
+      },
+      move(w, sibs, dir) {
+        const i = sibs.findIndex((x) => x.id === w.id), j = i + dir;
+        if (i < 0 || j < 0 || j >= sibs.length) return;
+        const order = [...sibs];
+        [order[i], order[j]] = [order[j], order[i]];
+        const now = Date.now();
+        const changed = order.map((x, k) => (x.sort === k ? null : normalizeWorkspace({ ...x, sort: k, updatedAt: now }))).filter(Boolean);
+        store.saveWorkspaces(changed).catch((err) => toast(err.message, "error"));
+      },
+    };
+  }, [store, toast]);
 
   async function exportBackup() {
     try {
@@ -1647,7 +2470,7 @@ function Notebook({ store, user }) {
       for (const e of entries) for (const a of e.attachments) {
         try { const b = await store.getFileBlob(a); if (b) files[a.id] = await blobToDataURL(b); } catch {}
       }
-      const data = { app: "second-brain-notebook", version: 1, exportedAt: new Date().toISOString(), range: [RANGE_START, RANGE_END], entries, files };
+      const data = { app: "second-brain-notebook", version: 2, exportedAt: new Date().toISOString(), range: [RANGE_START, RANGE_END], entries, workspaces, files };
       downloadBlob(new Blob([JSON.stringify(data)], { type: "application/json" }), `second-brain-backup-${todayKey()}.json`);
     } catch (err) { toast("Export failed: " + err.message, "error"); }
   }
@@ -1656,8 +2479,11 @@ function Notebook({ store, user }) {
       const data = JSON.parse(await file.text());
       if (!data || !Array.isArray(data.entries)) throw new Error("This is not a Second Brain backup file.");
       const valid = data.entries.filter((e) => e && e.id && /^\d{4}-\d{2}-\d{2}$/.test(e.date) && TAB_BY_ID[e.tab]);
-      if (!window.confirm(`Import ${valid.length} item(s)? Items with the same ID will be replaced; everything else stays.`)) return;
+      const wsValid = Array.isArray(data.workspaces)
+        ? data.workspaces.filter((w) => w && w.id && WS_KINDS[w.kind] && String(w.name || "").trim()).map(normalizeWorkspace) : [];
+      if (!window.confirm(`Import ${valid.length} item(s)${wsValid.length ? ` and ${wsValid.length} workspace(s)` : ""}? Items with the same ID will be replaced; everything else stays.`)) return;
       toast("Importing…");
+      if (wsValid.length) { try { await store.saveWorkspaces(wsValid); } catch (err) { toast(err.message, "error"); } }
       const files = data.files || {};
       let missing = 0;
       const out = [];
@@ -1681,43 +2507,70 @@ function Notebook({ store, user }) {
   }
 
   const ctx = useMemo(() => ({
-    store, toast, actions,
+    store, toast, actions, workspaces, wsIdx, wsFilter: filterNode ? filterNode.id : null, wsActions,
     openImage: setLightbox,
     onTag: (t) => { setQuery(t + " "); setSearchOpen(true); setTimeout(() => searchRef.current?.focus(), 0); },
-  }), [store, toast, actions]);
+  }), [store, toast, actions, workspaces, wsIdx, filterNode, wsActions]);
+  const filterLabel = filterNode ? wsIdx.path(filterNode.id).map((n) => n.name).join(" › ") : "";
 
   return (
     <AppCtx.Provider value={ctx}>
       <header className="topbar">
         <div className="topbar-inner">
+          <button ref={burgerRef} type="button" className="btn ghost icon-only ws-burger" onClick={openWs}
+            aria-label="Workspaces" aria-expanded={wsOpen} aria-controls="ws-nav"><Icon name="menu" /></button>
           <div className="brand">
             <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
             <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook · 6 Nov 2026 – 5 Mar 2027</div></div>
           </div>
-          <SearchBar entries={entries} query={query} setQuery={setQuery} open={searchOpen} setOpen={setSearchOpen}
+          <SearchBar entries={visible} query={query} setQuery={setQuery} open={searchOpen} setOpen={setSearchOpen}
             inputRef={searchRef} onPick={(e) => openEntry(e.date, e.tab, e.id)} />
+          {filterNode && (
+            <div className="ws-chip">
+              <button type="button" className="ws-chip-main" title={`Show summary · ${filterLabel}`} onClick={() => setView("summary")}>{filterLabel}</button>
+              <button type="button" className="x" aria-label="Clear workspace filter" onClick={() => selectWs(null)}><Icon name="x" size={13} strokeWidth={2.2} /></button>
+            </div>
+          )}
           <nav className="nav">
             <button className={`btn ghost${view === "calendar" ? " active" : ""}`} onClick={() => setView("calendar")} aria-label="Calendar">
               <Icon name="calendar" /><span className="label">Calendar</span>
             </button>
-            <button className={`btn ghost${view === "pending" ? " active" : ""}`} onClick={() => setView("pending")} aria-label={`Pending tasks, ${pendingCount}`}>
-              <Icon name="list" /><span className="label">Pending</span>{pendingCount > 0 && <span className="count-pill">{pendingCount}</span>}
+            <button className={`btn ghost${view === "pending" ? " active" : ""}`} onClick={() => setView("pending")} aria-label={`Pending tasks, ${visiblePending}`}>
+              <Icon name="list" /><span className="label">Pending</span>{visiblePending > 0 && <span className="count-pill">{visiblePending}</span>}
             </button>
+            <button className={`btn ghost${view === "building" ? " active" : ""}`} onClick={() => setView("building")} aria-label="Building details (รายละเอียดตึก)">
+              <Icon name="building" /><span className="label">Building</span>
+            </button>
+            {filterNode && (
+              <button className={`btn ghost${view === "summary" ? " active" : ""}`} onClick={() => setView("summary")} aria-label={`Summary of ${filterNode.name}`}>
+                <Icon name="file" /><span className="label">Summary</span>
+              </button>
+            )}
             <Menu user={user} onExport={exportBackup} onImport={importBackup} onSample={addSample} />
           </nav>
         </div>
       </header>
 
       <main className="layout">
+        {wsOpen && <div className="backdrop ws" onClick={closeWs} />}
+        <WorkspaceSidebar navRef={wsNavRef} open={wsOpen} filter={filterNode ? filterNode.id : null} view={view} counts={wsCounts}
+          allCount={entries.length} pendingCount={pendingCount} onSelect={selectWs}
+          onAll={() => { selectWs(null); setView("calendar"); }}
+          onPending={() => { selectWs(null); setView("pending"); }}
+          onDetails={(w) => { selectWs(w.id); setView("summary"); setPosEditing(true); }} />
         <div>
           {!loaded
             ? <div className="card empty"><span className="spinner" style={{ margin: "0 auto" }} /></div>
-            : view === "calendar"
-              ? <Calendar month={month} setMonth={setMonth} selected={selected} onSelect={selectDate} byDate={byDate} />
-              : <PendingTasks entries={entries} onOpen={openEntry} />}
+            : view === "building"
+              ? <BuildingView />
+              : view === "summary" && filterNode
+              ? <WorkspaceSummary node={filterNode} entries={visible} onOpen={openEntry} editing={posEditing} setEditing={setPosEditing} />
+              : view === "pending"
+                ? <PendingTasks entries={visible} onOpen={openEntry} />
+                : <Calendar month={month} setMonth={setMonth} selected={selected} onSelect={selectDate} byDate={byDate} />}
         </div>
         {panelOpen && <div className="backdrop" onClick={() => setPanelOpen(false)} />}
-        <DailyPanel date={selected} tab={tab} setTab={setTab} entries={entries} open={panelOpen}
+        <DailyPanel date={selected} tab={tab} setTab={setTab} entries={visible} open={panelOpen}
           onClose={() => setPanelOpen(false)} onDateChange={selectDate} focusId={focusId} />
       </main>
 
@@ -1763,8 +2616,8 @@ function sbAuthText(e) {
   if (/rate limit|too many/i.test(m)) return "Too many attempts. Wait a minute and try again.";
   return m;
 }
+// Invite-only: accounts are created by the owner in the Supabase dashboard — no sign-up from the app.
 function SupabaseAuth({ recovery, onRecovered }) {
-  const [mode, setMode] = useState("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -1784,15 +2637,11 @@ function SupabaseAuth({ recovery, onRecovered }) {
         const { error } = await sb.auth.updateUser({ password });
         if (error) return fail(error);
         onRecovered();
-      } else if (mode === "signin") {
+      } else {
         const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password });
         if (error && /email not confirmed/i.test(error.message || "")) {
           setMsg({ kind: "error", text: "Please confirm your email first — click the link we sent you.", action: { label: "Resend confirmation email", fn: resend } });
         } else if (error) fail(error);
-      } else {
-        const { data, error } = await sb.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: SB_REDIRECT } });
-        if (error) return fail(error);
-        if (!data.session) { setMode("signin"); setPassword(""); setMsg({ kind: "info", text: "Check your email to confirm your account, then sign in." }); }
       }
     } catch (err) { fail(err); } finally { setBusy(false); }
   }
@@ -1809,19 +2658,15 @@ function SupabaseAuth({ recovery, onRecovered }) {
           <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
           <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook</div></div>
         </div>
-        <h1>{recovery ? "Set a new password" : mode === "signin" ? "Welcome back" : "Create your account"}</h1>
-        <p className="lead">Your notes sync across desktop, iPad and phone.</p>
+        <h1>{recovery ? "Set a new password" : "Welcome back"}</h1>
+        <p className="lead">{recovery ? "Your notes sync across desktop, iPad and phone." : "บัญชีสร้างโดยผู้ดูแลเท่านั้น · Accounts are created by the owner only."}</p>
         <form className="auth-form" onSubmit={submit}>
           {!recovery && <label>Email<input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>}
-          <label>{recovery ? "New password" : "Password"}<input type="password" autoComplete={mode === "signin" && !recovery ? "current-password" : "new-password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+          <label>{recovery ? "New password" : "Password"}<input type="password" autoComplete={recovery ? "new-password" : "current-password"} required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} /></label>
           {msg && <div className={`auth-msg ${msg.kind}`}>{msg.text}{msg.action && <> <button type="button" className="linklike" onClick={msg.action.fn}>{msg.action.label}</button></>}</div>}
-          <button className="btn primary" type="submit" disabled={busy}>{busy ? "Please wait…" : recovery ? "Save new password" : mode === "signin" ? "Sign in" : "Create account"}</button>
+          <button className="btn primary" type="submit" disabled={busy}>{busy ? "Please wait…" : recovery ? "Save new password" : "Sign in"}</button>
         </form>
-        {!recovery && <div className="auth-switch">
-          {mode === "signin"
-            ? <>New here? <button className="linklike" onClick={() => { setMode("signup"); setMsg(null); }}>Create an account</button> · <button className="linklike" onClick={reset}>Forgot password?</button></>
-            : <>Already have an account? <button className="linklike" onClick={() => { setMode("signin"); setMsg(null); }}>Sign in</button></>}
-        </div>}
+        {!recovery && <div className="auth-switch"><button className="linklike" onClick={reset}>Forgot password?</button></div>}
       </div>
     </div>
   );
