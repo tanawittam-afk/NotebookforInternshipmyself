@@ -5,46 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Second Brain · Internship Notebook</title>
 <meta name="description" content="A minimalist second-brain notebook for an internship: calendar, Work / Study / Ideas notes, pending tasks, search and #tags." />
-<meta name="theme-color" content="#F6F3EA" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235E7043'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23F6F3EA' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%23F6F3EA'/%3E%3C/svg%3E" />
+<meta name="theme-color" content="#F3F7FD" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23001A5C'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23FFFFFF' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%230AA9F0'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Inter:wght@400;500;600&family=Prompt:wght@500;600&display=swap" rel="stylesheet" />
 
 <style>
 /* ============================================================
-   Design tokens — cream background, sage / olive accents
+   Design tokens — Plan B palette (navy / royal / sky), personal use
    ============================================================ */
 :root {
-  --bg: #F6F3EA;
-  --surface: #FFFDF7;
-  --surface-2: #F0ECE0;
-  --surface-3: #E9E4D6;
-  --border: #E3DDCC;
-  --border-strong: #CFC8B3;
-  --text: #2E3229;
-  --muted: #6B6F60;
-  --faint: #A3A596;
+  --bg: #F3F7FD;
+  --surface: #FFFFFF;
+  --surface-2: #EAF1FB;
+  --surface-3: #DCE7F6;
+  --border: #D5E0EF;
+  --border-strong: #7388A9;   /* UI boundaries — 3.61:1 on white */
+  --text: #0B1B3F;
+  --muted: #46587A;
+  --faint: #596B8B;           /* ≥4.7:1 on bg/surface/surface-2; not on surface-3 */
 
-  --accent: #5E7043;          /* olive — buttons, active tab (AA on white) */
-  --accent-hover: #4E5E37;
-  --sage: #8FA06F;            /* decorative — dots, highlights */
-  --accent-soft: #E3E9D3;
-  --accent-softer: #EFF2E5;
+  --accent: #0050AA;          /* Plan B royal — buttons, active tab, focus (7.7:1 on white) */
+  --accent-hover: #00337F;
+  --sage: #2B7FD0;            /* mid blue — dots, focus-within borders (UI only, never text) */
+  --accent-soft: #DDEAFB;
+  --accent-softer: #EEF4FD;
 
-  --danger: #A34A35;
-  --danger-soft: #F5E2DB;
-  --warn: #8F6516;
-  --warn-soft: #F4E9CF;
+  --danger: #B42318;
+  --danger-soft: #FDE8E5;
+  --warn: #8A5300;
+  --warn-soft: #FCEFD6;
 
-  --study: #7A6420;  --study-soft: #F1EBD3;
-  --ideas: #3E6656;  --ideas-soft: #DDE9E2;
+  --study: #5B3CB8;  --study-soft: #ECE6FA;
+  --ideas: #0A6B63;  --ideas-soft: #DCF1EC;
 
   --radius: 14px;
   --radius-sm: 9px;
-  --shadow: 0 1px 2px rgba(46,50,41,.05), 0 6px 20px rgba(46,50,41,.06);
-  --shadow-lg: 0 10px 40px rgba(46,50,41,.16);
+  --shadow: 0 1px 2px rgba(0,26,92,.05), 0 6px 20px rgba(0,26,92,.07);
+  --shadow-lg: 0 10px 40px rgba(0,26,92,.18);
   --font: "Inter", "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* ---- Plan B brand (new) ---- */
+  --navy: #001A5C;
+  --royal: #0050AA;
+  --sky: #0AA9F0;             /* DECORATIVE ONLY — 2.64:1 on white */
+  --sky-soft: #D3E9FD;
+  --navy-soft: #E3EAF7;
+  --on-navy: #FFFFFF;
+  --on-navy-muted: #BFD6F5;
+  --on-accent: #FFFFFF;
+  --grad-band: linear-gradient(100deg, #001A5C 0%, #0050AA 100%);
+  --grad-strip: linear-gradient(90deg, #001A5C 0%, #0050AA 55%, #0AA9F0 100%);
+  --topbar-bg: rgba(243,247,253,.92);
+  --scrim: rgba(0,16,51,.40);
+  --scrim-strong: rgba(0,16,51,.85);
+  --mark: #FFE58A;
+
+  /* ---- Mentor statuses (new) ---- */
+  --success: #17663A;  --success-soft: #DEF3E5;
+  --changes: #A13A00;  --changes-soft: #FDEADB;
+  --blocked-tint: #FFF5F3;
+
+  --tap: 44px;
+  --font-head: "Prompt", "IBM Plex Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -61,7 +85,9 @@ body {
 body.lock { overflow: hidden; }
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
+h1, h2, h3 { font-family: var(--font-head); line-height: 1.3; }
 h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+.brand-name, .cal-title, .panel-date { font-family: var(--font-head); }
 a { color: var(--accent); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .icon { flex: none; display: block; }
@@ -108,7 +134,7 @@ a { color: var(--accent); }
 /* ---------- Top bar ---------- */
 .topbar {
   position: sticky; top: 0; z-index: 30;
-  background: rgba(246,243,234,.92);
+  background: var(--topbar-bg);
   backdrop-filter: saturate(1.2) blur(10px);
   -webkit-backdrop-filter: saturate(1.2) blur(10px);
   border-bottom: 1px solid var(--border);
@@ -120,8 +146,8 @@ a { color: var(--accent); }
 }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .brand-mark {
-  width: 34px; height: 34px; border-radius: 10px; background: var(--accent);
-  display: grid; place-items: center; color: var(--bg); flex: none;
+  position: relative; width: 34px; height: 34px; border-radius: 10px; background: var(--navy);
+  display: grid; place-items: center; color: var(--on-navy); flex: none;
 }
 .brand-name { font-weight: 600; font-size: 16px; line-height: 1.2; }
 .brand-sub { font-size: 12px; color: var(--muted); line-height: 1.2; white-space: nowrap; }
@@ -158,7 +184,7 @@ a { color: var(--accent); }
 .result-title { font-weight: 500; }
 .result-snippet { font-size: 13px; color: var(--muted); margin-top: 2px; }
 .search-empty { padding: 18px 14px; color: var(--muted); font-size: 14px; }
-mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; }
+mark { background: var(--mark); color: inherit; border-radius: 3px; padding: 0 1px; }
 
 /* ---------- Badges, tags ---------- */
 .badge {
@@ -219,7 +245,7 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 }
 .day:hover:not(:disabled) { background: var(--surface-2); }
 .day:disabled { color: var(--faint); cursor: not-allowed; font-weight: 400;
-  background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(227,221,204,.35) 6px 7px); }
+  background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(213,224,239,.55) 6px 7px); }
 .day .num { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 4px; border-radius: 999px; }
 .day.today .num { background: var(--accent-soft); color: var(--accent-hover); font-weight: 600; }
 .day.selected { border-color: var(--accent); background: var(--accent-softer); }
@@ -253,7 +279,7 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
   transition: background .15s, color .15s;
 }
 .tab:hover { color: var(--text); }
-.tab.active { background: var(--accent); color: #fff; box-shadow: 0 1px 3px rgba(46,50,41,.15); }
+.tab.active { background: var(--accent); color: #fff; box-shadow: 0 1px 3px rgba(0,26,92,.18); }
 .tab .th { font-size: 12px; opacity: .85; }
 .tab .n { font-size: 11px; min-width: 18px; height: 18px; border-radius: 999px; display: inline-grid; place-items: center; background: var(--surface-3); color: var(--muted); padding: 0 5px; }
 .tab.active .n { background: rgba(255,255,255,.22); color: #fff; }
@@ -302,7 +328,7 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; }
 .thumb .x, .file-chip .x {
   position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%;
-  border: 0; background: rgba(46,50,41,.7); color: #fff; display: grid; place-items: center; padding: 0;
+  border: 0; background: rgba(11,27,63,.72); color: #fff; display: grid; place-items: center; padding: 0;
 }
 .files { display: flex; flex-direction: column; gap: 6px; }
 .file-chip {
@@ -334,7 +360,7 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 .field input[type=date] { height: 34px; border: 1px solid var(--border); border-radius: 8px; padding: 0 8px; background: var(--surface); }
 .segment { display: inline-flex; padding: 3px; background: var(--surface-2); border-radius: 9px; gap: 2px; }
 .segment button { border: 0; background: transparent; height: 28px; padding: 0 10px; border-radius: 7px; font-size: 12.5px; font-weight: 500; color: var(--muted); }
-.segment button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(46,50,41,.12); }
+.segment button.on { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,26,92,.12); }
 .segment button.on.p-high { color: var(--danger); }
 .segment button.on.p-medium { color: var(--warn); }
 .segment button.on.p-low { color: var(--accent); }
@@ -383,7 +409,7 @@ mark { background: #E6EDC4; color: inherit; border-radius: 3px; padding: 0 1px; 
 .toast.error { background: var(--danger); color: #fff; }
 .toast button { border: 0; background: rgba(255,255,255,.14); color: inherit; border-radius: 7px; padding: 5px 10px; font-weight: 600; font-size: 13px; }
 @keyframes rise { from { transform: translateY(8px); opacity: 0; } }
-.lightbox { position: fixed; inset: 0; z-index: 90; background: rgba(32,35,28,.82); display: grid; place-items: center; padding: 24px; cursor: zoom-out; }
+.lightbox { position: fixed; inset: 0; z-index: 90; background: var(--scrim-strong); display: grid; place-items: center; padding: 24px; cursor: zoom-out; }
 .lightbox img { max-width: 100%; max-height: 88vh; border-radius: 10px; box-shadow: var(--shadow-lg); }
 .lightbox .btn { position: absolute; top: 16px; right: 16px; }
 
@@ -480,8 +506,215 @@ button.ws-chev:hover { background: var(--surface-3); }
     transition: transform .26s cubic-bezier(.2,.8,.2,1), visibility 0s linear .26s;
   }
   .ws-side.open { transform: none; visibility: visible; box-shadow: var(--shadow-lg); transition: transform .26s cubic-bezier(.2,.8,.2,1); }
-  .backdrop.ws { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(32,35,28,.35); animation: fade .2s; }
+  .backdrop.ws { display: block; position: fixed; inset: 0; z-index: 55; background: var(--scrim); animation: fade .2s; }
 }
+
+/* ---------- Plan B brand touches ---------- */
+.topbar::before { content: ""; display: block; height: 3px; background: var(--grad-strip); }
+.topbar.mentor::before { height: 4px; }
+.brand-mark::after { content: ""; position: absolute; right: 5px; bottom: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--sky); }
+.brand-dot { display: inline-block; width: 6px; height: 6px; margin: 0 3px 2px; border-radius: 50%; background: var(--sky); vertical-align: middle; }
+.card-band {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  margin: -1px -1px 0; padding: 14px 22px;
+  background: var(--grad-band); color: var(--on-navy);
+  border-radius: 18px 18px 0 0;
+}
+.card-band h2 { font-family: var(--font-head); font-size: 18px; color: var(--on-navy); }
+.card-band .sub { font-size: 12.5px; color: var(--on-navy-muted); }
+.card-band .btn { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.28); color: var(--on-navy); }
+.card-band .btn:hover:not(:disabled) { background: rgba(255,255,255,.2); }
+.card-band .btn[aria-pressed="true"] { background: var(--on-navy); color: var(--navy); }
+.card-band :focus-visible, .role-chip:focus-visible { outline-color: var(--on-navy); }
+.app-foot { padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); text-align: center; font-size: 12px; color: var(--muted); }
+.disclaimer { margin-top: 18px; text-align: center; font-size: 12px; color: var(--muted); }
+
+/* ---------- Role indicator ---------- */
+.role-chip {
+  display: inline-flex; align-items: center; gap: 6px; flex: none;
+  height: 28px; padding: 0 11px; border: 0; border-radius: 999px;
+  background: var(--navy); color: var(--on-navy);
+  font-size: 12.5px; font-weight: 600; white-space: nowrap;
+}
+.role-chip .short { display: none; }
+@media (max-width: 1365px) { .topbar.mentor .brand-sub { display: none; } }
+
+/* ---------- Status pill ---------- */
+.st-pill {
+  position: relative; display: inline-flex; align-items: center; gap: 5px;
+  height: 24px; padding: 0 9px; border: 0; border-radius: 999px;
+  font-size: 12px; font-weight: 500; line-height: 1; white-space: nowrap;
+  transition: box-shadow .15s;
+}
+.st-pill.s-todo        { background: var(--surface-2);    color: var(--muted); }
+.st-pill.s-in_progress { background: var(--accent-soft);  color: var(--accent); }
+.st-pill.s-review      { background: var(--warn-soft);    color: var(--warn); }
+.st-pill.s-changes     { background: var(--changes-soft); color: var(--changes); }
+.st-pill.s-done        { background: var(--success-soft); color: var(--success); }
+.st-pill.is-btn { cursor: pointer; }
+.st-pill.is-btn:hover:not(:disabled) { box-shadow: 0 0 0 1px var(--border-strong); }
+.st-pill.is-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ---------- Blocked flag, mentor pill, private ---------- */
+.flag-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 24px; padding: 0 9px; border-radius: 999px;
+  background: var(--danger); color: #fff; font-size: 12px; font-weight: 600; line-height: 1;
+}
+.mentor-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 22px; padding: 0 8px; border-radius: 999px;
+  background: var(--navy-soft); color: var(--navy); font-size: 11.5px; font-weight: 600; line-height: 1;
+}
+.priv { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
+
+/* ---------- Mentor board ---------- */
+.mb { overflow: hidden; container-type: inline-size; }
+.mb-jump { display: none; }
+.mb-scroll { padding: 16px; overflow-x: auto; scroll-behavior: smooth; }
+.mb-cols { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.mb-col { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 10px; border-radius: 13px; background: var(--surface-2); border-top: 2px solid transparent; }
+.mb-col.focus { border-top-color: var(--warn); }
+.mb-col-head { display: flex; align-items: center; gap: 8px; min-height: 28px; }
+.mb-col-title { font-family: var(--font-head); font-size: 14px; font-weight: 600; }
+.mb-col-head .n { margin-left: auto; font-size: 12px; color: var(--muted); }
+.mb-list { display: flex; flex-direction: column; gap: 8px; max-height: 70vh; overflow-y: auto; }
+.mb-card {
+  display: flex; flex-direction: column; gap: 8px; width: 100%;
+  padding: 10px 12px; text-align: left;
+  border: 1px solid var(--border); border-left: 4px solid transparent; border-radius: 11px;
+  background: var(--surface); box-shadow: var(--shadow);
+  transition: border-color .15s, box-shadow .15s;
+}
+.mb-card:hover { border-color: var(--border-strong); }
+.mb-card.overdue { border-left: 4px dashed var(--danger); }
+.mb-card.blocked { border-left: 4px solid var(--danger); background: var(--blocked-tint); }
+.mb-card-title { font-weight: 500; font-size: 14px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mb-card .meta { gap: 5px; }
+.mb-count { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; color: var(--muted); }
+.mb-empty { padding: 14px 8px; border: 1.5px dashed var(--border-strong); border-radius: 11px; text-align: center; font-size: 12.5px; color: var(--muted); }
+.mb-skel { height: 72px; border-radius: 11px; background: linear-gradient(90deg, var(--surface) 0%, var(--surface-3) 50%, var(--surface) 100%); background-size: 200% 100%; animation: shimmer 1.4s linear infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+/* the board lives in the middle layout column, so switch on the board's own width (5 x ~200px) */
+@container (max-width: 899px) {
+  .mb-cols { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); }
+  .mb-scroll { scroll-snap-type: x proximity; }
+  .mb-col { scroll-snap-align: start; }
+}
+@media (max-width: 899px) {
+  .mb-jump { display: flex; gap: 6px; overflow-x: auto; position: sticky; top: 0; z-index: 2; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .mb-jump .tag-chip { flex: none; min-height: var(--tap); }
+  .mb-jump .tag-chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-hover); }
+  .mb-scroll { scroll-snap-type: x mandatory; padding: 12px 16px; }
+  .mb-cols { grid-auto-columns: 86%; }
+  .mb-list { max-height: none; }
+}
+
+/* ---------- Thread ---------- */
+.thread { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.msg { display: flex; align-items: flex-start; gap: 8px; animation: rise .16s ease; }
+.msg.mine { flex-direction: row-reverse; }
+.msg-av { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 11.5px; font-weight: 600; }
+.msg.mentor .msg-av { background: var(--navy); color: var(--on-navy); }
+.msg.intern .msg-av { background: var(--accent-soft); color: var(--accent-hover); }
+.msg-bubble { min-width: 0; max-width: min(85%, 520px); padding: 8px 12px; border-radius: 12px; }
+.msg.mentor .msg-bubble { background: var(--navy-soft); border-left: 3px solid var(--navy); }
+.msg.intern .msg-bubble { background: var(--surface); border: 1px solid var(--border); }
+.msg-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin-bottom: 2px; font-size: 12.5px; }
+.msg-name { font-weight: 600; color: var(--text); }
+.msg-role { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+.msg.mentor .msg-role { color: var(--navy); }
+.msg time { font-size: 12px; color: var(--faint); }
+.msg .rich { font-size: 14px; }
+.msg-sys { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); text-align: center; }
+.msg-sys::before, .msg-sys::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.msg-sys .st-pill { height: 20px; padding: 0 7px; font-size: 11.5px; }
+.composer { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.composer textarea { width: 100%; min-height: 72px; resize: vertical; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 10px 12px; line-height: 1.55; font-size: 14.5px; outline: 0; }
+.composer textarea:focus { border-color: var(--sage); background: var(--surface); box-shadow: 0 0 0 3px var(--accent-softer); }
+.composer-row { display: flex; align-items: center; gap: 8px; }
+.composer-row .hint { flex: 1; }
+
+/* ---------- Notification bell ---------- */
+.bell { position: relative; }
+.bell-n {
+  position: absolute; top: 2px; right: 2px;
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
+  background: var(--danger); color: #fff; box-shadow: 0 0 0 2px var(--surface);
+  font-size: 11px; font-weight: 600; line-height: 18px; text-align: center;
+  animation: pop .2s ease;
+}
+@keyframes pop { from { transform: scale(.6); } }
+.notif { width: 340px; max-height: min(70vh, 480px); overflow: auto; padding: 0; }
+.notif-head { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; background: var(--surface); border-bottom: 1px solid var(--border); font-weight: 600; font-size: 14px; }
+.notif-list { list-style: none; margin: 0; padding: 4px; }
+.notif-item { width: 100%; display: flex; align-items: flex-start; gap: 10px; min-height: 56px; padding: 9px 10px; border: 0; border-radius: 9px; background: transparent; text-align: left; color: var(--muted); }
+.notif-item:hover { background: var(--surface-2); }
+.notif-item .ud { flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: transparent; }
+.notif-item.unread { color: var(--text); }
+.notif-item.unread .ud { background: var(--sage); }
+.notif-item.unread .notif-text { font-weight: 600; }
+.notif-text { font-size: 13.5px; line-height: 1.45; }
+.notif-item time { display: block; margin-top: 2px; font-size: 12px; font-weight: 400; color: var(--faint); }
+.notif-empty { padding: 24px 14px; text-align: center; font-size: 13.5px; color: var(--muted); }
+
+/* ---------- Touch targets (≥44px) ---------- */
+@media (pointer: coarse) {
+  .bell { width: var(--tap); height: var(--tap); }
+  .st-pill.is-btn::after { content: ""; position: absolute; inset: -10px -4px; }
+  .role-chip[aria-pressed] { min-height: var(--tap); }
+  .menu-item { height: var(--tap); }
+  .composer .btn { height: var(--tap); }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 720px) {
+  .notif { position: fixed; left: 8px; right: 8px; top: 64px; width: auto; }
+  .role-chip .long { display: none; }
+  .role-chip .short { display: inline; }
+  .msg-bubble { max-width: 88%; }
+}
+
+/* ---------- Reduced motion (supplements the global rule at line 521) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .mb-scroll { scroll-behavior: auto; }
+  .mb-skel { animation: none; background: var(--surface-2); }
+  .msg, .bell-n { animation: none; }
+}
+
+/* ---------- Mentor MVP glue (DevBAmooTam) ---------- */
+.st-chev { opacity: .7; }
+.st-menu { position: static; width: auto; min-width: 180px; margin-top: 6px; box-shadow: var(--shadow); }
+.st-menu .menu-item { height: auto; min-height: 36px; }
+.st-wrap { display: inline-flex; flex-direction: column; align-items: flex-start; }
+.thread-wrap { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--border); }
+.msg-actions { display: flex; gap: 4px; margin-top: 4px; }
+.msg-edit { width: 100%; min-height: 60px; border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; background: var(--surface); }
+.priv-note { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.locked-note { font-size: 12.5px; color: var(--muted); }
+.mb-card-top { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.mb-open { border: 0; background: transparent; padding: 0; text-align: left; color: inherit; width: 100%; }
+.pending-card .pending { padding-top: 16px; }
+.tab:not(.active) .th { opacity: 1; }          /* --muted at .85 on --surface-2 drops to 4.46:1 */
+.msg.mentor time { color: var(--muted); }      /* --faint on --navy-soft is 4.46:1 */
+/* Board view: the board takes the full content width; the daily panel becomes the right drawer (same as <=899px) */
+@media (min-width: 900px) {
+  .layout.board-mode { grid-template-columns: 248px minmax(0, 1fr); }
+  .layout.board-mode .panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 60;
+    width: min(100%, 540px); max-height: none; height: 100%;
+    border-radius: 0; border-width: 0 0 0 1px;
+    transform: translateX(105%); visibility: hidden;
+    transition: transform .26s cubic-bezier(.2,.8,.2,1), visibility 0s linear .26s;
+  }
+  .layout.board-mode .panel.open { transform: none; visibility: visible; box-shadow: var(--shadow-lg); transition: transform .26s cubic-bezier(.2,.8,.2,1); }
+  .layout.board-mode .panel-close { display: inline-flex; }
+  .layout.board-mode .backdrop:not(.ws) { display: block; position: fixed; inset: 0; z-index: 55; background: var(--scrim); animation: fade .2s; }
+}
+@media (min-width: 900px) and (max-width: 1180px) { .layout.board-mode { grid-template-columns: minmax(0, 1fr); } }
+.card-band .count-pill { background: var(--on-navy); color: var(--navy); }
+@media (pointer: coarse) { .btn.tap { height: var(--tap); } .btn.tap.icon-only { width: var(--tap); } .st-menu .menu-item { min-height: var(--tap); } }
+@media (max-width: 720px) { .notif.menu { position: fixed; } }
 
 /* ============================================================
    Responsive: iPad portrait & phones — daily panel becomes a drawer
@@ -497,7 +730,7 @@ button.ws-chev:hover { background: var(--surface-3); }
   }
   .panel.open { transform: none; box-shadow: var(--shadow-lg); }
   .panel-close { display: inline-flex; }
-  .backdrop { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(32,35,28,.35); animation: fade .2s; }
+  .backdrop { display: block; position: fixed; inset: 0; z-index: 55; background: var(--scrim); animation: fade .2s; }
   @keyframes fade { from { opacity: 0; } }
 }
 @media (max-width: 960px) { .nav .label, .brand-sub { display: none; } }
@@ -650,14 +883,21 @@ function extractTags(text) {
 // Make every entry Firestore-safe (no undefined values) and consistent.
 function normalizeEntry(e) {
   const isWork = e.tab === "work";
+  // status wins; legacy rows only carry `done`. Study / Ideas have no workflow.
+  const status = !isWork ? "todo" : STATUS_BY_ID[e.status] ? e.status : e.done ? "done" : "todo";
   return {
     id: String(e.id || uid()),
     date: String(e.date),
     tab: e.tab,
     title: String(e.title || ""),
     body: String(e.body || ""),
-    done: isWork ? Boolean(e.done) : false,
-    doneAt: isWork && e.done ? Number(e.doneAt) || Date.now() : null,
+    status,
+    done: status === "done",
+    doneAt: status === "done" ? Number(e.doneAt) || Date.now() : null,
+    isPrivate: Boolean(e.isPrivate),
+    blocked: isWork ? Boolean(e.blocked) : false,
+    blockedAt: isWork && e.blocked ? Number(e.blockedAt) || null : null,
+    createdBy: e.createdBy ? String(e.createdBy) : null, // read-only: server-set, never sent
     due: isWork && e.due ? String(e.due) : null,
     priority: isWork ? (PRIORITY_RANK[e.priority] !== undefined ? e.priority : "medium") : null,
     attachments: Array.isArray(e.attachments) ? JSON.parse(JSON.stringify(e.attachments)) : [],
@@ -684,6 +924,42 @@ const WS_CHANNEL_PRESETS = ["JobThai", "LinkedIn", "Facebook", "Ads"];
 const WS_FILTER_KEY = "second-brain-ws-filter";
 const SCHEMA_MSG = "Run supabase/002_workspaces.sql in Supabase";
 const ASSIGNED = [{ id: "mentor", label: "พี่เลี้ยง" }, { id: "self", label: "ตัวเอง" }, { id: "other", label: "Other" }];
+// ---- Mentor (พี่เลี้ยง) workflow — docs/mentor-architecture.md §5. Board / workflow order. ----
+const STATUSES = [
+  { id: "todo", th: "รอทำ", icon: "circle" },
+  { id: "in_progress", th: "กำลังทำ", icon: "half" },
+  { id: "review", th: "รอพี่ตรวจ", icon: "eye" },
+  { id: "changes", th: "ให้แก้", icon: "rotate" },
+  { id: "done", th: "เสร็จ", icon: "check" },
+];
+const STATUS_BY_ID = Object.fromEntries(STATUSES.map((s) => [s.id, s]));
+const SCHEMA_MSG_003 = "Run supabase/003_mentor.sql in Supabase to turn on the mentor features";
+const ROLE_LABEL = { mentor: "พี่เลี้ยง", intern: "น้องฝึกงาน" };
+// Demo-only preview of the mentor UI over local data (ignored when a cloud backend is on).
+const DEMO_AS_MENTOR = !CLOUD_ENABLED && new URLSearchParams(location.search).get("as") === "mentor";
+// Mentor-assigned = created by someone other than the notebook owner (null createdBy = NOT assigned).
+const fromMentor = (e, ownerId) => Boolean(e.createdBy) && e.createdBy !== ownerId;
+// Client mirror of the server transition rules (the server stays the authority).
+// rc = { role, ownerId, hasMentor, caps }
+function canSetStatus(rc, e, to) {
+  if (!e || e.tab !== "work" || !STATUS_BY_ID[to] || e.status === to) return false;
+  if (!rc.caps.workflow) return to === "todo" || to === "done"; // before 003: only done / not done persists
+  if (rc.role === "mentor") return true;
+  if (!rc.hasMentor) return to !== "changes";
+  if (to === "changes") return false;               // the mentor's verb
+  if (fromMentor(e, rc.ownerId)) {
+    if (e.status === "done") return false;          // approved — ask the mentor to reopen
+    if (to === "done") return false;                // intern "done" = send for review
+  }
+  return true;
+}
+// The quick check button: next sensible status, or null.
+function quickStatus(rc, e) {
+  if (e.status === "done") return canSetStatus(rc, e, "todo") ? "todo" : null;
+  if (canSetStatus(rc, e, "done")) return "done";
+  if (canSetStatus(rc, e, "review")) return "review";
+  return null;
+}
 const LEARNING_TEMPLATE = "## เรื่องอะไร\n\n## ทำไมสำคัญ\n\n## ทำอย่างไร / ขั้นตอน\n\n## ตัวอย่างจริง\n\n## อธิบายด้วยคำของฉัน\n\n## คำถามถามพี่เลี้ยง\n";
 
 function normalizeWorkspace(w) {
@@ -786,10 +1062,12 @@ function downloadBlob(blob, name) {
 let idbPromise = null;
 function openIDB() {
   if (!idbPromise) idbPromise = new Promise((res, rej) => {
-    const req = indexedDB.open("second-brain-notebook", 2); // v2 adds "workspaces"
+    const req = indexedDB.open("second-brain-notebook", 3); // v2 adds "workspaces", v3 adds "comments"
+    // Another tab still runs an older version and holds the DB open: fail loudly instead of hanging.
+    req.onblocked = () => { idbPromise = null; rej(new Error("Close the other tabs of this notebook, then reload this page.")); };
     req.onupgradeneeded = () => {
       const db = req.result;
-      ["entries", "files", "workspaces"].forEach((n) => { if (!db.objectStoreNames.contains(n)) db.createObjectStore(n, { keyPath: "id" }); });
+      ["entries", "files", "workspaces", "comments"].forEach((n) => { if (!db.objectStoreNames.contains(n)) db.createObjectStore(n, { keyPath: "id" }); });
     };
     req.onsuccess = () => { req.result.onversionchange = () => req.result.close(); res(req.result); };
     req.onerror = () => rej(req.error);
@@ -807,7 +1085,7 @@ async function idbRun(storeName, mode, fn) {
   });
 }
 
-function createLocalStore() {
+function createLocalStore({ actorId = "local" } = {}) {
   let entries = [];
   const subs = new Set();
   const urls = new Map();
@@ -823,6 +1101,17 @@ function createLocalStore() {
     workspaces = [...workspaces.filter((x) => !ids.has(x.id)), ...list]; wsEmit();
   };
 
+  // What the 003 trigger does on the server: created_by is set once, blocked_at follows blocked.
+  const serverSide = (e) => {
+    const prev = entries.find((x) => x.id === e.id);
+    const createdBy = prev ? prev.createdBy || null : e.createdBy || actorId;
+    const blockedAt = !e.blocked ? null : prev && prev.blocked ? prev.blockedAt || Date.now() : Date.now();
+    return { ...e, createdBy, blockedAt };
+  };
+  let comments = [];
+  const cSubs = new Set();
+  const cEmit = () => cSubs.forEach((cb) => cb(comments));
+  const cReady = idbRun("comments", "readonly", (s) => s.getAll()).then((r) => { comments = r || []; });
   const getFileBlob = async (meta) => { const r = await idbRun("files", "readonly", (s) => s.get(meta.id)); return r ? r.blob : null; };
   const putFileWithId = async (meta, blob) => {
     await idbRun("files", "readwrite", (s) => s.put({ id: meta.id, blob }));
@@ -835,8 +1124,12 @@ function createLocalStore() {
       ready.then(() => cb(entries)).catch((e) => onError && onError(e));
       return () => subs.delete(cb);
     },
-    async save(e) { await idbRun("entries", "readwrite", (s) => s.put(e)); entries = [...entries.filter((x) => x.id !== e.id), e]; emit(); },
-    async saveMany(list) {
+    async save(e0) {
+      const e = serverSide(e0);
+      await idbRun("entries", "readwrite", (s) => s.put(e)); entries = [...entries.filter((x) => x.id !== e.id), e]; emit();
+    },
+    async saveMany(list0) {
+      const list = list0.map(serverSide);
       await idbRun("entries", "readwrite", (s) => { list.forEach((e) => s.put(e)); });
       const ids = new Set(list.map((e) => e.id));
       entries = [...entries.filter((x) => !ids.has(x.id)), ...list]; emit();
@@ -861,6 +1154,23 @@ function createLocalStore() {
       const u = URL.createObjectURL(b); urls.set(meta.id, u); return u;
     },
     async removeFile(meta) { await idbRun("files", "readwrite", (s) => s.delete(meta.id)); urls.delete(meta.id); },
+    subscribeComments(cb, onError) {
+      cSubs.add(cb);
+      cReady.then(() => cb(comments)).catch((e) => onError && onError(e));
+      return () => cSubs.delete(cb);
+    },
+    async saveComment({ id, entryId, body }) {
+      const now = Date.now();
+      const prev = comments.find((c) => c.id === id);
+      const c = prev ? { ...prev, body, updatedAt: now } : { id, entryId, ownerId: "local", authorId: actorId, body, createdAt: now, updatedAt: now };
+      await idbRun("comments", "readwrite", (s) => s.put(c));
+      comments = [...comments.filter((x) => x.id !== id), c]; cEmit();
+    },
+    async removeComment(id) { await idbRun("comments", "readwrite", (s) => s.delete(id)); comments = comments.filter((x) => x.id !== id); cEmit(); },
+    // Notifications come from server triggers — none in demo mode.
+    subscribeNotifications(cb) { cb([]); return () => {}; },
+    async markRead() {},
+    async clearNotifications() {},
   };
 }
 
@@ -938,17 +1248,20 @@ const SB_BUCKET = "notebook-files";
 const SB_MAX_FILE = 50 * 1024 * 1024;
 const SB_TABLE = "entries";
 const WS_TABLE = "workspaces";
-function createSupabaseStore(client, user) {
+// rc = { role, ownerId, caps } from detectRole(). ownerId is always the intern (notebook owner).
+function createSupabaseStore(client, user, rc) {
+  const { role, ownerId, caps } = rc;
   const rows = new Map(); // id -> entry (camelCase)
   const subs = new Set();
   const urls = new Map(); // file id -> { url, exp }
   let loaded = false;
   const emit = () => { if (loaded) { const list = [...rows.values()]; subs.forEach((cb) => cb(list)); } };
   const toRow = (e) => ({
-    id: e.id, user_id: user.id, date: e.date, tab: e.tab, title: e.title, body: e.body,
+    id: e.id, user_id: ownerId, date: e.date, tab: e.tab, title: e.title, body: e.body,
     done: e.done, done_at: e.doneAt, due: e.due, priority: e.priority,
     attachments: e.attachments, tags: e.tags, created_at: e.createdAt, updated_at: e.updatedAt,
     workspace_ids: e.workspaceIds || [], assigned_by: e.assignedBy || null, checklist: e.checklist || [],
+    status: e.status, is_private: Boolean(e.isPrivate), blocked: Boolean(e.blocked), // never created_by / blocked_at (server-set)
   });
   const fromRow = (r) => ({
     id: r.id, date: r.date, tab: r.tab, title: r.title || "", body: r.body || "",
@@ -957,6 +1270,8 @@ function createSupabaseStore(client, user) {
     workspaceIds: Array.isArray(r.workspace_ids) ? r.workspace_ids : [], assignedBy: r.assigned_by || null,
     checklist: Array.isArray(r.checklist) ? r.checklist : [],
     createdAt: Number(r.created_at) || 0, updatedAt: Number(r.updated_at) || 0,
+    status: r.status || null, isPrivate: Boolean(r.is_private), blocked: Boolean(r.blocked),
+    blockedAt: r.blocked_at == null ? null : Number(r.blocked_at), createdBy: r.created_by || null,
   });
   const check = ({ error }) => { if (error) throw error; };
 
@@ -968,7 +1283,7 @@ function createSupabaseStore(client, user) {
   const schemaError = () => Object.assign(new Error(SCHEMA_MSG), { code: "SCHEMA_MISSING" });
   const warnSchema = () => { if (!schemaWarned) { schemaWarned = true; if (wsFail) wsFail(schemaError()); } };
   const wsToRow = (w) => ({
-    id: w.id, user_id: user.id, parent_id: w.parentId, kind: w.kind, name: w.name, color: w.color, sort: w.sort,
+    id: w.id, user_id: ownerId, parent_id: w.parentId, kind: w.kind, name: w.name, color: w.color, sort: w.sort,
     archived_at: w.archivedAt, headcount: w.headcount, status: w.status, channels: w.channels, opened_on: w.openedOn,
     note: w.note, created_at: w.createdAt, updated_at: w.updatedAt,
   });
@@ -982,16 +1297,24 @@ function createSupabaseStore(client, user) {
     if (err && err.code === "23503") return new Error("This still has departments/positions inside — archive it instead.");
     return err;
   };
-  // Entries: if the new columns are missing, retry without them (workspace links / assigned-by / checklist are not stored until the migration runs).
+  // Entries: if newer columns are missing, retry without them. 002 and 003 columns are detected separately
+  // (002: workspace links / assigned-by / checklist · 003: status / private / blocked — before 003 only `done` is stored).
   const NEW_ENTRY_COLS = ["workspace_ids", "assigned_by", "checklist"];
+  const NEW_ENTRY_COLS_003 = ["status", "is_private", "blocked"];
+  let legacy003 = !caps.workflow; // role detection already knows 003 hasn't run, so don't even try
   async function upsertEntryRows(list) {
-    if (!legacyEntries) {
-      const { error } = await client.from(SB_TABLE).upsert(list);
+    for (;;) {
+      const strip = [...(legacy003 ? NEW_ENTRY_COLS_003 : []), ...(legacyEntries ? NEW_ENTRY_COLS : [])];
+      const body = strip.length ? list.map((r) => { const o = { ...r }; strip.forEach((k) => delete o[k]); return o; }) : list;
+      const { error } = await client.from(SB_TABLE).upsert(body);
       if (!error) return;
       if (!isSchemaMissing(error)) throw error;
-      legacyEntries = true; warnSchema();
+      const msg = error.message || "";
+      const names002 = NEW_ENTRY_COLS.some((c) => msg.includes(c));
+      if (!legacy003 && (NEW_ENTRY_COLS_003.some((c) => msg.includes(c)) || !names002)) { legacy003 = true; continue; }
+      if (!legacyEntries) { legacyEntries = true; warnSchema(); continue; }
+      throw error;
     }
-    check(await client.from(SB_TABLE).upsert(list.map((r) => { const o = { ...r }; NEW_ENTRY_COLS.forEach((k) => delete o[k]); return o; })));
   }
   async function saveWsList(list) {
     const prev = new Map(list.map((w) => [w.id, wsRows.get(w.id)]));
@@ -999,7 +1322,7 @@ function createSupabaseStore(client, user) {
     try { check(await client.from(WS_TABLE).upsert(list.map(wsToRow))); }
     catch (err) { prev.forEach((p, id) => { if (p) wsRows.set(id, p); else wsRows.delete(id); }); wsEmit(); throw wsError(err); }
   }
-  const fileName = (meta) => meta.path || `${user.id}/${meta.id}`;
+  const fileName = (meta) => meta.path || `${ownerId}/${meta.id}`;
 
   async function putBlob(meta, blob) {
     if (blob.size > SB_MAX_FILE) throw new Error(`"${meta.name}" is ${fmtSize(blob.size)} — too big (max 50 MB per file).`);
@@ -1030,27 +1353,39 @@ function createSupabaseStore(client, user) {
         rows.set(r.id, next); emit();
       };
       const channel = client
-        .channel(`entries-${user.id}-${uid()}`)
-        .on("postgres_changes", { event: "INSERT", schema: "public", table: SB_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
-        .on("postgres_changes", { event: "UPDATE", schema: "public", table: SB_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
+        .channel(`entries-${ownerId}-${uid()}`)
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: SB_TABLE, filter: `user_id=eq.${ownerId}` }, (p) => upsertLocal(p.new))
+        .on("postgres_changes", { event: "UPDATE", schema: "public", table: SB_TABLE, filter: `user_id=eq.${ownerId}` }, (p) => upsertLocal(p.new))
         // DELETE events can't be filtered and only carry the primary key — ignore ids we don't have.
         .on("postgres_changes", { event: "DELETE", schema: "public", table: SB_TABLE }, (p) => {
           const id = p.old && p.old.id;
           if (id && rows.has(id)) { rows.delete(id); emit(); }
         })
-        .subscribe((status, err) => { if (status === "CHANNEL_ERROR") fail(err || new Error("Live sync disconnected — changes from other devices may be delayed.")); });
-      (async () => {
-        const PAGE = 1000;
+        .subscribe((status, err) => {
+          if (status === "CHANNEL_ERROR") fail(err || new Error("Live sync disconnected — changes from other devices may be delayed."));
+          if (status === "SUBSCRIBED" && loaded && role === "mentor") load(true).catch(() => {}); // reconnect
+        });
+      // full = replace the cache: drops rows the intern made private / moved out of Work (no UPDATE event reaches the mentor)
+      async function load(full) {
+        const PAGE = 1000, seen = new Map();
         for (let from = 0; ; from += PAGE) {
-          const { data, error } = await client.from(SB_TABLE).select("*").order("id").range(from, from + PAGE - 1);
+          const { data, error } = await client.from(SB_TABLE).select("*").eq("user_id", ownerId).order("id").range(from, from + PAGE - 1);
           if (error) throw error;
-          data.forEach((r) => { const cur = rows.get(r.id); if (!cur || Number(r.updated_at) >= cur.updatedAt) rows.set(r.id, fromRow(r)); });
+          data.forEach((r) => seen.set(r.id, r));
           if (data.length < PAGE) break;
         }
+        if (full) [...rows.keys()].forEach((id) => { if (!seen.has(id)) rows.delete(id); });
+        seen.forEach((r) => { const cur = rows.get(r.id); if (!cur || Number(r.updated_at) >= cur.updatedAt) rows.set(r.id, fromRow(r)); });
         loaded = true;
         emit();
-      })().catch(fail);
-      return () => { subs.delete(cb); client.removeChannel(channel); };
+      }
+      load(false).catch(fail);
+      const onFocus = () => { if (document.visibilityState === "visible" && loaded) load(true).catch(() => {}); };
+      if (role === "mentor") { document.addEventListener("visibilitychange", onFocus); window.addEventListener("focus", onFocus); }
+      return () => {
+        subs.delete(cb); client.removeChannel(channel);
+        document.removeEventListener("visibilitychange", onFocus); window.removeEventListener("focus", onFocus);
+      };
     },
     async save(e) {
       const prev = rows.get(e.id);
@@ -1085,7 +1420,7 @@ function createSupabaseStore(client, user) {
         wsRows.set(r.id, next); wsEmit();
       };
       (async () => {
-        const { data, error } = await client.from(WS_TABLE).select("*").order("id").range(0, 4999);
+        const { data, error } = await client.from(WS_TABLE).select("*").eq("user_id", ownerId).order("id").range(0, 4999);
         if (error) {
           if (!isSchemaMissing(error)) throw error;
           wsLoaded = true; wsEmit(); warnSchema(); return; // table not created yet — app keeps working without workspaces
@@ -1094,9 +1429,9 @@ function createSupabaseStore(client, user) {
         wsLoaded = true; wsEmit();
         if (!alive) return;
         channel = client
-          .channel(`workspaces-${user.id}-${uid()}`)
-          .on("postgres_changes", { event: "INSERT", schema: "public", table: WS_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
-          .on("postgres_changes", { event: "UPDATE", schema: "public", table: WS_TABLE, filter: `user_id=eq.${user.id}` }, (p) => upsertLocal(p.new))
+          .channel(`workspaces-${ownerId}-${uid()}`)
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: WS_TABLE, filter: `user_id=eq.${ownerId}` }, (p) => upsertLocal(p.new))
+          .on("postgres_changes", { event: "UPDATE", schema: "public", table: WS_TABLE, filter: `user_id=eq.${ownerId}` }, (p) => upsertLocal(p.new))
           .on("postgres_changes", { event: "DELETE", schema: "public", table: WS_TABLE }, (p) => {
             const id = p.old && p.old.id;
             if (id && wsRows.has(id)) { wsRows.delete(id); wsEmit(); }
@@ -1132,9 +1467,131 @@ function createSupabaseStore(client, user) {
     async removeFile(meta) {
       urls.delete(meta.id);
       if (meta.storage !== "supabase") return;
+      if (!fileName(meta).startsWith(`${user.id}/`)) return; // not our folder (e.g. the mentor removing an intern upload): left orphaned
       check(await client.storage.from(SB_BUCKET).remove([fileName(meta)]));
     },
+    ...createSbSocial(client, user, rc),
   };
+}
+
+// ---- 4d. Supabase comments + notifications (003). Quietly off while those tables don't exist. ----
+const CMT_TABLE = "entry_comments";
+const NOTIF_TABLE = "notifications";
+function createSbSocial(client, user, { ownerId, caps }) {
+  const cRows = new Map();
+  const cSubs = new Set();
+  let cLoaded = false, cOff = !caps.comments;
+  const cEmit = () => { const list = [...cRows.values()]; cSubs.forEach((cb) => cb(list)); };
+  const cFrom = (r) => ({ id: r.id, entryId: r.entry_id, ownerId: r.owner_id, authorId: r.author_id, body: r.body || "",
+    createdAt: Number(r.created_at) || 0, updatedAt: Number(r.updated_at) || 0 });
+  const nRows = new Map();
+  const nSubs = new Set();
+  const nEmit = () => { const list = [...nRows.values()].sort((a, b) => b.createdAt - a.createdAt); nSubs.forEach((cb) => cb(list)); };
+  const nFrom = (r) => ({ id: r.id, type: r.type, actorId: r.actor_id, entryId: r.entry_id, commentId: r.comment_id,
+    payload: r.payload && typeof r.payload === "object" ? r.payload : {}, createdAt: Number(r.created_at) || 0,
+    readAt: r.read_at == null ? null : Number(r.read_at) });
+  const check = ({ error }) => { if (error) throw error; };
+
+  async function loadComments(full) {
+    const seen = new Map();
+    for (let from = 0; ; from += 1000) {
+      const { data, error } = await client.from(CMT_TABLE).select("*").eq("owner_id", ownerId).order("id").range(from, from + 999);
+      if (error) throw error;
+      data.forEach((r) => seen.set(r.id, r));
+      if (data.length < 1000) break;
+    }
+    if (full) [...cRows.keys()].forEach((id) => { if (!seen.has(id)) cRows.delete(id); });
+    seen.forEach((r) => cRows.set(r.id, cFrom(r)));
+    cLoaded = true; cEmit();
+  }
+  return {
+    subscribeComments(cb, onError) {
+      cSubs.add(cb);
+      if (cOff) { cb([]); return () => cSubs.delete(cb); }
+      let alive = true, channel = null;
+      const onFocus = () => { if (document.visibilityState === "visible" && cLoaded && !cOff) loadComments(true).catch(() => {}); };
+      (async () => {
+        try { await loadComments(false); }
+        catch (err) { if (isSchemaMissing(err)) { cOff = true; cb([]); return; } throw err; }
+        if (!alive) return;
+        const up = (r) => { if (r && r.id) { cRows.set(r.id, cFrom(r)); cEmit(); } };
+        channel = client.channel(`comments-${ownerId}-${uid()}`)
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: CMT_TABLE, filter: `owner_id=eq.${ownerId}` }, (p) => up(p.new))
+          .on("postgres_changes", { event: "UPDATE", schema: "public", table: CMT_TABLE, filter: `owner_id=eq.${ownerId}` }, (p) => up(p.new))
+          .on("postgres_changes", { event: "DELETE", schema: "public", table: CMT_TABLE }, (p) => { const id = p.old && p.old.id; if (id && cRows.has(id)) { cRows.delete(id); cEmit(); } })
+          .subscribe();
+        document.addEventListener("visibilitychange", onFocus); window.addEventListener("focus", onFocus);
+      })().catch((e) => onError && onError(e));
+      return () => {
+        alive = false; cSubs.delete(cb); if (channel) client.removeChannel(channel);
+        document.removeEventListener("visibilitychange", onFocus); window.removeEventListener("focus", onFocus);
+      };
+    },
+    // New comment = insert, edit = update(body, updated_at). Never upsert (column-level UPDATE grant). owner/author are server-set.
+    async saveComment({ id, entryId, body }) {
+      const prev = cRows.get(id);
+      const now = Date.now();
+      cRows.set(id, prev ? { ...prev, body, updatedAt: now } : { id, entryId, ownerId, authorId: user.id, body, createdAt: now, updatedAt: now }); cEmit();
+      try {
+        if (prev) check(await client.from(CMT_TABLE).update({ body, updated_at: now }).eq("id", id));
+        else check(await client.from(CMT_TABLE).insert({ id, entry_id: entryId, body }));
+      } catch (err) { if (prev) cRows.set(id, prev); else cRows.delete(id); cEmit(); throw err; }
+    },
+    async removeComment(id) {
+      const prev = cRows.get(id);
+      cRows.delete(id); cEmit();
+      try { check(await client.from(CMT_TABLE).delete().eq("id", id)); }
+      catch (err) { if (prev) { cRows.set(id, prev); cEmit(); } throw err; }
+    },
+    subscribeNotifications(cb, onError) {
+      nSubs.add(cb);
+      if (!caps.notifications) { cb([]); return () => nSubs.delete(cb); }
+      let alive = true, channel = null;
+      (async () => {
+        const { data, error } = await client.from(NOTIF_TABLE).select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(100);
+        if (error) { if (isSchemaMissing(error)) { cb([]); return; } throw error; }
+        data.forEach((r) => nRows.set(r.id, nFrom(r))); nEmit();
+        if (!alive) return;
+        const up = (r) => { if (r && r.id) { nRows.set(r.id, nFrom(r)); nEmit(); } };
+        channel = client.channel(`notifications-${user.id}-${uid()}`)
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: NOTIF_TABLE, filter: `recipient_id=eq.${user.id}` }, (p) => up(p.new))
+          .on("postgres_changes", { event: "UPDATE", schema: "public", table: NOTIF_TABLE, filter: `recipient_id=eq.${user.id}` }, (p) => up(p.new))
+          .on("postgres_changes", { event: "DELETE", schema: "public", table: NOTIF_TABLE }, (p) => { const id = p.old && p.old.id; if (id && nRows.has(id)) { nRows.delete(id); nEmit(); } })
+          .subscribe();
+      })().catch((e) => onError && onError(e));
+      return () => { alive = false; nSubs.delete(cb); if (channel) client.removeChannel(channel); };
+    },
+    async markRead(ids) {
+      const todo = ids.filter((id) => nRows.has(id) && !nRows.get(id).readAt);
+      if (!todo.length) return;
+      const now = Date.now();
+      todo.forEach((id) => nRows.set(id, { ...nRows.get(id), readAt: now })); nEmit();
+      try { check(await client.from(NOTIF_TABLE).update({ read_at: now }).in("id", todo)); }
+      catch (err) { todo.forEach((id) => { const n = nRows.get(id); if (n) nRows.set(id, { ...n, readAt: null }); }); nEmit(); throw err; }
+    },
+    async clearNotifications() {
+      nRows.clear(); nEmit();
+      check(await client.from(NOTIF_TABLE).delete().eq("recipient_id", user.id));
+    },
+  };
+}
+
+// ---- 4e. Role detection (docs/mentor-architecture.md §7): after sign-in, before the store is built ----
+const NO_MENTOR_CAPS = { workflow: false, comments: false, notifications: false };
+async function detectRole(client, user) {
+  const tableMissing = (e) => ["PGRST205", "42P01"].includes(e.code) || /could not find the table|relation .* does not exist/i.test(e.message || "");
+  let res = await client.from("mentorships").select("intern_id,mentor_id,intern_name,mentor_name").maybeSingle();
+  if (res.error && !tableMissing(res.error) && isSchemaMissing(res.error)) {
+    res = await client.from("mentorships").select("intern_id,mentor_id").maybeSingle(); // a first-version 003 without the name columns
+  }
+  if (res.error) {
+    if (isSchemaMissing(res.error)) return { role: "intern", ownerId: user.id, hasMentor: false, caps: NO_MENTOR_CAPS, internName: null, mentorName: null };
+    throw res.error;
+  }
+  const m = res.data;
+  const names = { internName: (m && m.intern_name) || null, mentorName: (m && m.mentor_name) || null };
+  if (m && m.mentor_id === user.id) return { role: "mentor", ownerId: m.intern_id, hasMentor: true, caps: { workflow: true, comments: true, notifications: true }, ...names };
+  return { role: "intern", ownerId: user.id, hasMentor: Boolean(m), caps: { workflow: true, comments: true, notifications: Boolean(m) }, ...names };
 }
 
 /* ============================================================
@@ -1172,6 +1629,15 @@ const ICONS = {
   arrowRight: <><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></>,
   building: <><rect x="4" y="2" width="16" height="20" rx="2" /><line x1="9" y1="6" x2="9.01" y2="6" /><line x1="15" y1="6" x2="15.01" y2="6" /><line x1="9" y1="10" x2="9.01" y2="10" /><line x1="15" y1="10" x2="15.01" y2="10" /><line x1="9" y1="14" x2="9.01" y2="14" /><line x1="15" y1="14" x2="15.01" y2="14" /><path d="M10 22v-4h4v4" /></>,
   menu: <><line x1="4" y1="6" x2="20" y2="6" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="18" x2="20" y2="18" /></>,
+  bell: <><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></>,
+  lock: <><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></>,
+  message: <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />,
+  eye: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>,
+  rotate: <><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></>,
+  user: <><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></>,
+  circle: <circle cx="12" cy="12" r="9" />,
+  half: <><circle cx="12" cy="12" r="9" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none" /></>,
+  chevronDown: <polyline points="6 9 12 15 18 9" />,
 };
 function Icon({ name, size = 18, strokeWidth = 1.8 }) {
   return (
@@ -1209,6 +1675,185 @@ function RichBody({ text }) {
   flush();
   return out;
 }
+/* ---- Mentor MVP helpers + atoms (Noey §5) ---- */
+const personRole = (rc, id) => (id === rc.ownerId ? "intern" : "mentor");
+const personName = (rc, id) => (personRole(rc, id) === "intern" ? rc.internName : rc.mentorName) || ROLE_LABEL[personRole(rc, id)];
+const initialOf = (name) => ((String(name || "").match(/[ก-ฮA-Za-z0-9]/) || ["?"])[0]).toUpperCase();
+const isoMinute = (ms) => { const d = new Date(ms); return `${toKey(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+function fmtStamp(ms) {
+  const d = new Date(ms);
+  const t = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  const k = toKey(d), today = todayKey();
+  if (k === today) return t;
+  if (k === addDays(today, -1)) return `เมื่อวาน ${t}`;
+  return `${d.toLocaleDateString("th-TH", { day: "numeric", month: "short" })} ${t}`;
+}
+const canDeleteEntry = (rc, e) => (rc.role === "mentor" ? Boolean(e.createdBy) && e.createdBy === rc.actorId : !fromMentor(e, rc.ownerId));
+// Server refusals (RLS / guard trigger raise 42501) as a Thai toast; the store has already rolled back.
+function errText(err) {
+  const m = (err && err.message) || "";
+  if (err && err.code === "42501") {
+    if (/reopen/i.test(m)) return "พี่เลี้ยงอนุมัติงานนี้แล้ว ขอให้พี่เลี้ยงเปิดงานใหม่ก่อน";
+    if (/changes/i.test(m)) return "เฉพาะพี่เลี้ยงที่ส่งงานกลับให้แก้ได้";
+    if (/privacy|private/i.test(m)) return "เปลี่ยนเป็นงานส่วนตัวไม่ได้ — งานนี้พี่เลี้ยงมอบหมาย";
+    if (/stays in Work|Work tasks/i.test(m)) return "ย้ายแท็บไม่ได้ — งานจากพี่เลี้ยงต้องอยู่ในงาน (Work)";
+    return "ทำรายการนี้ไม่ได้ — ไม่มีสิทธิ์";
+  }
+  return m || "Something went wrong.";
+}
+const EDIT_FIELD_TH = { title: "ชื่องาน", body: "รายละเอียด", due: "กำหนดส่ง", priority: "ความสำคัญ", checklist: "เช็กลิสต์", attachments: "ไฟล์แนบ", workspace_ids: "workspace" };
+function notifText(rc, n) {
+  const p = n.payload || {};
+  const other = rc.role === "mentor" ? "intern" : "mentor";
+  const actor = p.actor_name || (other === "intern" ? rc.internName : rc.mentorName) || ROLE_LABEL[other];
+  const t = `“${p.title || "(untitled)"}”`;
+  switch (n.type) {
+    case "task_assigned": return `${actor} มอบหมายงานใหม่ ${t}`;
+    case "comment_added": return `${actor} คอมเมนต์ใน ${t}`;
+    case "task_blocked": return `${actor} แจ้งติดปัญหาใน ${t}`;
+    case "task_edited": {
+      const f = Array.isArray(p.fields) ? p.fields.map((x) => EDIT_FIELD_TH[x] || x) : [];
+      return `${actor} แก้ไขงาน ${t}${f.length ? ` · ${f.join(", ")}` : ""}`;
+    }
+    case "status_changed":
+      return p.to === "review" ? `${actor} ขอให้ตรวจ ${t}` : `${actor} เปลี่ยนสถานะ ${t} เป็น ${(STATUS_BY_ID[p.to] || {}).th || p.to || "?"}`;
+    default: return `${actor} อัปเดต ${t}`;
+  }
+}
+function StatusPill({ status }) {
+  const s = STATUS_BY_ID[status] || STATUS_BY_ID.todo;
+  return <span className={`st-pill s-${s.id}`}><Icon name={s.icon} size={12} strokeWidth={2.2} />{s.th}</span>;
+}
+function FlagBadge() { return <span className="flag-badge"><Icon name="flag" size={12} strokeWidth={2.2} />ติดปัญหา</span>; }
+function MentorPill() { return <span className="mentor-pill"><Icon name="user" size={12} strokeWidth={2.2} />จากพี่เลี้ยง</span>; }
+function PrivBadge() { return <span className="priv" title="เห็นเฉพาะคุณ — พี่เลี้ยงมองไม่เห็น"><Icon name="lock" size={12} strokeWidth={2.2} />ส่วนตัว</span>; }
+// Arrow-key focus inside a menu (same pattern as the account menu)
+function menuArrows(e, root) {
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  const items = [...root.querySelectorAll(".menu-item, .notif-item")];
+  if (!items.length) return;
+  e.preventDefault();
+  const i = items.indexOf(document.activeElement);
+  items[(i + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length].focus();
+}
+// Status changer: pill button + inline menu of the statuses this role may set now.
+function StatusMenu({ entry }) {
+  const { rc, actions } = useApp();
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const btnRef = useRef(null);
+  const s = STATUS_BY_ID[entry.status] || STATUS_BY_ID.todo;
+  const options = STATUSES.filter((x) => canSetStatus(rc, entry, x.id));
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    requestAnimationFrame(() => ref.current?.querySelector(".menu-item")?.focus());
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open]);
+  const locked = !options.length && rc.role === "intern" && entry.status === "done" && fromMentor(entry, rc.ownerId);
+  return (
+    <div className="st-wrap" ref={ref} onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => { if (e.key === "Escape" && open) { e.stopPropagation(); setOpen(false); btnRef.current?.focus(); } else if (open) menuArrows(e, ref.current); }}>
+      <button ref={btnRef} type="button" className={`st-pill s-${s.id} is-btn`} disabled={!options.length} aria-haspopup="menu" aria-expanded={open}
+        aria-label={`สถานะ: ${s.th} — เปลี่ยนสถานะ`} title={locked ? "พี่เลี้ยงอนุมัติแล้ว — ขอให้พี่เลี้ยงเปิดงานใหม่" : undefined} onClick={() => setOpen((v) => !v)}>
+        <Icon name={s.icon} size={12} strokeWidth={2.2} />{s.th}<span className="st-chev"><Icon name="chevronDown" size={12} strokeWidth={2.2} /></span>
+      </button>
+      {open && (
+        <div className="menu st-menu" role="menu" aria-label="เปลี่ยนสถานะ">
+          {options.map((o) => (
+            <button key={o.id} type="button" role="menuitem" className="menu-item" onClick={() => { setOpen(false); actions.setStatus(entry, o.id); }}><StatusPill status={o.id} /></button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Comment / progress thread inside a Work task (Noey §5.5). Private task: read-only, no composer.
+function Thread({ entry, comments }) {
+  const { rc, store, toast } = useApp();
+  const [draft, setDraft] = useState("");
+  const [sending, setSending] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [editText, setEditText] = useState("");
+  const list = [...comments].sort((a, b) => a.createdAt - b.createdAt);
+  const priv = entry.isPrivate;
+  async function send() {
+    const body = draft.trim();
+    if (!body || sending) return;
+    setSending(true);
+    try { await store.saveComment({ id: uid(), entryId: entry.id, body }); setDraft(""); }
+    catch { toast("ส่งไม่สำเร็จ ลองอีกครั้ง", "error"); }
+    finally { setSending(false); }
+  }
+  async function saveEdit(c) {
+    const body = editText.trim();
+    if (!body) return;
+    try { await store.saveComment({ id: c.id, entryId: c.entryId, body }); setEditId(null); }
+    catch (err) { toast(errText(err), "error"); }
+  }
+  async function del(c) {
+    if (!window.confirm("ลบความคิดเห็นนี้?")) return;
+    try { await store.removeComment(c.id); } catch (err) { toast(errText(err), "error"); }
+  }
+  return (
+    <div className="thread-wrap">
+      {list.length > 0 && (
+        <ol className="thread" role="log" aria-live="polite" aria-label="ความคิดเห็นและความคืบหน้า">
+          {list.map((c) => {
+            const who = personRole(rc, c.authorId);
+            const name = personName(rc, c.authorId);
+            const mine = c.authorId === rc.actorId;
+            return (
+              <li key={c.id} className={`msg ${who}${mine ? " mine" : ""}`}>
+                <span className="msg-av" aria-hidden="true">{initialOf(name)}</span>
+                <div className="msg-bubble">
+                  <div className="msg-head">
+                    <span className="msg-name">{name}</span>
+                    {name !== ROLE_LABEL[who] && <span className="msg-role">{ROLE_LABEL[who]}</span>}
+                    <time dateTime={isoMinute(c.createdAt)} title={new Date(c.createdAt).toLocaleString("th-TH")}>{fmtStamp(c.createdAt)}</time>
+                  </div>
+                  {editId === c.id
+                    ? <>
+                        <textarea className="msg-edit" value={editText} onChange={(e) => setEditText(e.target.value)} aria-label="แก้ไขความคิดเห็น"
+                          onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveEdit(c); } if (e.key === "Escape") { e.stopPropagation(); setEditId(null); } }} />
+                        <div className="msg-actions">
+                          <button type="button" className="btn sm primary tap" disabled={!editText.trim()} onClick={() => saveEdit(c)}>บันทึก</button>
+                          <button type="button" className="btn sm ghost tap" onClick={() => setEditId(null)}>ยกเลิก</button>
+                        </div>
+                      </>
+                    : <div className="rich"><RichText text={c.body} /></div>}
+                  {mine && !priv && editId !== c.id && (
+                    <div className="msg-actions">
+                      <button type="button" className="btn sm ghost tap" onClick={() => { setEditId(c.id); setEditText(c.body); }}>แก้ไข</button>
+                      <button type="button" className="btn sm ghost tap danger" onClick={() => del(c)}>ลบ</button>
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
+      {priv
+        ? <div className="priv-note"><PrivBadge />งานส่วนตัว พี่เลี้ยงมองไม่เห็นและคอมเมนต์ไม่ได้</div>
+        : <>
+            {!list.length && <div className="empty" style={{ padding: "10px 8px" }}>ยังไม่มีความคิดเห็น — {rc.role === "mentor" ? "ทักน้องได้เลย" : "เล่าความคืบหน้าให้พี่เลี้ยงฟังได้เลย"}</div>}
+            <div className="composer">
+              <textarea value={draft} readOnly={sending} onChange={(e) => setDraft(e.target.value)} aria-label="เขียนความคิดเห็น"
+                placeholder={rc.role === "mentor" ? "เขียนความคิดเห็นหรือคำแนะนำถึงน้อง…" : "อัปเดตความคืบหน้า หรือถามพี่เลี้ยง…"}
+                onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); send(); } }} />
+              <div className="composer-row">
+                <span className="hint">Ctrl/⌘ + Enter เพื่อส่ง</span>
+                <button type="button" className="btn primary" disabled={!draft.trim() || sending} onClick={send}>{sending ? <span className="spinner" /> : null}ส่ง</button>
+              </div>
+            </div>
+          </>}
+    </div>
+  );
+}
+
 const assignedLabel = (a) => (a === "mentor" ? "จากพี่เลี้ยง" : a === "self" ? "ตัวเอง" : `By ${a}`);
 function AssignedBadge({ a }) { return a ? <span className="badge" title="Assigned by">{assignedLabel(a)}</span> : null; }
 function ChecklistProgress({ list }) {
@@ -1287,8 +1932,13 @@ function Attachments({ list, onRemove }) {
    7. ENTRY EDITOR — title, rich body, links, images, files, due date, priority
    ============================================================ */
 function EntryEditor({ initial, date, tab, onClose }) {
-  const { store, toast, actions, wsFilter } = useApp();
+  const { store, toast, actions, wsFilter, rc } = useApp();
   const isWork = tab === "work";
+  const isMentor = rc.role === "mentor";
+  const assignedTask = Boolean(initial.id) && fromMentor(initial, rc.ownerId);
+  const [priv, setPriv] = useState(Boolean(initial.isPrivate));
+  // 🔒: intern only. On a mentor-assigned task it may only be switched OFF (owner decision 1).
+  const showPriv = !isMentor && isWork && rc.caps.workflow && (!assignedTask || initial.isPrivate);
   const initAssigned = initial.assignedBy || "";
   const [wsIds, setWsIds] = useState(initial.workspaceIds || (!initial.id && wsFilter ? [wsFilter] : []));
   const [assigned, setAssigned] = useState(initAssigned === "mentor" || initAssigned === "self" ? initAssigned : initAssigned ? "other" : "");
@@ -1363,7 +2013,9 @@ function EntryEditor({ initial, date, tab, onClose }) {
         title: title.trim(), body: body.replace(/\s+$/, ""),
         attachments: atts, due: isWork ? due || null : null, priority: isWork ? priority : null,
         workspaceIds: wsIds,
-        assignedBy: isWork ? (assigned === "other" ? assignedOther.trim() || null : assigned || null) : null,
+        isPrivate: showPriv ? priv : Boolean(initial.isPrivate),
+        // the mentor and mentor-assigned tasks keep the stored value (server-set attribution)
+        assignedBy: !isWork ? null : isMentor || assignedTask ? initial.assignedBy || null : (assigned === "other" ? assignedOther.trim() || null : assigned || null),
         checklist: isWork ? (clText.trim() ? [...checklist, { id: uid(), text: clText.trim(), done: false }] : checklist) : (initial.checklist || []),
         updatedAt: Date.now(),
       });
@@ -1419,7 +2071,8 @@ function EntryEditor({ initial, date, tab, onClose }) {
           </div>
         </div>
       )}
-      {isWork && (
+      {isWork && assignedTask && <div className="field-row"><span className="field">Assigned by</span><MentorPill /></div>}
+      {isWork && !isMentor && !assignedTask && (
         <div className="field-row">
           <div className="field">Assigned by
             <div className="segment" role="radiogroup" aria-label="Assigned by">
@@ -1430,6 +2083,15 @@ function EntryEditor({ initial, date, tab, onClose }) {
             </div>
           </div>
           {assigned === "other" && <input className="ws-input" style={{ flex: "0 1 200px" }} value={assignedOther} onChange={(e) => setAssignedOther(e.target.value)} placeholder="Who assigned it?" aria-label="Assigned by (name)" />}
+        </div>
+      )}
+      {showPriv && (
+        <div className="field-row">
+          <button type="button" className="btn sm tap" aria-pressed={priv} disabled={assignedTask && !priv} onClick={() => setPriv((v) => !v)}
+            title="งานส่วนตัว — พี่เลี้ยงมองไม่เห็น">
+            <Icon name="lock" size={14} />{priv ? "ส่วนตัว (พี่เลี้ยงมองไม่เห็น)" : "ทำเป็นงานส่วนตัว"}
+          </button>
+          {assignedTask && <span className="locked-note">งานจากพี่เลี้ยง: ปิดความเป็นส่วนตัวได้ แต่เปิดอีกไม่ได้</span>}
         </div>
       )}
       <WorkspacePicker value={wsIds} onChange={setWsIds} />
@@ -1480,14 +2142,21 @@ function EntryEditor({ initial, date, tab, onClose }) {
    8. ENTRY CARD (view mode)
    ============================================================ */
 function EntryCard({ entry, focused }) {
-  const { actions } = useApp();
+  const { actions, rc, commentsByEntry } = useApp();
   const [editing, setEditing] = useState(false);
   const [flash, setFlash] = useState(false);
+  const [threadOpen, setThreadOpen] = useState(false);
   const ref = useRef(null);
   const isWork = entry.tab === "work";
+  const wf = isWork && rc.caps.workflow;
+  const assigned = fromMentor(entry, rc.ownerId);
+  const q = isWork ? quickStatus(rc, entry) : null;
+  const cmts = commentsByEntry.get(entry.id) || [];
+  const showThread = isWork && rc.caps.comments;
 
   useEffect(() => {
     if (!focused) return;
+    if (showThread && cmts.length) setThreadOpen(true);
     ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     setFlash(true);
     const t = setTimeout(() => setFlash(false), 1900);
@@ -1500,15 +2169,22 @@ function EntryCard({ entry, focused }) {
     <article ref={ref} className={`entry${entry.done ? " done" : ""}${flash ? " flash" : ""}`}>
       <div className="entry-row">
         {isWork && (
-          <button type="button" className={`check${entry.done ? " on" : ""}`} onClick={() => actions.toggleDone(entry)}
-            aria-label={entry.done ? "Mark as not done" : "Mark as done"} aria-pressed={entry.done}>
+          <button type="button" className={`check${entry.done ? " on" : ""}`} disabled={!q} onClick={() => q && actions.setStatus(entry, q)}
+            aria-label={q === "review" ? "ส่งให้พี่เลี้ยงตรวจ" : entry.done ? "Mark as not done" : "Mark as done"} aria-pressed={entry.done}>
             <Icon name="check" size={14} strokeWidth={3} />
           </button>
         )}
         <div className="entry-main">
           {entry.title && <h4 className="entry-title"><RichText text={entry.title} /></h4>}
-          {isWork && (entry.priority || entry.due || entry.assignedBy || entry.checklist.length > 0) && (
-            <div className="meta"><PriorityBadge p={entry.priority} /><DueBadge due={entry.due} done={entry.done} /><AssignedBadge a={entry.assignedBy} /><ChecklistProgress list={entry.checklist} /></div>
+          {isWork && (wf || entry.priority || entry.due || entry.assignedBy || entry.checklist.length > 0) && (
+            <div className="meta">
+              {wf && <StatusMenu entry={entry} />}
+              {entry.blocked && <FlagBadge />}
+              {assigned && <MentorPill />}
+              {entry.isPrivate && <PrivBadge />}
+              <PriorityBadge p={entry.priority} /><DueBadge due={entry.due} done={entry.done} />
+              {!(assigned && entry.assignedBy === "mentor") && <AssignedBadge a={entry.assignedBy} />}<ChecklistProgress list={entry.checklist} />
+            </div>
           )}
           {entry.body && <div className="rich"><RichBody text={entry.body} /></div>}
           {isWork && entry.checklist.length > 0 && (
@@ -1523,10 +2199,26 @@ function EntryCard({ entry, focused }) {
             </ul>
           )}
           <Attachments list={entry.attachments} />
+          {(showThread || (wf && rc.role === "intern")) && (
+            <div className="toolbar">
+              {showThread && (
+                <button type="button" className="btn sm ghost tap" aria-expanded={threadOpen} onClick={() => setThreadOpen((v) => !v)}>
+                  <Icon name="message" size={15} />ความคิดเห็น{cmts.length ? ` (${cmts.length})` : ""}
+                </button>
+              )}
+              <span className="spacer" />
+              {wf && rc.role === "intern" && (
+                <button type="button" className="btn sm tap" aria-pressed={entry.blocked} onClick={() => actions.setBlocked(entry, !entry.blocked)}>
+                  <Icon name="flag" size={14} />{entry.blocked ? "ยกเลิกติดปัญหา" : "แจ้งติดปัญหา"}
+                </button>
+              )}
+            </div>
+          )}
+          {showThread && threadOpen && <Thread entry={entry} comments={cmts} />}
         </div>
         <div className="entry-actions">
           <button type="button" className="btn sm ghost icon-only" onClick={() => setEditing(true)} aria-label="Edit" title="Edit"><Icon name="edit" size={15} /></button>
-          <button type="button" className="btn sm ghost icon-only danger" onClick={() => actions.remove(entry)} aria-label="Delete" title="Delete"><Icon name="trash" size={15} /></button>
+          {canDeleteEntry(rc, entry) && <button type="button" className="btn sm ghost icon-only danger" onClick={() => actions.remove(entry)} aria-label="Delete" title="Delete"><Icon name="trash" size={15} /></button>}
         </div>
       </div>
     </article>
@@ -1537,6 +2229,8 @@ function EntryCard({ entry, focused }) {
    9. DAILY PANEL — Work / Study / Ideas tabs for one date
    ============================================================ */
 function DailyPanel({ date, tab, setTab, entries, open, onClose, onDateChange, focusId }) {
+  const { rc } = useApp();
+  const tabs = rc.role === "mentor" ? TABS.filter((x) => x.id === "work") : TABS;
   const [composing, setComposing] = useState(false);
   useEffect(() => setComposing(false), [date, tab]);
 
@@ -1566,7 +2260,7 @@ function DailyPanel({ date, tab, setTab, entries, open, onClose, onDateChange, f
       </div>
 
       <div className="tabs" role="tablist">
-        {TABS.map((x) => (
+        {tabs.map((x) => (
           <button key={x.id} role="tab" aria-selected={tab === x.id} className={`tab${tab === x.id ? " active" : ""}`} onClick={() => setTab(x.id)}>
             <span>{x.en}</span><span className="th">{x.th}</span>{counts[x.id] > 0 && <span className="n">{counts[x.id]}</span>}
           </button>
@@ -1660,13 +2354,15 @@ function Calendar({ month, setMonth, selected, onSelect, byDate }) {
    11. PENDING TASKS — every unfinished Work item, from any date
    ============================================================ */
 function PendingTasks({ entries, onOpen }) {
-  const { actions } = useApp();
+  const { actions, rc } = useApp();
   const [prio, setPrio] = useState("all");
   const [src, setSrc] = useState("all");
   const today = todayKey();
   const week = addDays(today, 7);
 
-  const pending = entries.filter((e) => e.tab === "work" && !e.done && (prio === "all" || e.priority === prio) && (src === "all" || e.assignedBy === src));
+  // "From mentor" = created by the mentor; legacy rows the intern tagged "mentor" by hand still count here.
+  const srcOk = (e) => src === "all" || (src === "mentor" ? fromMentor(e, rc.ownerId) || e.assignedBy === "mentor" : !fromMentor(e, rc.ownerId) && e.assignedBy === src);
+  const pending = entries.filter((e) => e.tab === "work" && !e.done && (prio === "all" || e.priority === prio) && srcOk(e));
   const sorter = (a, b) => (PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]) || ((a.due || "9") < (b.due || "9") ? -1 : (a.due || "9") > (b.due || "9") ? 1 : 0) || (a.date < b.date ? -1 : 1);
   const groups = [
     { id: "overdue", title: "Overdue", items: pending.filter((e) => e.due && e.due < today) },
@@ -1678,10 +2374,10 @@ function PendingTasks({ entries, onOpen }) {
   const total = entries.filter((e) => e.tab === "work" && !e.done).length;
 
   return (
-    <section className="card pending" aria-label="Pending tasks">
+    <section className="card pending-card" aria-label="Pending tasks">
+      <div className="card-band"><h2>Pending Tasks</h2><span className="count-pill">{total}</span></div>
+      <div className="pending">
       <div className="pending-head">
-        <h2>Pending Tasks</h2>
-        <span className="count-pill">{total}</span>
         <div className="segment" role="radiogroup" aria-label="Filter by priority" style={{ marginLeft: "auto" }}>
           {[{ id: "all", label: "All" }, ...PRIORITIES].map((p) => (
             <button key={p.id} role="radio" aria-checked={prio === p.id} className={`${prio === p.id ? "on" : ""} p-${p.id}`} onClick={() => setPrio(p.id)}>{p.label}</button>
@@ -1703,16 +2399,18 @@ function PendingTasks({ entries, onOpen }) {
           <div className={`group-title ${g.id}`}>{g.title}<span className="n">{g.items.length}</span></div>
           {g.items.map((e) => (
             <div key={e.id} className="task-row">
-              <button type="button" className="check" onClick={() => actions.toggleDone(e)} aria-label={`Mark "${entryLabel(e)}" as done`}>
-                <Icon name="check" size={14} strokeWidth={3} />
-              </button>
+              <QuickCheck e={e} />
               <div className="task-main" role="button" tabIndex={0} onClick={() => onOpen(e.date, "work", e.id)}
                 onKeyDown={(ev) => { if (ev.key === "Enter") onOpen(e.date, "work", e.id); }}>
                 <div className="task-title">{entryLabel(e)}</div>
                 <div className="meta">
+                  {rc.caps.workflow && <StatusMenu entry={e} />}
+                  {e.blocked && <FlagBadge />}
+                  {fromMentor(e, rc.ownerId) && <MentorPill />}
+                  {e.isPrivate && <PrivBadge />}
                   <PriorityBadge p={e.priority} />
                   <DueBadge due={e.due} />
-                  <AssignedBadge a={e.assignedBy} />
+                  {!(fromMentor(e, rc.ownerId) && e.assignedBy === "mentor") && <AssignedBadge a={e.assignedBy} />}
                   <ChecklistProgress list={e.checklist} />
                   <span className="task-src"><Icon name="calendar" size={12} />{fmtShort(e.date)} · Work (งาน)</span>
                   {e.tags.map((tg) => <RichText key={tg} text={"#" + tg} />)}
@@ -1723,7 +2421,19 @@ function PendingTasks({ entries, onOpen }) {
           ))}
         </div>
       ))}
+      </div>
     </section>
+  );
+}
+// Check button = next allowed status (done, or "send for review" on a mentor-assigned task)
+function QuickCheck({ e }) {
+  const { rc, actions } = useApp();
+  const q = quickStatus(rc, e);
+  return (
+    <button type="button" className="check" disabled={!q} onClick={() => q && actions.setStatus(e, q)}
+      aria-label={q === "review" ? `ส่ง "${entryLabel(e)}" ให้พี่เลี้ยงตรวจ` : `Mark "${entryLabel(e)}" as done`}>
+      <Icon name={q === "review" ? "eye" : "check"} size={14} strokeWidth={q === "review" ? 2.2 : 3} />
+    </button>
   );
 }
 
@@ -1882,7 +2592,7 @@ function WsInlineInput({ initial = "", placeholder, depth = 0, keepOpen, onSubmi
   );
 }
 
-function WorkspaceSidebar({ navRef, open, filter, view, counts, allCount, pendingCount, onSelect, onAll, onPending, onDetails }) {
+function WorkspaceSidebar({ navRef, open, filter, view, counts, allCount, pendingCount, onSelect, onAll, onPending, onDetails, readOnly }) {
   const { workspaces, wsIdx: idx, wsActions } = useApp();
   const [collapsed, setCollapsed] = useState(() => new Set());
   const [menuFor, setMenuFor] = useState(null);
@@ -1940,8 +2650,8 @@ function WorkspaceSidebar({ navRef, open, filter, view, counts, allCount, pendin
             aria-current={on ? "true" : undefined} onClick={() => onSelect(w.id)}>{w.name}</button>
           {archivedRow ? <span className="badge ws-badge">Closed</span> : w.kind === "position" && <PositionBadge ws={w} />}
           {n > 0 && <span className="count-pill" aria-label={`${n} items`}>{n}</span>}
-          <button type="button" className="btn sm ghost icon-only ws-more" aria-label={`Actions for ${w.name}`} aria-expanded={menuFor === w.id}
-            onClick={() => setMenuFor((m) => (m === w.id ? null : w.id))}><Icon name="more" size={16} /></button>
+          {!readOnly && <button type="button" className="btn sm ghost icon-only ws-more" aria-label={`Actions for ${w.name}`} aria-expanded={menuFor === w.id}
+            onClick={() => setMenuFor((m) => (m === w.id ? null : w.id))}><Icon name="more" size={16} /></button>}
         </div>
         {menuFor === w.id && renderMenu(w)}
         {expanded && kids.map((c) => renderRow(c, depth + 1))}
@@ -1965,12 +2675,12 @@ function WorkspaceSidebar({ navRef, open, filter, view, counts, allCount, pendin
         {pendingCount > 0 && <span className="count-pill">{pendingCount}</span>}
       </div>
       <div className="ws-head">Companies
-        <button type="button" className="btn sm ghost icon-only" aria-label="Add company" title="Add company" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} /></button>
+        {!readOnly && <button type="button" className="btn sm ghost icon-only" aria-label="Add company" title="Add company" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} /></button>}
       </div>
       {!workspaces.length && !edit ? (
         <div className="ws-empty">
-          <p>แยกบันทึกตามบริษัท/แผนก/ตำแหน่งที่รับสมัคร</p>
-          <button type="button" className="btn sm primary" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} />Add company</button>
+          <p>{readOnly ? "ยังไม่มีบริษัท/แผนก/ตำแหน่ง" : "แยกบันทึกตามบริษัท/แผนก/ตำแหน่งที่รับสมัคร"}</p>
+          {!readOnly && <button type="button" className="btn sm primary" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} />Add company</button>}
         </div>
       ) : (
         <>
@@ -1978,7 +2688,7 @@ function WorkspaceSidebar({ navRef, open, filter, view, counts, allCount, pendin
           {edit && edit.mode === "add" && !edit.parentId && (
             <WsInlineInput key="add-company" placeholder="New company name" onSubmit={(name) => { setEdit(null); wsActions.add("company", null, name); }} onCancel={() => setEdit(null)} />
           )}
-          <button type="button" className="btn sm ghost ws-add" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} />Add company</button>
+          {!readOnly && <button type="button" className="btn sm ghost ws-add" onClick={() => startAdd(null, "company")}><Icon name="plus" size={15} />Add company</button>}
         </>
       )}
       {archived.length > 0 && (
@@ -2041,7 +2751,7 @@ function PositionInfo({ ws, onEdit }) {
         {st ? <span className={`badge ${st.cls}`}>{st.label}</span> : <span className="badge">No status</span>}
         {ws.headcount != null && <span className="badge">Headcount {ws.headcount}</span>}
         {ws.openedOn && <span className="badge"><Icon name="calendar" size={11} strokeWidth={2.2} />Opened {fmtShort(ws.openedOn)}</span>}
-        <button type="button" className="btn sm" style={{ marginLeft: "auto" }} onClick={onEdit}><Icon name="edit" size={14} />Edit details</button>
+        {onEdit && <button type="button" className="btn sm" style={{ marginLeft: "auto" }} onClick={onEdit}><Icon name="edit" size={14} />Edit details</button>}
       </div>
       {ws.channels.length > 0 && (
         <div className="chips" aria-label="Channels">
@@ -2113,7 +2823,7 @@ function PositionForm({ ws, onDone }) {
 }
 
 function WorkspaceSummary({ node, entries, onOpen, editing, setEditing }) {
-  const { wsIdx, actions } = useApp();
+  const { wsIdx, rc } = useApp();
   const path = wsIdx.path(node.id);
   const open = entries.filter((e) => e.tab === "work" && !e.done)
     .sort((a, b) => ((a.due || "9") < (b.due || "9") ? -1 : (a.due || "9") > (b.due || "9") ? 1 : PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]));
@@ -2129,7 +2839,7 @@ function WorkspaceSummary({ node, entries, onOpen, editing, setEditing }) {
   const row = (e, withCheck) => (
     <div key={e.id} className="task-row">
       {withCheck && (
-        <button type="button" className="check" onClick={() => actions.toggleDone(e)} aria-label={`Mark "${entryLabel(e)}" as done`}><Icon name="check" size={14} strokeWidth={3} /></button>
+        <QuickCheck e={e} />
       )}
       <div className="task-main" role="button" tabIndex={0} onClick={() => go(e)} onKeyDown={(ev) => { if (ev.key === "Enter") go(e); }}>
         <div className="task-title">{entryLabel(e)}</div>
@@ -2155,7 +2865,7 @@ function WorkspaceSummary({ node, entries, onOpen, editing, setEditing }) {
       </div>
       {node.kind === "position" && (editing
         ? <PositionForm key={node.id} ws={node} onDone={() => setEditing(false)} />
-        : <PositionInfo ws={node} onEdit={() => setEditing(true)} />)}
+        : <PositionInfo ws={node} onEdit={rc.role === "mentor" ? null : () => setEditing(true)} />)}
       <div className="group">
         <div className="group-title">Open tasks<span className="n">{open.length}</span></div>
         {open.length ? open.map((e) => row(e, true)) : <div className="pending-sub">No open tasks here.</div>}
@@ -2203,8 +2913,9 @@ function BuildingView() {
   const term = q.trim().toLowerCase();
   const rows = term ? PLANB_FLOORS.filter((f) => `${f.floor} ${f.name}`.toLowerCase().includes(term)) : PLANB_FLOORS;
   return (
-    <section className="card pending" aria-label="Building details">
-      <div className="pending-head"><h2>Building</h2><span className="pending-sub" style={{ margin: 0 }}>รายละเอียดตึก · Plan B Tower</span></div>
+    <section className="card pending-card" aria-label="Building details">
+      <div className="card-band"><h2>Building</h2><span className="sub">รายละเอียดตึก · Plan B Tower</span></div>
+      <div className="pending">
       <img src={PLANB_IMG} loading="lazy" alt="Plan B Tower floor directory" className="bld-img" onClick={() => openImage(PLANB_IMG)} />
       <div className="search-box" style={{ margin: "16px 0 10px" }}>
         <Icon name="search" size={17} />
@@ -2217,6 +2928,7 @@ function BuildingView() {
         </div>
       ))}
       {!rows.length && <div className="empty">No floor matches “{q.trim()}”.</div>}
+      </div>
     </section>
   );
 }
@@ -2224,7 +2936,7 @@ function BuildingView() {
 /* ============================================================
    13. MENU — sync status, export / import backup, sample data, sign out
    ============================================================ */
-function Menu({ user, onExport, onImport, onSample }) {
+function Menu({ user, onExport, onImport, onSample, mentor }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const fileRef = useRef(null);
@@ -2245,13 +2957,154 @@ function Menu({ user, onExport, onImport, onSample }) {
               ? <><strong><span className="status-dot" />Synced with {CLOUD_NAME}</strong>{user.email || user.displayName}</>
               : <><strong><span className="status-dot local" />Demo mode</strong>Saved in this browser only. Add your Supabase (or Firebase) config in index.html to turn on login &amp; sync.</>}
           </div>
-          <button className="menu-item" role="menuitem" onClick={run(onExport)}><Icon name="download" />Export backup (.json)</button>
-          <button className="menu-item" role="menuitem" onClick={run(() => fileRef.current.click())}><Icon name="upload" />Import backup</button>
-          <button className="menu-item" role="menuitem" onClick={run(onSample)}><Icon name="sparkle" />Add sample notes</button>
+          {!mentor && <>
+            <button className="menu-item" role="menuitem" onClick={run(onExport)}><Icon name="download" />Export backup (.json)</button>
+            <button className="menu-item" role="menuitem" onClick={run(() => fileRef.current.click())}><Icon name="upload" />Import backup</button>
+            <button className="menu-item" role="menuitem" onClick={run(onSample)}><Icon name="sparkle" />Add sample notes</button>
+          </>}
           {user && <><div className="menu-sep" /><button className="menu-item" role="menuitem" onClick={run(() => signOutCloud())}><Icon name="logout" />Sign out</button></>}
         </div>
       )}
     </div>
+  );
+}
+
+// Notification bell + dropdown (Noey §5.6). notifs === null while loading.
+function NotificationBell({ notifs, onOpenNotif }) {
+  const { rc, store, toast } = useApp();
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const btnRef = useRef(null);
+  const list = notifs || [];
+  const unread = list.filter((n) => !n.readAt).length;
+  const pop = useRef({ n: 0, k: 0 }); // replay the pop animation only when the count goes up
+  if (unread > pop.current.n) pop.current.k++;
+  pop.current.n = unread;
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open]);
+  const readAll = () => store.markRead(list.filter((n) => !n.readAt).map((n) => n.id)).catch((err) => toast(errText(err), "error"));
+  return (
+    <div className="menu-wrap" ref={ref}
+      onKeyDown={(e) => { if (e.key === "Escape" && open) { e.stopPropagation(); setOpen(false); btnRef.current?.focus(); } else if (open) menuArrows(e, ref.current); }}>
+      <button ref={btnRef} type="button" className="btn ghost icon-only bell" aria-haspopup="true" aria-expanded={open}
+        aria-label={unread ? `การแจ้งเตือน, ยังไม่อ่าน ${unread} รายการ` : "การแจ้งเตือน, ไม่มีการแจ้งเตือนใหม่"} onClick={() => setOpen((v) => !v)}>
+        <Icon name="bell" />
+        {unread > 0 && <span key={pop.current.k} className="bell-n" aria-hidden="true">{unread > 9 ? "9+" : unread}</span>}
+      </button>
+      {open && (
+        <div className="menu notif" aria-label="การแจ้งเตือน">
+          <div className="notif-head">การแจ้งเตือน<button type="button" className="linklike" disabled={!unread} onClick={readAll}>อ่านทั้งหมด</button></div>
+          {notifs === null
+            ? <div className="notif-empty"><span className="spinner" style={{ display: "inline-block", verticalAlign: "middle", marginRight: 8 }} />กำลังโหลด…</div>
+            : list.length
+              ? <ul className="notif-list">
+                  {list.map((n) => (
+                    <li key={n.id}>
+                      <button type="button" className={`notif-item${n.readAt ? "" : " unread"}`} onClick={() => { setOpen(false); onOpenNotif(n); }}>
+                        <span className="ud" aria-hidden="true" />
+                        <span><span className="notif-text">{notifText(rc, n)}</span>
+                          <time dateTime={isoMinute(n.createdAt)}>{fmtStamp(n.createdAt)}</time></span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              : <div className="notif-empty">ยังไม่มีการแจ้งเตือน</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   13b. MENTOR BOARD — columns by status (Noey §5.4). Overdue / Blocked are card styles + a filter.
+   ============================================================ */
+const daysBetween = (a, b) => Math.round((fromKey(b) - fromKey(a)) / 86400000);
+function MentorBoard({ entries, loaded, error, onRetry, onOpen }) {
+  const { rc, commentsByEntry } = useApp();
+  const [onlyFlag, setOnlyFlag] = useState(false);
+  const [inView, setInView] = useState(rc.role === "mentor" ? "review" : "todo");
+  const scrollRef = useRef(null);
+  const colRefs = useRef({});
+  const today = todayKey();
+  const isOver = (e) => Boolean(e.due) && e.due < today && e.status !== "done";
+  const work = entries.filter((e) => e.tab === "work");
+  const shown = work.filter((e) => !onlyFlag || e.blocked || isOver(e));
+  const byDue = (a, b) => ((a.due || "9") < (b.due || "9") ? -1 : (a.due || "9") > (b.due || "9") ? 1 : a.createdAt - b.createdAt);
+  const cols = STATUSES.map((s) => ({ s, items: shown.filter((e) => e.status === s.id).sort((a, b) => (b.blocked - a.blocked) || (isOver(b) - isOver(a)) || byDue(a, b)) }));
+  const nBlocked = work.filter((e) => e.blocked).length;
+  const nOver = work.filter(isOver).length;
+  const jump = (id) => colRefs.current[id]?.scrollIntoView({ inline: "start", block: "nearest" });
+
+  // ≤899px: highlight the jump chip of the column in view; the mentor starts on รอพี่ตรวจ
+  useEffect(() => {
+    if (!loaded || error || !window.matchMedia("(max-width: 899px)").matches || !window.IntersectionObserver) return;
+    if (rc.role === "mentor" && scrollRef.current && colRefs.current.review) scrollRef.current.scrollLeft = colRefs.current.review.offsetLeft - 16;
+    const io = new IntersectionObserver((list) => list.forEach((x) => { if (x.isIntersecting) setInView(x.target.dataset.status); }), { root: scrollRef.current, threshold: 0.6 });
+    Object.values(colRefs.current).forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, [loaded, error]);
+
+  const dueBadge = (e) => {
+    if (!e.due || e.status === "done") return e.due ? <span className="badge"><Icon name="clock" size={11} strokeWidth={2.2} />Due {fmtDue(e.due)}</span> : null;
+    if (e.due < today) return <span className="badge overdue"><Icon name="clock" size={11} strokeWidth={2.2} />เลยกำหนด {daysBetween(e.due, today)} วัน</span>;
+    if (e.due === today) return <span className="badge due-today"><Icon name="clock" size={11} strokeWidth={2.2} />ครบกำหนดวันนี้</span>;
+    return <span className="badge"><Icon name="clock" size={11} strokeWidth={2.2} />Due {fmtDue(e.due)}</span>;
+  };
+  const card = (e) => {
+    const n = (commentsByEntry.get(e.id) || []).length;
+    return (
+      <div key={e.id} className={`mb-card${e.blocked ? " blocked" : isOver(e) ? " overdue" : ""}`}>
+        <button type="button" className="mb-open" onClick={() => onOpen(e.date, "work", e.id)}>
+          {e.blocked && <span className="mb-card-top" style={{ marginBottom: 6 }}><FlagBadge /></span>}
+          <span className="mb-card-title">{entryLabel(e)}</span>
+        </button>
+        <div className="meta">
+          {dueBadge(e)}
+          {fromMentor(e, rc.ownerId) && <MentorPill />}
+          {e.isPrivate && <PrivBadge />}
+          {n > 0 && <span className="mb-count" aria-label={`${n} ความคิดเห็น`}><Icon name="message" size={12} />{n}</span>}
+        </div>
+        <StatusMenu entry={e} />
+      </div>
+    );
+  };
+  return (
+    <section className="card mb" aria-label="บอร์ดงาน">
+      <div className="card-band">
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2>{rc.role === "mentor" ? "บอร์ดงานน้องฝึกงาน" : "บอร์ดงาน"}</h2>
+          <div className="sub">{work.length} งาน · ติดปัญหา {nBlocked} · เลยกำหนด {nOver}</div>
+        </div>
+        <button type="button" className="btn sm tap" aria-pressed={onlyFlag} onClick={() => setOnlyFlag((v) => !v)}>เฉพาะที่ติดปัญหา/เลยกำหนด</button>
+      </div>
+      {error
+        ? <div style={{ padding: 16 }}><div className="auth-msg error" style={{ display: "flex", alignItems: "center", gap: 10 }}>โหลดบอร์ดไม่สำเร็จ<button type="button" className="btn sm" onClick={onRetry}>ลองใหม่</button></div></div>
+        : <>
+            <div className="mb-jump" role="group" aria-label="ไปที่คอลัมน์">
+              {cols.map((c) => (
+                <button key={c.s.id} type="button" className={`tag-chip${inView === c.s.id ? " on" : ""}`} aria-pressed={inView === c.s.id} onClick={() => jump(c.s.id)}>{c.s.th}<span>{c.items.length}</span></button>
+              ))}
+            </div>
+            <div className="mb-scroll" ref={scrollRef} tabIndex={0} aria-label="บอร์ดงาน เลื่อนซ้ายขวา">
+              <div className="mb-cols">
+                {cols.map((c) => (
+                  <div key={c.s.id} data-status={c.s.id} ref={(el) => { colRefs.current[c.s.id] = el; }}
+                    className={`mb-col${c.s.id === "review" && rc.role === "mentor" ? " focus" : ""}`} role="group" aria-label={`${c.s.th} ${c.items.length} งาน`}>
+                    <div className="mb-col-head"><StatusPill status={c.s.id} /><span className="n">{c.items.length}</span></div>
+                    <div className="mb-list">
+                      {!loaded ? [0, 1, 2].map((i) => <div key={i} className="mb-skel" aria-hidden="true" />)
+                        : c.items.length ? c.items.map(card) : <div className="mb-empty">ไม่มีงานในสถานะนี้</div>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>}
+    </section>
   );
 }
 
@@ -2278,11 +3131,16 @@ function sampleEntries() {
 /* ============================================================
    15. NOTEBOOK — main screen, owns app state
    ============================================================ */
-function Notebook({ store, user }) {
+function Notebook({ store, user, rc }) {
+  const isMentor = rc.role === "mentor";
   const [entries, setEntries] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(null);
+  const [reloadN, setReloadN] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [notifs, setNotifs] = useState(null);
   const initialDate = inRange(todayKey()) ? todayKey() : RANGE_START;
-  const [view, setView] = useState("calendar");
+  const [view, setView] = useState(isMentor ? "board" : "calendar");
   const [selected, setSelected] = useState(initialDate);
   const [tab, setTab] = useState("work");
   const [panelOpen, setPanelOpen] = useState(false);
@@ -2312,13 +3170,29 @@ function Notebook({ store, user }) {
   }, []);
 
   useEffect(() => {
-    setLoaded(false);
+    setLoaded(false); setLoadError(null);
+    let got = false;
     const unsub = store.subscribe(
-      (list) => { setEntries(list.map(normalizeEntry)); setLoaded(true); },
-      (err) => { setLoaded(true); toast(err.code === "permission-denied" ? "Firestore blocked access — check your security rules." : err.code === "42501" ? "Supabase blocked access — check the row-level security policies." : err.message, "error"); }
+      // the mentor only ever sees Work + not private (RLS does this on the server; this also covers the ?as=mentor demo)
+      (list) => { got = true; setEntries(list.map(normalizeEntry).filter((e) => !isMentor || (e.tab === "work" && !e.isPrivate))); setLoaded(true); },
+      (err) => { if (!got) setLoadError(err); setLoaded(true); toast(err.code === "permission-denied" ? "Firestore blocked access — check your security rules." : err.code === "42501" ? "Supabase blocked access — check the row-level security policies." : err.message, "error"); }
     );
     return unsub;
+  }, [store, reloadN]);
+
+  useEffect(() => {
+    if (!store.subscribeComments) return; // Firebase mode: no mentor features
+    return store.subscribeComments(setComments, (err) => toast(err.message, "error"));
   }, [store]);
+  useEffect(() => {
+    if (!store.subscribeNotifications || !rc.caps.notifications) return;
+    return store.subscribeNotifications(setNotifs, (err) => { setNotifs([]); toast(err.message, "error"); });
+  }, [store]);
+  const commentsByEntry = useMemo(() => {
+    const m = new Map();
+    comments.forEach((c) => { if (!m.has(c.entryId)) m.set(c.entryId, []); m.get(c.entryId).push(c); });
+    return m;
+  }, [comments]);
 
   useEffect(() => {
     setWsLoaded(false);
@@ -2402,27 +3276,57 @@ function Notebook({ store, user }) {
   }
 
   const actions = useMemo(() => ({
-    save: async (e) => { await store.save(normalizeEntry(e)); },
-    async toggleDone(e) {
-      const next = normalizeEntry({ ...e, done: !e.done, doneAt: e.done ? null : Date.now(), updatedAt: Date.now() });
+    async save(e) {
+      const isNew = !e.id;
+      const extra = isNew ? { createdBy: rc.actorId } : {}; // optimistic only; the server sets created_by
+      if (isMentor) Object.assign(extra, isNew ? { assignedBy: "mentor", isPrivate: false, tab: "work" } : { assignedBy: e.assignedBy, isPrivate: false });
+      try { await store.save(normalizeEntry({ ...e, ...extra })); }
+      catch (err) { throw new Error(errText(err)); }
+    },
+    async setStatus(e, to) {
+      if (!canSetStatus(rc, e, to)) return;
+      let note = null;
+      if (isMentor && to === "changes" && rc.caps.comments) { // the comment goes first, then the status
+        note = window.prompt("บอกน้องว่าต้องแก้อะไร (ไม่บังคับ)", "");
+        if (note === null) return;
+      }
+      const prev = e.status;
       try {
-        await store.save(next);
-        if (next.done) toast(`Done: ${entryLabel(next)}`, "info", { label: "Undo", fn: () => store.save(normalizeEntry({ ...next, done: false, updatedAt: Date.now() })) });
-      } catch (err) { toast(err.message, "error"); }
+        if (note && note.trim()) await store.saveComment({ id: uid(), entryId: e.id, body: note.trim() });
+        await store.save(normalizeEntry({ ...e, status: to, doneAt: to === "done" ? Date.now() : null, updatedAt: Date.now() }));
+        const undo = canSetStatus(rc, { ...e, status: to }, prev)
+          ? { label: "Undo", fn: () => store.save(normalizeEntry({ ...e, status: prev, updatedAt: Date.now() })).catch((err) => toast(errText(err), "error")) } : null;
+        if (to === "done") toast(`Done: ${entryLabel(e)}`, "info", undo);
+        else if (to === "review" && !isMentor) toast("ส่งให้พี่เลี้ยงตรวจแล้ว", "info", undo);
+      } catch (err) { toast(errText(err), "error"); }
+    },
+    async setBlocked(e, on) {
+      try { await store.save(normalizeEntry({ ...e, blocked: on, updatedAt: Date.now() })); }
+      catch (err) { toast(errText(err), "error"); }
     },
     async remove(e) {
+      if (!canDeleteEntry(rc, e)) return toast("ลบงานนี้ไม่ได้ — เฉพาะคนที่สร้างงานเท่านั้น", "error");
       if (!window.confirm(`Delete this ${TAB_BY_ID[e.tab].noun}? This can't be undone.`)) return;
       try {
         await Promise.all(e.attachments.map((a) => store.removeFile(a).catch(() => {})));
         await store.remove(e.id);
         toast("Deleted");
-      } catch (err) { toast(err.message, "error"); }
+      } catch (err) { toast(errText(err), "error"); }
     },
     async toggleCheck(e, itemId) {
       const next = normalizeEntry({ ...e, checklist: e.checklist.map((c) => (c.id === itemId ? { ...c, done: !c.done } : c)), updatedAt: Date.now() });
-      try { await store.save(next); } catch (err) { toast(err.message, "error"); }
+      try { await store.save(next); } catch (err) { toast(errText(err), "error"); }
     },
   }), [store, toast]);
+
+  // Notification → open its task. It may be gone for this user (private / moved / deleted): toast, still mark read.
+  function openNotif(n) {
+    store.markRead([n.id]).catch(() => {});
+    const e = n.entryId && entries.find((x) => x.id === n.entryId);
+    if (!e) return toast("เปิดงานนี้ไม่ได้แล้ว — อาจถูกลบ ย้าย หรือตั้งเป็นส่วนตัว");
+    if (filterNode && !visible.includes(e)) selectWs(null);
+    openEntry(e.date, e.tab, e.id);
+  }
 
   // Workspace actions — hierarchy rules are enforced here (client-side).
   const wsActions = useMemo(() => {
@@ -2507,22 +3411,27 @@ function Notebook({ store, user }) {
   }
 
   const ctx = useMemo(() => ({
-    store, toast, actions, workspaces, wsIdx, wsFilter: filterNode ? filterNode.id : null, wsActions,
+    store, toast, actions, workspaces, wsIdx, wsFilter: filterNode ? filterNode.id : null, wsActions, rc, commentsByEntry,
     openImage: setLightbox,
     onTag: (t) => { setQuery(t + " "); setSearchOpen(true); setTimeout(() => searchRef.current?.focus(), 0); },
-  }), [store, toast, actions, workspaces, wsIdx, filterNode, wsActions]);
+  }), [store, toast, actions, workspaces, wsIdx, filterNode, wsActions, rc, commentsByEntry]);
   const filterLabel = filterNode ? wsIdx.path(filterNode.id).map((n) => n.name).join(" › ") : "";
 
   return (
     <AppCtx.Provider value={ctx}>
-      <header className="topbar">
+      <header className={`topbar${isMentor ? " mentor" : ""}`}>
         <div className="topbar-inner">
           <button ref={burgerRef} type="button" className="btn ghost icon-only ws-burger" onClick={openWs}
             aria-label="Workspaces" aria-expanded={wsOpen} aria-controls="ws-nav"><Icon name="menu" /></button>
           <div className="brand">
             <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
-            <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook · 6 Nov 2026 – 5 Mar 2027</div></div>
+            <div><BrandName /><div className="brand-sub">Internship notebook · 6 Nov 2026 – 5 Mar 2027</div></div>
           </div>
+          {isMentor && (
+            <span className="role-chip" title={`กำลังดูสมุดของ ${rc.internName || ROLE_LABEL.intern}`}>
+              <Icon name="eye" size={14} /><span className="long">โหมดพี่เลี้ยง{rc.mentorName ? ` · ${rc.mentorName}` : ""}</span><span className="short">พี่เลี้ยง</span>
+            </span>
+          )}
           <SearchBar entries={visible} query={query} setQuery={setQuery} open={searchOpen} setOpen={setSearchOpen}
             inputRef={searchRef} onPick={(e) => openEntry(e.date, e.tab, e.id)} />
           {filterNode && (
@@ -2532,6 +3441,11 @@ function Notebook({ store, user }) {
             </div>
           )}
           <nav className="nav">
+            {rc.caps.workflow && (
+              <button className={`btn ghost${view === "board" ? " active" : ""}`} onClick={() => setView("board")} aria-label="บอร์ดงาน">
+                <Icon name="list" /><span className="label">บอร์ด</span>
+              </button>
+            )}
             <button className={`btn ghost${view === "calendar" ? " active" : ""}`} onClick={() => setView("calendar")} aria-label="Calendar">
               <Icon name="calendar" /><span className="label">Calendar</span>
             </button>
@@ -2546,20 +3460,23 @@ function Notebook({ store, user }) {
                 <Icon name="file" /><span className="label">Summary</span>
               </button>
             )}
-            <Menu user={user} onExport={exportBackup} onImport={importBackup} onSample={addSample} />
+            {rc.caps.notifications && <NotificationBell notifs={notifs} onOpenNotif={openNotif} />}
+            <Menu user={user} onExport={exportBackup} onImport={importBackup} onSample={addSample} mentor={isMentor} />
           </nav>
         </div>
       </header>
 
-      <main className="layout">
+      <main className={`layout${view === "board" && rc.caps.workflow ? " board-mode" : ""}`}>
         {wsOpen && <div className="backdrop ws" onClick={closeWs} />}
         <WorkspaceSidebar navRef={wsNavRef} open={wsOpen} filter={filterNode ? filterNode.id : null} view={view} counts={wsCounts}
           allCount={entries.length} pendingCount={pendingCount} onSelect={selectWs}
           onAll={() => { selectWs(null); setView("calendar"); }}
           onPending={() => { selectWs(null); setView("pending"); }}
-          onDetails={(w) => { selectWs(w.id); setView("summary"); setPosEditing(true); }} />
+          onDetails={(w) => { selectWs(w.id); setView("summary"); setPosEditing(true); }} readOnly={isMentor} />
         <div>
-          {!loaded
+          {view === "board" && rc.caps.workflow
+            ? <MentorBoard entries={visible} loaded={loaded} error={loadError} onRetry={() => setReloadN((n) => n + 1)} onOpen={openEntry} />
+            : !loaded
             ? <div className="card empty"><span className="spinner" style={{ margin: "0 auto" }} /></div>
             : view === "building"
               ? <BuildingView />
@@ -2573,6 +3490,7 @@ function Notebook({ store, user }) {
         <DailyPanel date={selected} tab={tab} setTab={setTab} entries={visible} open={panelOpen}
           onClose={() => setPanelOpen(false)} onDateChange={selectDate} focusId={focusId} />
       </main>
+      <footer className="app-foot">{DISCLAIMER}</footer>
 
       <div className="toasts" aria-live="polite">
         {toasts.map((t) => (
@@ -2590,6 +3508,12 @@ function Notebook({ store, user }) {
       )}
     </AppCtx.Provider>
   );
+}
+
+// Brand: "Second·Brain" with the sky dot motif (Noey §4.2); screen readers hear "Second Brain".
+const DISCLAIMER = "สมุดบันทึกส่วนตัว · ไม่ใช่ระบบทางการของ Plan B";
+function BrandName() {
+  return <div className="brand-name"><span className="sr-only">Second Brain</span><span aria-hidden="true">Second<span className="brand-dot" />Brain</span></div>;
 }
 
 /* ============================================================
@@ -2656,7 +3580,7 @@ function SupabaseAuth({ recovery, onRecovered }) {
       <div className="card auth-card">
         <div className="brand">
           <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
-          <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook</div></div>
+          <div><BrandName /><div className="brand-sub">Internship notebook</div></div>
         </div>
         <h1>{recovery ? "Set a new password" : "Welcome back"}</h1>
         <p className="lead">{recovery ? "Your notes sync across desktop, iPad and phone." : "บัญชีสร้างโดยผู้ดูแลเท่านั้น · Accounts are created by the owner only."}</p>
@@ -2667,6 +3591,7 @@ function SupabaseAuth({ recovery, onRecovered }) {
           <button className="btn primary" type="submit" disabled={busy}>{busy ? "Please wait…" : recovery ? "Save new password" : "Sign in"}</button>
         </form>
         {!recovery && <div className="auth-switch"><button className="linklike" onClick={reset}>Forgot password?</button></div>}
+        <div className="disclaimer">{DISCLAIMER}</div>
       </div>
     </div>
   );
@@ -2707,7 +3632,7 @@ function AuthScreen() {
       <div className="card auth-card">
         <div className="brand">
           <div className="brand-mark"><Icon name="brain" size={18} strokeWidth={2.2} /></div>
-          <div><div className="brand-name">Second Brain</div><div className="brand-sub">Internship notebook</div></div>
+          <div><BrandName /><div className="brand-sub">Internship notebook</div></div>
         </div>
         <h1>{mode === "signin" ? "Welcome back" : "Create your account"}</h1>
         <p className="lead">Your notes sync across desktop, iPad and phone.</p>
@@ -2727,6 +3652,7 @@ function AuthScreen() {
             ? <>New here? <button className="linklike" onClick={() => { setMode("signup"); setMsg(null); }}>Create an account</button> · <button className="linklike" onClick={reset}>Forgot password</button></>
             : <>Already have an account? <button className="linklike" onClick={() => { setMode("signin"); setMsg(null); }}>Sign in</button></>}
         </div>
+        <div className="disclaimer">{DISCLAIMER}</div>
       </div>
     </div>
   );
@@ -2735,6 +3661,11 @@ function AuthScreen() {
 /* ============================================================
    17. APP ROOT — picks Supabase, Firebase, or demo (local) mode
    ============================================================ */
+// Demo mode: one local "intern"; ?as=mentor previews the mentor UI over the same data (UI only — RLS is tested separately).
+const DEMO_RC = {
+  role: DEMO_AS_MENTOR ? "mentor" : "intern", ownerId: "local", actorId: DEMO_AS_MENTOR ? "local-mentor" : "local",
+  hasMentor: true, caps: { workflow: true, comments: true, notifications: false }, internName: null, mentorName: null,
+};
 function App() {
   const [user, setUser] = useState(CLOUD_ENABLED ? undefined : null); // undefined = still checking
   // Supabase password-reset link — but never when the link carried an auth error (expired/invalid).
@@ -2760,13 +3691,40 @@ function App() {
     if (FIREBASE_ENABLED) return firebase.auth().onAuthStateChanged((u) => setUser(u));
   }, []);
   const userKey = user ? user.uid || user.id : null;
-  const store = useMemo(() => (SUPABASE_ENABLED ? (user ? createSupabaseStore(sb, user) : null)
-    : FIREBASE_ENABLED ? (user ? createFirebaseStore(user) : null) : createLocalStore()), [userKey]);
+  // Role (docs/mentor-architecture.md §7). Supabase: one mentorships read; before 003 → intern, mentor features off.
+  const [sbRole, setSbRole] = useState(null); // { key, rc } | { key, error }
+  const [roleTry, setRoleTry] = useState(0);
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !userKey) return;
+    let alive = true;
+    detectRole(sb, user)
+      .then((r) => { if (alive) setSbRole({ key: userKey, rc: { ...r, actorId: userKey } }); })
+      .catch((error) => { if (alive) setSbRole({ key: userKey, error }); });
+    return () => { alive = false; };
+  }, [userKey, roleTry]);
+  const rc = useMemo(() => {
+    if (!CLOUD_ENABLED) return DEMO_RC;
+    if (FIREBASE_ENABLED) return userKey ? { role: "intern", ownerId: userKey, actorId: userKey, hasMentor: false, caps: NO_MENTOR_CAPS, internName: null, mentorName: null } : null;
+    return sbRole && sbRole.key === userKey && sbRole.rc ? sbRole.rc : null;
+  }, [userKey, sbRole]);
+  const rcKey = rc ? `${rc.role}:${rc.ownerId}` : "";
+  const store = useMemo(() => (SUPABASE_ENABLED ? (user && rc ? createSupabaseStore(sb, user, rc) : null)
+    : FIREBASE_ENABLED ? (user ? createFirebaseStore(user) : null) : createLocalStore({ actorId: DEMO_RC.actorId })), [userKey, rcKey]);
 
   if (CLOUD_ENABLED && user === undefined) return <div className="boot">Loading your notebook…</div>;
   if (SUPABASE_ENABLED && (!user || recovery)) return <SupabaseAuth recovery={Boolean(user && recovery)} onRecovered={() => setRecovery(false)} />;
   if (CLOUD_ENABLED && !user) return <AuthScreen />;
-  return <Notebook key={userKey || "local"} store={store} user={user} />;
+  if (!rc || !store) {
+    const failed = sbRole && sbRole.key === userKey && sbRole.error;
+    return (
+      <div className="boot">
+        {failed
+          ? <div style={{ textAlign: "center" }}>Couldn't load your account ({failed.message}).<br /><button className="btn sm" style={{ marginTop: 10 }} onClick={() => { setSbRole(null); setRoleTry((n) => n + 1); }}>ลองใหม่</button></div>
+          : "Loading your notebook…"}
+      </div>
+    );
+  }
+  return <Notebook key={`${userKey || "local"}:${rcKey}`} store={store} user={user} rc={rc} />;
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
